@@ -1,4 +1,4 @@
-package com.baloise.jenkins.plugin;
+package de.hypery2k.jenkins.plugin;
 
 import hudson.model.Result;
 import hudson.model.View;

@@ -1,4 +1,4 @@
-package com.baloise.jenkins.plugin;
+package de.hypery2k.jenkins.plugin;
 
 import com.github.baloise.rocketchatrestclient.RocketChatClient;
 import com.github.baloise.rocketchatrestclient.model.Room;
