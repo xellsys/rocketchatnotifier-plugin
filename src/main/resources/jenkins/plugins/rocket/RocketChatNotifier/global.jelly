@@ -1,0 +1,36 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
+         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+  <!--
+    This Jelly script is used to produce the global configuration option.
+
+    Hudson uses a set of tag libraries to provide uniformity in forms.
+    To determine where this tag is defined, first check the namespace URI,
+    and then look under $HUDSON/views/. For example, <f:section> is defined
+    in $HUDSON/views/lib/form/section.jelly.
+
+    It's also often useful to just check other similar scripts to see what
+    tags they use. Views are always organized according to its owner class,
+    so it should be straightforward to find them.
+  -->
+<f:section title="Global RocketChat Notifier Settings" name="rocket">
+    <f:entry title="Rocket Server URL">
+        <f:textbox field="rocketServerUrl" name="rocketServer" value="${descriptor.getRocketServerURL()}" />
+    </f:entry>
+    <f:entry title="Login Username">
+        <f:textbox field="username" name="rocketUsername" value="${descriptor.getUsername()}" />
+    </f:entry>
+    <f:entry title="Login password">
+        <f:textbox field="password" name="rocketPassword" value="${descriptor.getPassword()}" />
+    </f:entry>
+    <f:entry title="Channel" >
+        <f:textbox field="channel" name="rocketChannel" value="${descriptor.getChannel()}" />
+    </f:entry>
+    <f:entry title="Build Server URL">
+        <f:textbox field="buildServerUrl" name="rocketBuildServerUrl" value="${descriptor.getBuildServerUrl()}" />
+    </f:entry>
+    <f:validateButton
+        title="${%Test Connection}" progress="${%Testing...}"
+        method="testConnection" with="rocketServer,rocketUsername,rocketPassword,rocketChannel,rocketBuildServerUrl" />
+  </f:section>
+</j:jelly>

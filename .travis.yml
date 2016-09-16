@@ -1,6 +1,6 @@
 language: java
 
-script: mvn -DskipTests -Dmaven.test.skip=true clean package site
+script: mvn clean package
 
 cache:
   directories:
@@ -12,5 +12,4 @@ branches:
 
 install:
   -
-    
-    
+

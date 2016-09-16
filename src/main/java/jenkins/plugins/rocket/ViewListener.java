@@ -1,4 +1,4 @@
-package de.hypery2k.jenkins.plugin;
+package jenkins.plugins.rocket;
 
 import hudson.model.Result;
 import hudson.model.View;
