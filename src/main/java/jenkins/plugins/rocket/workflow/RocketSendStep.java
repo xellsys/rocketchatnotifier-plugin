@@ -3,6 +3,7 @@ package jenkins.plugins.rocket.workflow;
 import hudson.AbortException;
 import hudson.Extension;
 import hudson.Util;
+import hudson.model.Run;
 import hudson.model.TaskListener;
 import jenkins.model.Jenkins;
 import jenkins.plugins.rocket.Messages;
@@ -87,6 +88,9 @@ public class RocketSendStep extends AbstractStepImpl {
     @StepContextParameter
     transient TaskListener listener;
 
+    @StepContextParameter
+    transient Run run;
+
     @Override
     protected Void run() throws Exception {
 
@@ -104,13 +108,16 @@ public class RocketSendStep extends AbstractStepImpl {
       String user = rocketDesc.getUsername();
       String password = rocketDesc.getPassword();
       String channel = step.channel != null ? step.channel : rocketDesc.getChannel();
-
+      String jenkinsUrl = rocketDesc.getBuildServerUrl();
       // placing in console log to simplify testing of retrieving values from global config or from step field; also used for tests
-      listener.getLogger().println(Messages.RocketSendStepConfig(channel,step.message));
+      listener.getLogger().println(Messages.RocketSendStepConfig(channel, step.message));
 
       RocketClient rocketClient = getRocketClient(server, user, password, channel);
-      boolean publishSuccess = rocketClient.publish(step.message);
-      listener.getLogger().println(publishSuccess);
+
+      String msgWithJobLink = step.message
+        + "," + run.getDisplayName()
+        + "," + jenkinsUrl + run.getUrl() + "";
+      boolean publishSuccess = rocketClient.publish(msgWithJobLink);
       if (!publishSuccess && step.failOnError) {
         throw new AbortException(Messages.NotificationFailed());
       } else if (!publishSuccess) {

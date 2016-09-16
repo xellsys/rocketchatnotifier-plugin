@@ -1,6 +1,6 @@
 language: java
 
-script: mvn clean package
+script: mvn clean package --quiet
 
 cache:
   directories:
