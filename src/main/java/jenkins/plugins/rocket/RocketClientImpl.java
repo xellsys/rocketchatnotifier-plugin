@@ -10,16 +10,15 @@ import java.io.IOException;
  */
 public class RocketClientImpl implements RocketClient {
 
+  public static final String API_PATH = "/api/";
+
   private RocketChatClient client;
 
   private String channel;
 
 
   public RocketClientImpl(String serverUrl, String user, String password, String channel) {
-
-    String newUrl = serverUrl.replace("https://", "https://" + user + ":" + password + '@').replace("http://", "http://" + user + ":" + password + '@');
-    System.out.println(newUrl);
-    this.client = new RocketChatClient(newUrl, user, password);
+    this.client = new RocketChatClient(serverUrl + API_PATH, user, password);
     this.channel = channel;
   }
 

@@ -110,6 +110,7 @@ public class RocketSendStep extends AbstractStepImpl {
 
       RocketClient rocketClient = getRocketClient(server, user, password, channel);
       boolean publishSuccess = rocketClient.publish(step.message);
+      listener.getLogger().println(publishSuccess);
       if (!publishSuccess && step.failOnError) {
         throw new AbortException(Messages.NotificationFailed());
       } else if (!publishSuccess) {
