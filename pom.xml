@@ -221,4 +221,14 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <url>https://wiki.jenkins-ci.org/display/JENKINS/RocketChat+Plugin</url>
+
+  <developers>
+    <developer>
+      <id>hypery2k</id>
+      <name>Martin Reinhardt</name>
+      <email>contact@martinreinhardt-online.de</email>
+    </developer>
+  </developers>
 </project>
