@@ -115,7 +115,7 @@ public class RocketSendStep extends AbstractStepImpl {
       RocketClient rocketClient = getRocketClient(server, user, password, channel);
 
       String msgWithJobLink = step.message
-        + "," + run.getDisplayName()
+        + "," + run.getFullDisplayName()
         + "," + jenkinsUrl + run.getUrl() + "";
       boolean publishSuccess = rocketClient.publish(msgWithJobLink);
       if (!publishSuccess && step.failOnError) {

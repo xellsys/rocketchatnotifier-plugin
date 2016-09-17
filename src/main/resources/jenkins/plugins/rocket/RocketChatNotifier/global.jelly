@@ -21,7 +21,7 @@
         <f:textbox field="username" name="rocketUsername" value="${descriptor.getUsername()}" />
     </f:entry>
     <f:entry title="Login password">
-        <f:textbox field="password" name="rocketPassword" value="${descriptor.getPassword()}" />
+        <f:password field="password" name="rocketPassword" value="${descriptor.getPassword()}" />
     </f:entry>
     <f:entry title="Channel" >
         <f:textbox field="channel" name="rocketChannel" value="${descriptor.getChannel()}" />
