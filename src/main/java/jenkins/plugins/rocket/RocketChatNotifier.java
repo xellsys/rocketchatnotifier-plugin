@@ -1,6 +1,5 @@
 package jenkins.plugins.rocket;
 
-import com.github.baloise.rocketchatrestclient.RocketChatClient;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
