@@ -68,13 +68,13 @@ class RocketChatClient {
     Rooms rooms = (Rooms) this.authenticatedGet("publicRooms", Rooms.class);
     HashSet ret = new HashSet();
     this.roomCache.clear();
-    Room[] var3 = rooms.rooms;
+    Room[] var3 = rooms.getRooms();
     int var4 = var3.length;
 
     for (int var5 = 0; var5 < var4; ++var5) {
       Room r = var3[var5];
       ret.add(r);
-      this.roomCache.put(r.name, r);
+      this.roomCache.put(r.getName(), r);
     }
 
     return ret;
@@ -161,7 +161,7 @@ class RocketChatClient {
   }
 
   public void send(Room room, String message) throws IOException {
-    this.authenticatedPost("rooms/" + room._id + "/send", new Message(message));
+    this.authenticatedPost("rooms/" + room.getId() + "/send", new Message(message));
   }
 
   public Room getRoom(String room) throws IOException {

@@ -44,8 +44,6 @@ public class ActiveNotifier implements FineGrainedNotifier {
 
   public void started(AbstractBuild build) {
 
-    AbstractProject<?, ?> project = build.getProject();
-
     CauseAction causeAction = build.getAction(CauseAction.class);
 
     if (causeAction != null) {
@@ -68,13 +66,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
   }
 
   private void notifyStart(AbstractBuild build, String message) {
-    AbstractProject<?, ?> project = build.getProject();
-    AbstractBuild<?, ?> previousBuild = project.getLastBuild().getPreviousCompletedBuild();
-    if (previousBuild == null) {
-      getRocket(build).publish(message);//, "good");
-    } else {
-      getRocket(build).publish(message);//, getBuildColor(previousBuild));
-    }
+    getRocket(build).publish(message);
   }
 
   public void finalized(AbstractBuild r) {
@@ -180,17 +172,6 @@ public class ActiveNotifier implements FineGrainedNotifier {
     message.append("Changes:\n- ");
     message.append(StringUtils.join(commits, "\n- "));
     return message.toString();
-  }
-
-  static String getBuildColor(AbstractBuild r) {
-    Result result = r.getResult();
-    if (result == Result.SUCCESS) {
-      return "good";
-    } else if (result == Result.FAILURE) {
-      return "danger";
-    } else {
-      return "warning";
-    }
   }
 
   String getBuildStatusMessage(AbstractBuild r, boolean includeTestSummary, boolean includeCustomMessage) {
