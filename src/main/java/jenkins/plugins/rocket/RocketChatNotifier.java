@@ -1,5 +1,5 @@
 package jenkins.plugins.rocket;
-
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
+@SuppressWarnings("rawtypes")
 public class RocketChatNotifier extends Notifier {
 
   private static final Logger logger = Logger.getLogger(RocketChatNotifier.class.getName());
@@ -67,7 +68,7 @@ public class RocketChatNotifier extends Notifier {
   }
 
   public String getBuildServerUrl() {
-    if (buildServerUrl == null || buildServerUrl == "") {
+    if (buildServerUrl == null || buildServerUrl.equalsIgnoreCase("")) {
       JenkinsLocationConfiguration jenkinsConfig = new JenkinsLocationConfiguration();
       return jenkinsConfig.getUrl();
     } else {
@@ -236,7 +237,7 @@ public class RocketChatNotifier extends Notifier {
     }
 
     public String getBuildServerUrl() {
-      if (buildServerUrl == null || buildServerUrl == "") {
+      if (buildServerUrl == null || buildServerUrl.equalsIgnoreCase("")) {
         JenkinsLocationConfiguration jenkinsConfig = new JenkinsLocationConfiguration();
         return jenkinsConfig.getUrl();
       } else {
@@ -249,6 +250,7 @@ public class RocketChatNotifier extends Notifier {
     }
 
     @Override
+    @SuppressWarnings("NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE")
     public RocketChatNotifier newInstance(StaplerRequest sr, JSONObject json) {
       String rocketServerUrl = sr.getParameter("rocketServer");
       String username = sr.getParameter("rocketUsername");
@@ -278,7 +280,7 @@ public class RocketChatNotifier extends Notifier {
       password = sr.getParameter("rocketPassword");
       channel = sr.getParameter("rocketChannel");
       buildServerUrl = sr.getParameter("rocketBuildServerUrl");
-      if (buildServerUrl == null || buildServerUrl == "") {
+      if (buildServerUrl == null || buildServerUrl.equalsIgnoreCase("")) {
         JenkinsLocationConfiguration jenkinsConfig = new JenkinsLocationConfiguration();
         buildServerUrl = jenkinsConfig.getUrl();
       }

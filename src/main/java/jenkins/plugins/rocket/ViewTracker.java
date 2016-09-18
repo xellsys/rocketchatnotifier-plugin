@@ -84,7 +84,7 @@ public class ViewTracker {
         Run<?, ?> build = job.getLastCompletedBuild();
         if (build != null) {
           Result result = build.getResult();
-          if (result.isBetterOrEqualTo(Result.FAILURE))
+          if (result != null && result.isBetterOrEqualTo(Result.FAILURE))
             ret = ret.combine(result);
         }
       }

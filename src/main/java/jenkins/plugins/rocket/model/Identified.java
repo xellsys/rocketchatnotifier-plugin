@@ -9,7 +9,11 @@ public abstract class Identified implements Comparable<Identified> {
 
   @Override
   public boolean equals(Object obj) {
-    return ((Identified) obj)._id.equals(_id);
+    if (obj != null && obj instanceof Identified  ) {
+      return ((Identified) obj)._id.equals(_id);
+    } else {
+      return false;
+    }
   }
 
   @Override

@@ -1,5 +1,6 @@
 package jenkins.plugins.rocket;
 
+import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import hudson.EnvVars;
 import hudson.Util;
 import hudson.model.*;
@@ -73,30 +74,36 @@ public class ActiveNotifier implements FineGrainedNotifier {
   }
 
   public void completed(AbstractBuild r) {
-    AbstractProject<?, ?> project = r.getProject();
-    Result result = r.getResult();
-    AbstractBuild<?, ?> previousBuild = project.getLastBuild();
-    do {
-      previousBuild = previousBuild.getPreviousCompletedBuild();
-    } while (previousBuild != null && previousBuild.getResult() == Result.ABORTED);
-    Result previousResult = (previousBuild != null) ? previousBuild.getResult() : Result.SUCCESS;
-    if ((result == Result.ABORTED && notifier.getNotifyAborted())
-      || (result == Result.FAILURE //notify only on single failed build
-      && previousResult != Result.FAILURE
-      && notifier.getNotifyFailure())
-      || (result == Result.FAILURE //notify only on repeated failures
-      && previousResult == Result.FAILURE
-      && notifier.getNotifyRepeatedFailure())
-      || (result == Result.NOT_BUILT && notifier.getNotifyNotBuilt())
-      || (result == Result.SUCCESS
-      && (previousResult == Result.FAILURE || previousResult == Result.UNSTABLE)
-      && notifier.getNotifyBackToNormal())
-      || (result == Result.SUCCESS && notifier.getNotifySuccess())
-      || (result == Result.UNSTABLE && notifier.getNotifyUnstable())) {
-      getRocket(r).publish(getBuildStatusMessage(r, notifier.includeTestSummary(),
-        notifier.includeCustomMessage()));//, getBuildColor(r));
-      if (notifier.getCommitInfoChoice().showAnything()) {
-        getRocket(r).publish(getCommitList(r));//, getBuildColor(r));
+    if (r != null) {
+      AbstractProject<?, ?> project = r.getProject();
+      Result result = r.getResult();
+      if (project != null) {
+        AbstractBuild<?, ?> previousBuild = project.getLastBuild();
+        if (previousBuild != null) {
+          do {
+            previousBuild = previousBuild.getPreviousCompletedBuild();
+          } while (previousBuild != null && previousBuild.getResult() == Result.ABORTED);
+          Result previousResult = (previousBuild != null) ? previousBuild.getResult() : Result.SUCCESS;
+          if ((result == Result.ABORTED && notifier.getNotifyAborted())
+            || (result == Result.FAILURE //notify only on single failed build
+            && previousResult != Result.FAILURE
+            && notifier.getNotifyFailure())
+            || (result == Result.FAILURE //notify only on repeated failures
+            && previousResult == Result.FAILURE
+            && notifier.getNotifyRepeatedFailure())
+            || (result == Result.NOT_BUILT && notifier.getNotifyNotBuilt())
+            || (result == Result.SUCCESS
+            && (previousResult == Result.FAILURE || previousResult == Result.UNSTABLE)
+            && notifier.getNotifyBackToNormal())
+            || (result == Result.SUCCESS && notifier.getNotifySuccess())
+            || (result == Result.UNSTABLE && notifier.getNotifyUnstable())) {
+            getRocket(r).publish(getBuildStatusMessage(r, notifier.includeTestSummary(),
+              notifier.includeCustomMessage()));//, getBuildColor(r));
+            if (notifier.getCommitInfoChoice().showAnything()) {
+              getRocket(r).publish(getCommitList(r));//, getBuildColor(r));
+            }
+          }
+        }
       }
     }
   }
@@ -153,8 +160,10 @@ public class ActiveNotifier implements FineGrainedNotifier {
       String upProjectName = c.getUpstreamProject();
       int buildNumber = c.getUpstreamBuild();
       AbstractProject project = Hudson.getInstance().getItemByFullName(upProjectName, AbstractProject.class);
-      AbstractBuild upBuild = (AbstractBuild) project.getBuildByNumber(buildNumber);
-      return getCommitList(upBuild);
+      if (project != null) {
+        AbstractBuild upBuild = project.getBuildByNumber(buildNumber);
+        return getCommitList(upBuild);
+      }
     }
     Set<String> commits = new HashSet<String>();
     for (Entry entry : entries) {
@@ -216,6 +225,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
       return this;
     }
 
+    @SuppressWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     static String getStatusMessage(AbstractBuild r) {
       if (r.isBuilding()) {
         return STARTING_STATUS_MESSAGE;
@@ -345,6 +355,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
       return this;
     }
 
+    @SuppressWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
     private String createBackToNormalDurationString() {
       Run previousSuccessfulBuild = build.getPreviousSuccessfulBuild();
       long previousSuccessStartTime = previousSuccessfulBuild.getStartTimeInMillis();
