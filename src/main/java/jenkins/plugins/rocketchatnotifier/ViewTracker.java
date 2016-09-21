@@ -1,4 +1,4 @@
-package jenkins.plugins.rocket;
+package jenkins.plugins.rocketchatnotifier;
 
 import hudson.model.*;
 import jenkins.model.Jenkins;

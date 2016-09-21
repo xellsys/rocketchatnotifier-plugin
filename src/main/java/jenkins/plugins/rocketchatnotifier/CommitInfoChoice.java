@@ -1,4 +1,4 @@
-package jenkins.plugins.rocket;
+package jenkins.plugins.rocketchatnotifier;
 
 public enum CommitInfoChoice {
     NONE("nothing about commits",                             false, false),

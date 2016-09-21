@@ -1,4 +1,4 @@
-package jenkins.plugins.rocket;
+package jenkins.plugins.rocketchatnotifier;
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import hudson.EnvVars;
 import hudson.Extension;

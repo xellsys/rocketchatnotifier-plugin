@@ -1,4 +1,4 @@
-package jenkins.plugins.rocket.workflow;
+package jenkins.plugins.rocketchatnotifier.workflow;
 
 import hudson.AbortException;
 import hudson.Extension;
@@ -6,10 +6,10 @@ import hudson.Util;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import jenkins.model.Jenkins;
-import jenkins.plugins.rocket.Messages;
-import jenkins.plugins.rocket.RocketChatNotifier;
-import jenkins.plugins.rocket.RocketClient;
-import jenkins.plugins.rocket.RocketClientImpl;
+import jenkins.plugins.rocketchatnotifier.Messages;
+import jenkins.plugins.rocketchatnotifier.RocketChatNotifier;
+import jenkins.plugins.rocketchatnotifier.RocketClient;
+import jenkins.plugins.rocketchatnotifier.RocketClientImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;

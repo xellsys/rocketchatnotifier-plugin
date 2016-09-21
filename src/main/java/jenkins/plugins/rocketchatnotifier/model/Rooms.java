@@ -1,4 +1,4 @@
-package jenkins.plugins.rocket.model;
+package jenkins.plugins.rocketchatnotifier.model;
 
 public class Rooms {
 

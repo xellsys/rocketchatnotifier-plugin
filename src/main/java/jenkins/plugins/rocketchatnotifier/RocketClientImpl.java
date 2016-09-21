@@ -1,4 +1,4 @@
-package jenkins.plugins.rocket;
+package jenkins.plugins.rocketchatnotifier;
 
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -7,9 +7,9 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import jenkins.plugins.rocket.model.Message;
-import jenkins.plugins.rocket.model.Room;
-import jenkins.plugins.rocket.model.Rooms;
+import jenkins.plugins.rocketchatnotifier.model.Message;
+import jenkins.plugins.rocketchatnotifier.model.Room;
+import jenkins.plugins.rocketchatnotifier.model.Rooms;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -68,13 +68,16 @@ class RocketChatClient {
     Rooms rooms = (Rooms) this.authenticatedGet("publicRooms", Rooms.class);
     HashSet ret = new HashSet();
     this.roomCache.clear();
-    Room[] var3 = rooms.getRooms();
-    int var4 = var3.length;
+    Room[] roomsArray = rooms.getRooms();
+    int numberOfRooms = roomsArray.length;
 
-    for (int var5 = 0; var5 < var4; ++var5) {
-      Room r = var3[var5];
-      ret.add(r);
-      this.roomCache.put(r.getName(), r);
+    for (int i = 0; i < numberOfRooms; ++i) {
+      Room room = roomsArray[i];
+      if (room.getId() == null) {
+        room.setId(room.getName());
+      }
+      ret.add(room);
+      this.roomCache.put(room.getName(), room);
     }
 
     return ret;

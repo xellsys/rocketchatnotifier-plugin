@@ -18,7 +18,7 @@
   </properties>
 
 
-  <artifactId>rocket</artifactId>
+  <artifactId>rocketchatnotifier</artifactId>
   <version>0.2.0-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
@@ -47,7 +47,7 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>2.5.2</version>
         <configuration>
-          <tagNameFormat>rocket-@{project.version}</tagNameFormat>
+          <tagNameFormat>rocketchatnotifier-@{project.version}</tagNameFormat>
         </configuration>
       </plugin>
       <plugin>

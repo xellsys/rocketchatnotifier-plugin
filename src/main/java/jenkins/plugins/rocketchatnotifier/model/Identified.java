@@ -1,4 +1,4 @@
-package jenkins.plugins.rocket.model;
+package jenkins.plugins.rocketchatnotifier.model;
 
 public abstract class Identified implements Comparable<Identified> {
   private String _id;
@@ -7,9 +7,13 @@ public abstract class Identified implements Comparable<Identified> {
     return this._id;
   }
 
+  public void setId(String id) {
+    this._id = id;
+  }
+
   @Override
   public boolean equals(Object obj) {
-    if (obj != null && obj instanceof Identified  ) {
+    if (obj != null && obj instanceof Identified) {
       return ((Identified) obj)._id.equals(_id);
     } else {
       return false;
