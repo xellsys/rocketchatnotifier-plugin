@@ -73,9 +73,6 @@ class RocketChatClient {
 
     for (int i = 0; i < numberOfRooms; ++i) {
       Room room = roomsArray[i];
-      if (room.getId() == null) {
-        room.setId(room.getName());
-      }
       ret.add(room);
       this.roomCache.put(room.getName(), room);
     }
@@ -164,7 +161,7 @@ class RocketChatClient {
   }
 
   public void send(Room room, String message) throws IOException {
-    this.authenticatedPost("rooms/" + room.getId() + "/send", new Message(message));
+    this.authenticatedPost("rooms/" + room.get_id() + "/send", new Message(message));
   }
 
   public Room getRoom(String room) throws IOException {

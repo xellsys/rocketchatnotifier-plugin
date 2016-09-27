@@ -3,11 +3,11 @@ package jenkins.plugins.rocketchatnotifier.model;
 public abstract class Identified implements Comparable<Identified> {
   private String _id;
 
-  public String getId() {
+  public String get_id() {
     return this._id;
   }
 
-  public void setId(String id) {
+  public void set_id(String id) {
     this._id = id;
   }
 
