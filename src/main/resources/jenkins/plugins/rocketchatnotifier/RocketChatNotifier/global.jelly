@@ -15,7 +15,7 @@
   -->
 <f:section title="Global RocketChat Notifier Settings" name="rocket">
     <f:entry title="Rocket Server URL">
-        <f:textbox field="rocketServerUrl" name="rocketServer" value="${descriptor.getRocketServerURL()}" />
+        <f:textbox field="rocketServerURL" name="rocketServer" value="${descriptor.getRocketServerURL()}" />
     </f:entry>
     <f:entry title="Login Username">
         <f:textbox field="username" name="rocketUsername" value="${descriptor.getUsername()}" />
