@@ -53,7 +53,7 @@
         </f:entry>
 
         <f:entry title="Project Channel" >
-            <f:textbox name="rocketChannel" value="${instance.getRoom()}"/>
+            <f:textbox name="rocketChannel" value="${instance.getChannel()}"/>
         </f:entry>
         <f:validateButton
                 title="${%Test Connection}" progress="${%Testing...}"
