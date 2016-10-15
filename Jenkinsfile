@@ -3,7 +3,7 @@
 // only 20 builds
 properties([buildDiscarder(logRotator(artifactNumToKeepStr: '20', numToKeepStr: '20'))])
 
-node {
+node('docker') {
     deleteDir()
 
     def buildNumber = env.BUILD_NUMBER
