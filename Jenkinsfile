@@ -3,6 +3,7 @@
 // only 20 builds
 properties([
   disableConcurrentBuilds(),
+  [$class: 'GithubProjectProperty', displayName: '', projectUrlStr: 'https://github.com/jenkinsci/rocketchatnotifier-plugin/'],
   buildDiscarder(logRotator(artifactNumToKeepStr: '20', numToKeepStr: '20'))
 ])
 
@@ -28,8 +29,8 @@ node('docker') {
         sh "mvn package"
       }
 
-      junit allowEmptyResults: true, testResults: 'target/surefire-reports/TEST-*.xml'
-      archiveArtifacts allowEmptyArchive: true, artifacts: 'target/*.hpi'
+      junit testResults: 'target/surefire-reports/TEST-*.xml'
+      archiveArtifacts artifacts: 'target/*.hpi'
     }
   } catch (e) {
     mail subject: 'Error on build', to: 'github@martinreinhardt-online.de', body: "Please go to ${env.BUILD_URL}."
