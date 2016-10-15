@@ -28,11 +28,11 @@ node('docker') {
         sh "mvn package"
       }
 
-      step([$class: 'JUnitResultArchiver', testResults: '*/target/surefire-reports/TEST-*.xml'])
-      step([$class: 'ArtifactArchiver', artifacts: '*/target/*.hpi'])
+      junit allowEmptyResults: true, testResults: 'target/surefire-reports/TEST-*.xml'
+      archiveArtifacts allowEmptyArchive: true, artifacts: 'target/*.hpi'
     }
   } catch (e) {
-    mail subject: 'Error on build', to: 'github@martinreinhardt-online.de'
+    mail subject: 'Error on build', to: 'github@martinreinhardt-online.de', body: "Please go to ${env.BUILD_URL}."
     throw e
   }
 
