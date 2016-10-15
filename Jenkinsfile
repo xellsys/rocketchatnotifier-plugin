@@ -1,7 +1,10 @@
 #!groovy
 
 // only 20 builds
-properties([buildDiscarder(logRotator(artifactNumToKeepStr: '20', numToKeepStr: '20'))])
+properties([
+  disableConcurrentBuilds(),
+  buildDiscarder(logRotator(artifactNumToKeepStr: '20', numToKeepStr: '20'))
+])
 
 node('docker') {
 
@@ -17,7 +20,7 @@ node('docker') {
 
     try {
 	    docker.image('cloudbees/java-build-tools').inside {
-	        stage('Checkout') { 
+	        stage('Checkout') {
 	    		checkout scm
 	        }
 
@@ -27,7 +30,7 @@ node('docker') {
 
 	        step([$class: 'JUnitResultArchiver', testResults: '**/target/surefire-reports/TEST-*.xml'])
 	        step([$class: 'ArtifactArchiver', artifacts: '*/target/*.hpi'])
-		}        
+		}
     } catch (e) {
        mail subject: 'Error on build', to: 'github@martinreinhardt-online.de'
        throw e
