@@ -1,6 +1,8 @@
 # Rocket Chat Notification Plugin for Jenkins
 
-[![Build Status](https://travis-ci.org/jenkinsci/rocketchatnotifier-plugin.svg?branch=master)](https://travis-ci.org/jenkinsci/rocketchatnotifier-plugin) [![Build Status](https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/badge/icon)](https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/)
+[![Build Status](https://travis-ci.org/jenkinsci/rocketchatnotifier-plugin.svg?branch=master)](https://travis-ci.org/jenkinsci/rocketchatnotifier-plugin) 
+[![Build Status](https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/badge/icon)](https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/)
+[![Build Status](https://martinreinhardt-online.de/jenkins/buildStatus/icon?job=rocketchatnotifier-plugin/master)](https://martinreinhardt-online.de/jenkins/job/rocketchatnotifier-plugin/job/master/)
 
 ## Usage
 
