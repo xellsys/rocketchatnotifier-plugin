@@ -26,11 +26,18 @@ node('docker') {
       }
 
       stage('Build') {
-        sh "mvn package"
+        sh "mvn clean install"
+      }
+
+      stage('Test') {
       }
 
       junit testResults: 'target/surefire-reports/TEST-*.xml'
       archiveArtifacts artifacts: 'target/*.hpi'
+    }
+
+    stage('Deploy') {
+      sh "mvn deploy -DskipTests=true"
     }
   } catch (e) {
     mail subject: 'Error on build', to: 'github@martinreinhardt-online.de', body: "Please go to ${env.BUILD_URL}."

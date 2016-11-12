@@ -13,6 +13,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <jenkins.version>1.653</jenkins.version>
+    <java.level>7</java.level>
+    <jenkins-test-harness.version>2.13</jenkins-test-harness.version>
     <workflow.version>1.11</workflow.version>
     <!-- Project Libs-->
     <unirest.version>1.4.9</unirest.version>
@@ -62,30 +64,6 @@
           <compatibleSinceVersion>2.0</compatibleSinceVersion>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <version>0.12</version>
-        <configuration>
-          <repositoryOwner>baloise</repositoryOwner>
-          <repositoryName>rocket-chat-notifier</repositoryName>
-          <message>releasing ${project.version}</message>
-          <outputDirectory>${project.build.directory}</outputDirectory>
-          <includes>
-            <include>rocket-chat-notifier.hpi</include>
-          </includes>
-          <oauth2Token>${env.github_oauth2Token}</oauth2Token>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>site</goal>
-            </goals>
-            <phase>site</phase>
-          </execution>
-        </executions>
-      </plugin>
-
     </plugins>
   </build>
 
