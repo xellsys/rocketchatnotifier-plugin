@@ -37,7 +37,9 @@ node('docker') {
     }
 
     stage('Deploy') {
-      sh "mvn deploy -DskipTests=true"
+      sshagent (credentials: ['github-hypery2k']) {
+        sh "mvn deploy -DskipTests=true"
+      }
     }
   } catch (e) {
     mail subject: 'Error on build', to: 'github@martinreinhardt-online.de', body: "Please go to ${env.BUILD_URL}."
