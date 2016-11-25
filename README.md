@@ -4,6 +4,8 @@
 [![Build Status](https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/badge/icon)](https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/)
 [![Build Status](https://martinreinhardt-online.de/jenkins/buildStatus/icon?job=rocketchatnotifier-plugin/master)](https://martinreinhardt-online.de/jenkins/job/rocketchatnotifier-plugin/job/master/)
 
+See Wiki for [more details](https://wiki.jenkins-ci.org/display/JENKINS/RocketChat+Plugin).
+
 ## Usage
 
 You can use it in the Workflow/Pipeline DSL
