@@ -1,4 +1,5 @@
 package jenkins.plugins.rocketchatnotifier;
+
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -19,6 +20,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
+import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -328,7 +330,7 @@ public class RocketChatNotifier extends Notifier {
         }
         RocketChatClient rocketChatClient = getRocketChatClient(targetServerUrl, targetUsername, targetPassword);
         String message = "RocketChat/Jenkins plugin: you're all set on " + targetBuildServerUrl;
-        boolean success = false;
+        boolean success;
         try {
           rocketChatClient.send(targetChannel, message);
           success = true;
@@ -336,8 +338,10 @@ public class RocketChatNotifier extends Notifier {
           success = false;
         }
         return success ? FormValidation.ok("Success") : FormValidation.error("Failure");
+      } catch (ValidatorException e) {
+        return FormValidation.error(e, "SSL error");
       } catch (Exception e) {
-        return FormValidation.error("Client error : " + e.getMessage());
+        return FormValidation.error(e, "Client error : " + e.getMessage());
       }
     }
   }
