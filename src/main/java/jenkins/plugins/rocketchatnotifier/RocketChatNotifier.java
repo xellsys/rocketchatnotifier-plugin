@@ -24,12 +24,14 @@ import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings("rawtypes")
 public class RocketChatNotifier extends Notifier {
 
-  private static final Logger logger = Logger.getLogger(RocketChatNotifier.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(RocketChatNotifier.class.getName());
+
   private String rocketServerUrl;
   private String username;
   private String password;
@@ -70,6 +72,7 @@ public class RocketChatNotifier extends Notifier {
   }
 
   public String getBuildServerUrl() {
+    LOGGER.log(Level.FINE, "Getting build server URL");
     if (buildServerUrl == null || buildServerUrl.equalsIgnoreCase("")) {
       JenkinsLocationConfiguration jenkinsConfig = new JenkinsLocationConfiguration();
       return jenkinsConfig.getUrl();
@@ -199,7 +202,7 @@ public class RocketChatNotifier extends Notifier {
       Map<Descriptor<Publisher>, Publisher> map = build.getProject().getPublishersList().toMap();
       for (Publisher publisher : map.values()) {
         if (publisher instanceof RocketChatNotifier) {
-          logger.info("Invoking Started...");
+          LOGGER.info("Invoking Started...");
           new ActiveNotifier((RocketChatNotifier) publisher, listener).started(build);
         }
       }
@@ -339,8 +342,10 @@ public class RocketChatNotifier extends Notifier {
         }
         return success ? FormValidation.ok("Success") : FormValidation.error("Failure");
       } catch (ValidatorException e) {
-        return FormValidation.error(e, "SSL error");
+        LOGGER.severe("SSL Error during trying to send rocket message");
+        return FormValidation.error(e, "SSL error", e);
       } catch (Exception e) {
+        LOGGER.severe("Client error during trying to send rocket message");
         return FormValidation.error(e, "Client error : " + e.getMessage());
       }
     }
