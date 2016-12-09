@@ -1,4 +1,5 @@
 package jenkins.plugins.rocketchatnotifier;
+
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import hudson.EnvVars;
 import hudson.Extension;
@@ -19,15 +20,18 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
+import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @SuppressWarnings("rawtypes")
 public class RocketChatNotifier extends Notifier {
 
-  private static final Logger logger = Logger.getLogger(RocketChatNotifier.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(RocketChatNotifier.class.getName());
+
   private String rocketServerUrl;
   private String username;
   private String password;
@@ -68,6 +72,7 @@ public class RocketChatNotifier extends Notifier {
   }
 
   public String getBuildServerUrl() {
+    LOGGER.log(Level.FINE, "Getting build server URL");
     if (buildServerUrl == null || buildServerUrl.equalsIgnoreCase("")) {
       JenkinsLocationConfiguration jenkinsConfig = new JenkinsLocationConfiguration();
       return jenkinsConfig.getUrl();
@@ -197,7 +202,7 @@ public class RocketChatNotifier extends Notifier {
       Map<Descriptor<Publisher>, Publisher> map = build.getProject().getPublishersList().toMap();
       for (Publisher publisher : map.values()) {
         if (publisher instanceof RocketChatNotifier) {
-          logger.info("Invoking Started...");
+          LOGGER.info("Invoking Started...");
           new ActiveNotifier((RocketChatNotifier) publisher, listener).started(build);
         }
       }
@@ -328,7 +333,7 @@ public class RocketChatNotifier extends Notifier {
         }
         RocketChatClient rocketChatClient = getRocketChatClient(targetServerUrl, targetUsername, targetPassword);
         String message = "RocketChat/Jenkins plugin: you're all set on " + targetBuildServerUrl;
-        boolean success = false;
+        boolean success;
         try {
           rocketChatClient.send(targetChannel, message);
           success = true;
@@ -336,8 +341,12 @@ public class RocketChatNotifier extends Notifier {
           success = false;
         }
         return success ? FormValidation.ok("Success") : FormValidation.error("Failure");
+      } catch (ValidatorException e) {
+        LOGGER.severe("SSL Error during trying to send rocket message");
+        return FormValidation.error(e, "SSL error", e);
       } catch (Exception e) {
-        return FormValidation.error("Client error : " + e.getMessage());
+        LOGGER.severe("Client error during trying to send rocket message");
+        return FormValidation.error(e, "Client error : " + e.getMessage());
       }
     }
   }

@@ -11,17 +11,21 @@ import jenkins.plugins.rocketchatnotifier.model.Message;
 import jenkins.plugins.rocketchatnotifier.model.Room;
 import jenkins.plugins.rocketchatnotifier.model.Rooms;
 import org.json.JSONObject;
+import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * Created by mreinhardt on 08.09.16.
  */
 public class RocketClientImpl implements RocketClient {
+
+  private static final Logger LOG = Logger.getLogger(RocketClientImpl.class.getName());
 
   public static final String API_PATH = "/api/";
 
@@ -37,8 +41,11 @@ public class RocketClientImpl implements RocketClient {
 
   public boolean publish(String message) {
     try {
+      LOG.fine("Starting sending message to channel " + this.channel);
       this.client.send(this.channel, message);
       return true;
+    } catch (ValidatorException e) {
+      return false;
     } catch (IOException e) {
       return false;
     }
@@ -94,11 +101,11 @@ class RocketChatClient {
     }
   }
 
-  private void authenticatedPost(String method, Object request) throws IOException {
+  private void authenticatedPost(String method, Object request) throws ValidatorException, IOException {
     this.authenticatedPost(method, request, (Class) null);
   }
 
-  private <T> T authenticatedPost(String method, Object request, Class<T> reponseClass) throws IOException {
+  private <T> T authenticatedPost(String method, Object request, Class<T> reponseClass) throws ValidatorException, IOException {
     try {
       HttpResponse e = Unirest.post(this.serverUrl + method).header("X-Auth-Token", this.xAuthToken).header("X-User-Id", this.xUserId).header("Content-Type", "application/json").body(this.jacksonObjectMapper.writeValueAsString(request)).asString();
       if (e.getStatus() == 401) {
@@ -151,7 +158,7 @@ class RocketChatClient {
     return this.lazyVersions;
   }
 
-  public void send(String roomName, String message) throws IOException {
+  public void send(String roomName, String message) throws ValidatorException, IOException {
     Room room = this.getRoom(roomName);
     if (room == null) {
       throw new IOException(String.format("unknown room : %s", new Object[]{roomName}));
@@ -160,7 +167,7 @@ class RocketChatClient {
     }
   }
 
-  public void send(Room room, String message) throws IOException {
+  public void send(Room room, String message) throws ValidatorException, IOException {
     this.authenticatedPost("rooms/" + room.get_id() + "/send", new Message(message));
   }
 

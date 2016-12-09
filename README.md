@@ -4,7 +4,7 @@
 [![Build Status](https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/badge/icon)](https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/)
 [![Build Status](https://martinreinhardt-online.de/jenkins/buildStatus/icon?job=rocketchatnotifier-plugin/master)](https://martinreinhardt-online.de/jenkins/job/rocketchatnotifier-plugin/job/master/)
 
-See Wiki for [more details](https://wiki.jenkins-ci.org/display/JENKINS/RocketChat+Plugin).
+The current alpha is available via the [Experimental Plugins Update Center](https://jenkins.io/blog/2013/09/23/experimental-plugins-update-center/).
 
 ## Usage
 
@@ -46,3 +46,25 @@ You can define a default notification channel:
 
 
 ![sampel message](rocket_admin_settings.png)
+
+# Contribution
+
+## Bugs
+
+If you find a bug in the source code or a mistake in the documentation, you can help us by
+submitting an issue to our [JIRA](https://issues.jenkins-ci.org/browse/JENKINS-39690?jql=project%20%3D%20JENKINS%20AND%20component%20%3D%20rocket-chat-notifier-plugin). Even better you can submit a Pull Request
+with a fix.
+
+First search if the issue is already described!
+
+If not create a new issue:
+
+* Tell about your environment:
+  * operating system and version
+  * Jenkins version
+  * Java version
+  * RocketChat version
+* Describe your issue
+  * describe your steps leading to the issue
+  * attach error logs or screenshots
+  * if possible provide test case or screenshots

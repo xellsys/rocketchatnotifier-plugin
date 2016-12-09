@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.util.logging.Level.INFO;
@@ -25,7 +26,7 @@ import static java.util.logging.Level.SEVERE;
 @SuppressWarnings("rawtypes")
 public class ActiveNotifier implements FineGrainedNotifier {
 
-  private static final Logger logger = Logger.getLogger(RocketChatNotifier.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(RocketChatNotifier.class.getName());
 
   RocketChatNotifier notifier;
   BuildListener listener;
@@ -74,6 +75,9 @@ public class ActiveNotifier implements FineGrainedNotifier {
   }
 
   public void completed(AbstractBuild r) {
+    if (LOGGER.isLoggable(Level.INFO)) {
+      LOGGER.info("Build completed. Checking for rocket notifiers");
+    }
     if (r != null) {
       AbstractProject<?, ?> project = r.getProject();
       Result result = r.getResult();
@@ -110,7 +114,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
 
   String getChanges(AbstractBuild r, boolean includeCustomMessage) {
     if (!r.hasChangeSetComputed()) {
-      logger.info("No change set computed...");
+      LOGGER.info("No change set computed...");
       return null;
     }
     ChangeLogSet changeSet = r.getChangeSet();
@@ -118,12 +122,12 @@ public class ActiveNotifier implements FineGrainedNotifier {
     Set<AffectedFile> files = new HashSet<AffectedFile>();
     for (Object o : changeSet.getItems()) {
       Entry entry = (Entry) o;
-      logger.info("Entry " + o);
+      LOGGER.info("Entry " + o);
       entries.add(entry);
       files.addAll(entry.getAffectedFiles());
     }
     if (entries.isEmpty()) {
-      logger.info("Empty change...");
+      LOGGER.info("Empty change...");
       return null;
     }
     Set<String> authors = new HashSet<String>();
@@ -148,11 +152,11 @@ public class ActiveNotifier implements FineGrainedNotifier {
     List<Entry> entries = new LinkedList<Entry>();
     for (Object o : changeSet.getItems()) {
       Entry entry = (Entry) o;
-      logger.info("Entry " + o);
+      LOGGER.info("Entry " + o);
       entries.add(entry);
     }
     if (entries.isEmpty()) {
-      logger.info("Empty change...");
+      LOGGER.info("Empty change...");
       Cause.UpstreamCause c = (Cause.UpstreamCause) r.getCause(Cause.UpstreamCause.class);
       if (c == null) {
         return "No Changes.";
@@ -344,11 +348,11 @@ public class ActiveNotifier implements FineGrainedNotifier {
       String customMessage = notifier.getCustomMessage();
       EnvVars envVars = new EnvVars();
       try {
-        envVars = build.getEnvironment(new LogTaskListener(logger, INFO));
+        envVars = build.getEnvironment(new LogTaskListener(LOGGER, INFO));
       } catch (IOException e) {
-        logger.log(SEVERE, e.getMessage(), e);
+        LOGGER.log(SEVERE, e.getMessage(), e);
       } catch (InterruptedException e) {
-        logger.log(SEVERE, e.getMessage(), e);
+        LOGGER.log(SEVERE, e.getMessage(), e);
       }
       message.append("\n");
       message.append(envVars.expand(customMessage));
