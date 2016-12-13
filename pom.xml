@@ -23,7 +23,7 @@
     <powermock.version>1.6.2</powermock.version>
   </properties>
 
-
+  <name>RocketChat Notifier</name>
   <artifactId>rocketchatnotifier</artifactId>
   <version>0.3.0</version>
   <packaging>hpi</packaging>
