@@ -1,0 +1,7 @@
+ports:
+  - ${mongo.port}
+healthChecks:
+  pings:
+    - url: http://localhost:${mongo.port}/
+      timeout: 60000
+tag: jenkins-plugin/${project.artifactId}-mongo:${project.version}
