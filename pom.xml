@@ -26,12 +26,16 @@
     <rocket.version>latest</rocket.version>
     <rocket.port>4443</rocket.port>
     <mongo.port>27017</mongo.port>
+    <!-- Maven Plugins -->
+    <maven-release-plugin.version>2.5.1</maven-release-plugin.version>
+    <maven-site-plugin.version>3.3</maven-site-plugin.version>
+    <jgitflow-maven-plugin.version>1.0-m5.1</jgitflow-maven-plugin.version>
     <docker-maven-plugin.version>2.11.19</docker-maven-plugin.version>
   </properties>
 
-
+  <name>RocketChat Notifier</name>
   <artifactId>rocketchatnotifier</artifactId>
-  <version>0.3.0-SNAPSHOT</version>
+  <version>0.3.2-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the
@@ -54,6 +58,36 @@
   </pluginRepositories>
 
   <build>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>${maven-release-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>sql-maven-plugin</artifactId>
+          <version>${sql-maven-plugin.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>external.atlassian.jgitflow</groupId>
+          <artifactId>jgitflow-maven-plugin</artifactId>
+          <version>${jgitflow-maven-plugin.version}</version>
+          <configuration>
+            <flowInitContext>
+              <masterBranchName>master</masterBranchName>
+              <developBranchName>develop</developBranchName>
+              <featureBranchPrefix>feature-</featureBranchPrefix>
+              <releaseBranchPrefix>release-</releaseBranchPrefix>
+              <hotfixBranchPrefix>hotfix-</hotfixBranchPrefix>
+              <versionTagPrefix></versionTagPrefix>
+            </flowInitContext>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>com.alexecollins.docker</groupId>
@@ -83,6 +117,28 @@
         <configuration>
           <compatibleSinceVersion>2.0</compatibleSinceVersion>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>external.atlassian.jgitflow</groupId>
+        <artifactId>jgitflow-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>${maven-site-plugin.version}</version>
+        <dependencies>
+          <dependency>
+            <groupId>lt.velykis.maven.skins</groupId>
+            <artifactId>reflow-velocity-tools</artifactId>
+            <version>1.1.1</version>
+          </dependency>
+          <!-- Reflow skin requires Velocity >= 1.7  -->
+          <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>
@@ -286,8 +342,7 @@
 
   <issueManagement>
     <system>JIRA</system>
-    <url>https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+component+%3D+rocket-chat-notifier-plugin
-    </url>
+    <url>https://issues.jenkins-ci.org/browse/JENKINS-40595?jql=project%20%3D%20JENKINS%20AND%20component%20%3D%20rocket-chat-notifier-plugin</url>
   </issueManagement>
 
   <ciManagement>
