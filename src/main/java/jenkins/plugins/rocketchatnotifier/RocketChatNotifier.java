@@ -15,6 +15,7 @@ import hudson.tasks.Publisher;
 import hudson.util.FormValidation;
 import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.plugins.rocketchatnotifier.rocket.RocketChatClient;
+import jenkins.plugins.rocketchatnotifier.rocket.RocketChatClientImpl;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -298,7 +299,7 @@ public class RocketChatNotifier extends Notifier {
     }
 
     RocketChatClient getRocketChatClient(final String rocketServerURL, final String username, final String password) {
-      return new RocketChatClient(rocketServerURL, username, password);
+      return new RocketChatClientImpl(rocketServerURL, username, password);
     }
 
     @Override

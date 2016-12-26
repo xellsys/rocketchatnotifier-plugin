@@ -30,6 +30,7 @@ node('docker') {
       }
 
       stage('Test') {
+        sh "mvn -Pdocker clean verify"
       }
 
       junit testResults: 'target/surefire-reports/TEST-*.xml'
