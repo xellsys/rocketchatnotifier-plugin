@@ -14,10 +14,7 @@ import org.json.JSONObject;
 import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by mreinhardt on 26.12.16.
@@ -163,6 +160,6 @@ public class LegacyRocketChatClient implements RocketChatClient {
 
   @Override
   public Room[] getChannels() throws IOException {
-    return new Room[0];
+   return this.getPublicRooms().toArray(new Room[0]);
   }
 }
