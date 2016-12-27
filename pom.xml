@@ -148,18 +148,19 @@
   <profiles>
     <profile>
       <id>docker</id>
-      <properties>
-        <webdriver.base.url>http://localhost:41080/</webdriver.base.url>
-      </properties>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-failsafe-plugin</artifactId>
-            <goals>
-              <goal>integration-test</goal>
-              <goal>verify</goal>
-            </goals>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>integration-test</goal>
+                  <goal>verify</goal>
+                </goals>
+              </execution>
+            </executions>
             <configuration>
               <!-- Sets the VM argument line used when unit tests are run. -->
               <argLine>${failsafeArgLine}</argLine>
