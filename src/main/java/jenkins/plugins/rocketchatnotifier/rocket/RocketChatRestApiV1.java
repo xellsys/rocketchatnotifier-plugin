@@ -24,7 +24,11 @@ public enum RocketChatRestApiV1 {
   /**
    * Retrieves a list of all the channels in the server.
    */
-  ChannelsInfo("channels.info", HttpMethods.GET, true);
+  ChannelsInfo("channels.info", HttpMethods.GET, true),
+  /**
+   * Retrieves a list of all the channels in the server.
+   */
+  PostMessage("chat.postMessage", HttpMethods.POST, true);
 
   private String methodName;
   private HttpMethods httpMethod;

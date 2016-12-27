@@ -6,6 +6,8 @@ import jenkins.plugins.rocketchatnotifier.model.User;
 import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Client for Rocket.Chat which relies on the REST API v1.
@@ -69,11 +71,18 @@ public class RocketChatClientImpl implements RocketChatClient {
 
   @Override
   public void send(Room room, String message) throws ValidatorException, IOException {
-
+    this.send(room.getName(), message);
   }
 
   @Override
-  public void send(String room, String message) throws ValidatorException, IOException {
-
+  public void send(String channelName, String message) throws ValidatorException, IOException {
+    Map body = new HashMap<String, String>();
+    body.put("channel", "#" + channelName);
+    body.put("text", message);
+    Response res = this.callBuilder.buildCall(RocketChatRestApiV1.PostMessage,
+      null, body);
+    if (!res.isSuccessful()) {
+      throw new IOException("The send of the message was unsuccessful.");
+    }
   }
 }

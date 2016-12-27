@@ -38,6 +38,13 @@ public interface RocketChatClient {
 
   void send(Room room, String message) throws ValidatorException, IOException;
 
-  void send(String room, String message) throws ValidatorException, IOException;
+  /**
+   *
+   * @param channelName
+   * @param message
+   * @throws ValidatorException
+   * @throws IOException
+   */
+  void send(String channelName, String message) throws ValidatorException, IOException;
 
 }

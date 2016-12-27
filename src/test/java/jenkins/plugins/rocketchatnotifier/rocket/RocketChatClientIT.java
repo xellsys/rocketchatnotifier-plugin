@@ -24,4 +24,11 @@ public class RocketChatClientIT {
     Room[] rooms = this.client.getChannels();
     assertThat(rooms.length, is(1));
   }
+
+  @Test
+  public void shouldSendMessage() throws Exception {
+    this.client.send("general", "test");
+  }
+
+
 }
