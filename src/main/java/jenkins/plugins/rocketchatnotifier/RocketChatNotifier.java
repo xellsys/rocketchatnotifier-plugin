@@ -14,15 +14,12 @@ import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
 import hudson.util.FormValidation;
 import jenkins.model.JenkinsLocationConfiguration;
-import jenkins.plugins.rocketchatnotifier.rocket.RocketChatClient;
-import jenkins.plugins.rocketchatnotifier.rocket.RocketChatClientImpl;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
-import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -298,10 +295,6 @@ public class RocketChatNotifier extends Notifier {
       return super.configure(sr, formData);
     }
 
-    RocketChatClient getRocketChatClient(final String rocketServerURL, final String username, final String password) {
-      return new RocketChatClientImpl(rocketServerURL, username, password);
-    }
-
     @Override
     public String getDisplayName() {
       return "RocketChat Notifications";
@@ -333,19 +326,13 @@ public class RocketChatNotifier extends Notifier {
         if (StringUtils.isEmpty(targetBuildServerUrl)) {
           targetBuildServerUrl = this.buildServerUrl;
         }
-        RocketChatClient rocketChatClient = getRocketChatClient(targetServerUrl, targetUsername, targetPassword);
+        RocketClient rocketChatClient = new RocketClientImpl(targetServerUrl, targetUsername, targetPassword, targetChannel);
         String message = "RocketChat/Jenkins plugin: you're all set on " + targetBuildServerUrl;
-        boolean success;
-        try {
-          rocketChatClient.send(targetChannel, message);
-          success = true;
-        } catch (IOException e) {
-          success = false;
-        }
-        return success ? FormValidation.ok("Success") : FormValidation.error("Failure");
-      } catch (ValidatorException e) {
-        LOGGER.severe("SSL Error during trying to send rocket message");
-        return FormValidation.error(e, "SSL error", e);
+        rocketChatClient.publish(message);
+        return FormValidation.ok("Success");
+        // } catch (ValidatorException e) {
+        //  LOGGER.severe("SSL Error during trying to send rocket message");
+        //  return FormValidation.error(e, "SSL error", e);
       } catch (Exception e) {
         LOGGER.severe("Client error during trying to send rocket message");
         return FormValidation.error(e, "Client error : " + e.getMessage());

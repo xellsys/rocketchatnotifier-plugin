@@ -9,6 +9,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import jenkins.plugins.rocketchatnotifier.model.Message;
 import jenkins.plugins.rocketchatnotifier.model.Room;
 import jenkins.plugins.rocketchatnotifier.model.Rooms;
+import jenkins.plugins.rocketchatnotifier.model.User;
 import org.json.JSONObject;
 import sun.security.validator.ValidatorException;
 
@@ -21,7 +22,8 @@ import java.util.Set;
 /**
  * Created by mreinhardt on 26.12.16.
  */
-public class LegacyRocketChatClient {
+@Deprecated
+public class LegacyRocketChatClient implements RocketChatClient {
   private final String serverUrl;
   private final String user;
   private final String password;
@@ -147,5 +149,20 @@ public class LegacyRocketChatClient {
     }
 
     return ret;
+  }
+
+  @Override
+  public User[] getUsers() throws IOException {
+    return new User[0];
+  }
+
+  @Override
+  public User getUser(String userId) throws IOException {
+    return null;
+  }
+
+  @Override
+  public Room[] getChannels() throws IOException {
+    return new Room[0];
   }
 }
