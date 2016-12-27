@@ -17,7 +17,11 @@ public class RocketChatClientIT {
   @Before
   public void setup() throws Exception {
     String rocketVersionString = System.getProperty("rocket.version", "0.48.2");
-    int rocketVersion = Integer.parseInt(rocketVersionString.split("\\.")[1]);
+    int rocketVersion = 48;
+    try {
+      rocketVersion= Integer.parseInt(rocketVersionString.split("\\.")[1]);
+    } catch (Exception ignored) {
+    }
     if (rocketVersion >= 48) {
       this.client = new RocketChatClientImpl("http://localhost:4443/api/", "admin", "supersecret"); // TODO read from env
     } else {
