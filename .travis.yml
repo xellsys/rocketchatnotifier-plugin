@@ -1,6 +1,13 @@
+sudo: required
+
+services:
+  - docker
+
 language: java
 
-script: mvn clean package --quiet
+script:
+  - mvn clean package --quiet
+  - mvn -Pdocker verify
 
 cache:
   directories:
