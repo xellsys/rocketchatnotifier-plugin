@@ -14,7 +14,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <jenkins.version>1.653</jenkins.version>
     <java.level>7</java.level>
-    <failsafeArgLine></failsafeArgLine>
+    <failsafeArgLine />
     <skipITs>false</skipITs>
     <jenkins-test-harness.version>2.13</jenkins-test-harness.version>
     <workflow.version>1.11</workflow.version>
@@ -36,7 +36,7 @@
 
   <name>RocketChat Notifier</name>
   <artifactId>rocketchatnotifier</artifactId>
-  <version>0.4.0</version>
+  <version>0.4.1-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the
