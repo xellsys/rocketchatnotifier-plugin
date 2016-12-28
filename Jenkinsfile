@@ -30,6 +30,7 @@ node('docker') {
       }
 
       stage('Test') {
+        sh "mvn -Pdocker clean test" // TODO docker in Jenkins
       }
 
       junit testResults: 'target/surefire-reports/TEST-*.xml'

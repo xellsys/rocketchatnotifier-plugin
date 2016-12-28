@@ -1,6 +1,26 @@
+sudo: required
+
+services:
+  - docker
+
 language: java
 
-script: mvn clean package --quiet
+env:
+  matrix:
+   - RC_VERSION=latest
+   - RC_VERSION=0.48.2
+   - RC_VERSION=0.48.1
+   - RC_VERSION=0.48.0
+   - RC_VERSION=0.47.1
+   - RC_VERSION=0.46.0
+   - RC_VERSION=0.45.0
+   - RC_VERSION=0.44.0
+   - RC_VERSION=0.43.0
+   - RC_VERSION=0.42.0
+
+script:
+  - mvn clean package --quiet
+  - mvn -Pdocker verify -Drocket.version=$RC_VERSION
 
 cache:
   directories:

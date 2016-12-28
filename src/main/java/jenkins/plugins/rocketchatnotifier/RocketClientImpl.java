@@ -1,7 +1,9 @@
 package jenkins.plugins.rocketchatnotifier;
 
 
+import jenkins.plugins.rocketchatnotifier.rocket.LegacyRocketChatClient;
 import jenkins.plugins.rocketchatnotifier.rocket.RocketChatClient;
+import jenkins.plugins.rocketchatnotifier.rocket.RocketChatClientImpl;
 import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
@@ -22,7 +24,13 @@ public class RocketClientImpl implements RocketClient {
 
 
   public RocketClientImpl(String serverUrl, String user, String password, String channel) {
-    this.client = new RocketChatClient(serverUrl + API_PATH, user, password);
+    this.client = new RocketChatClientImpl(serverUrl + API_PATH, user, password);
+    try {
+      this.client.getChannels();
+    } catch (IOException e) {
+      // TODO remove this dirty check
+      this.client = new LegacyRocketChatClient(serverUrl + API_PATH, user, password);
+    }
     this.channel = channel;
   }
 
