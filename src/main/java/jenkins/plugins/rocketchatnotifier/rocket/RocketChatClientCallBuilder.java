@@ -74,6 +74,8 @@ public class RocketChatClientCallBuilder {
       loginResult = Unirest.post(serverUrl + "v1/login").field("user", user).field("password", password).asJson();
     } catch (UnirestException e) {
       throw new IOException(e);
+    } catch (Exception e) {
+      throw new IOException(e);
     }
 
     if (loginResult.getStatus() == 401)

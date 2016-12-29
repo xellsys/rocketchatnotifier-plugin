@@ -39,11 +39,21 @@ public class RocketClientImpl implements RocketClient {
       LOG.fine("Starting sending message to channel " + this.channel);
       this.client.send(this.channel, message);
       return true;
-    } catch (ValidatorException e) {
-      return false;
     } catch (IOException e) {
+      LOG.severe("I/O error");
+      LOG.throwing(RocketClientImpl.class.getName(), "publish", e);
+      return false;
+    } catch (Exception e) {
+      LOG.severe("Unknown error");
+      LOG.throwing(RocketClientImpl.class.getName(), "publish", e);
       return false;
     }
+  }
+
+  @Override
+  public void validate() throws ValidatorException, IOException {
+    LOG.fine("Starting validating");
+    this.client.getChannels();
   }
 }
 
