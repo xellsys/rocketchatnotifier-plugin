@@ -46,7 +46,7 @@ node('docker') {
           sh "mvn deploy -DskipTests=true"
           // nightly build
         } else {
-          sh "mvn deploy -DskipTests=true -DfinalName=rocketchatnotifier_${projectVersion}-alpha-build_${buildNumber}"
+          sh "mvn deploy -DskipTests=true -DartifactSuffix=-alpha"
         }
       }
     }

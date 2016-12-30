@@ -8,7 +8,7 @@
   </parent>
 
   <properties>
-    <finalName>${project.artifactId}-${project.version}</finalName>
+    <artifactSuffix></artifactSuffix>
     <jenkins.version>1.653</jenkins.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
@@ -35,7 +35,7 @@
   </properties>
 
   <name>RocketChat Notifier</name>
-  <artifactId>rocketchatnotifier</artifactId>
+  <artifactId>rocketchatnotifier${artifactSuffix}</artifactId>
   <version>0.4.5-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
