@@ -8,6 +8,7 @@
   </parent>
 
   <properties>
+    <finalName>${project.artifactId}-${project.version}</finalName>
     <jenkins.version>1.653</jenkins.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
@@ -58,6 +59,9 @@
   </pluginRepositories>
 
   <build>
+
+    <defaultGoal>clean test</defaultGoal>
+    <finalName>${finalName}</finalName>
 
     <pluginManagement>
       <plugins>
