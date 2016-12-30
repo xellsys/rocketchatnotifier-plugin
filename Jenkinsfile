@@ -20,25 +20,23 @@ node('docker') {
   echo "PATH is $env.PATH"
 
   try {
-    docker.image('cloudbees/java-build-tools').inside {
-      stage('Checkout') {
-        checkout scm
-      }
-
-      stage('Build') {
-        sh "mvn clean install"
-      }
-
-      stage('Test') {
-        sh "mvn -Pdocker clean test" // TODO docker in Jenkins
-      }
-
-      junit testResults: 'target/surefire-reports/TEST-*.xml'
-      archiveArtifacts artifacts: 'target/*.hpi'
+    stage('Checkout') {
+      checkout scm
     }
 
+    stage('Build') {
+      sh "mvn clean install"
+    }
+
+    stage('Test') {
+      sh "mvn -Pdocker clean verify"
+    }
+
+    junit testResults: 'target/surefire-reports/TEST-*.xml'
+    archiveArtifacts artifacts: 'target/*.hpi'
+
     stage('Deploy') {
-      sshagent (credentials: ['github-hypery2k']) {
+      sshagent(credentials: ['github-hypery2k']) {
         sh "mvn deploy -DskipTests=true"
       }
     }

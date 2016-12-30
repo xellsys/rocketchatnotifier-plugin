@@ -20,6 +20,7 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
+import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -328,14 +329,19 @@ public class RocketChatNotifier extends Notifier {
         }
         RocketClient rocketChatClient = new RocketClientImpl(targetServerUrl, targetUsername, targetPassword, targetChannel);
         String message = "RocketChat/Jenkins plugin: you're all set on " + targetBuildServerUrl;
+        LOGGER.fine("Start validating config");
+        rocketChatClient.validate();
+        LOGGER.fine("Done validating config");
+        LOGGER.fine("Start publishing message");
         rocketChatClient.publish(message);
+        LOGGER.fine("Done publishing message");
         return FormValidation.ok("Success");
-        // } catch (ValidatorException e) {
-        //  LOGGER.severe("SSL Error during trying to send rocket message");
-        //  return FormValidation.error(e, "SSL error", e);
+      } catch (ValidatorException e) {
+        LOGGER.log(Level.SEVERE, "SSL error during trying to send rocket message", e);
+        return FormValidation.error(e, "SSL error", e);
       } catch (Exception e) {
-        LOGGER.severe("Client error during trying to send rocket message");
-        return FormValidation.error(e, "Client error : " + e.getMessage());
+        LOGGER.log(Level.SEVERE, "Client error during trying to send rocket message", e);
+        return FormValidation.error(e, "Client error - Could not send message");
       }
     }
   }

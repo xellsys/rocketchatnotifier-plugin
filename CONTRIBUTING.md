@@ -1,4 +1,4 @@
-# Contributing to Holisticon AngularCommon
+# Contributing to RocketChat Jenkins Notifier Plugin
 
 We'd love for you to contribute to our source code and to make this package even better than it is
 today! Here are the guidelines we'd like you to follow:
@@ -42,3 +42,14 @@ To ensure consistency throughout the source code, keep these rules in mind as yo
 ## <a name="commit"></a> Git Commit Guidelines
 
 We're using [Angular Commit Guidelines](https://github.com/angular/angular.js/blob/master/CONTRIBUTING.md#-git-commit-guidelines)
+
+
+## <a name="debug"></a> Debug plugin
+
+To debug the plugin in jenkins:
+```
+export MAVEN_OPTS="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,address=8000,suspend=n"
+mvn hpi:run
+```
+
+Now you can debug the plugin via port 8000
