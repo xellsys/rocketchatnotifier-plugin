@@ -1,30 +1,13 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v0.4.1...v) (2016-12-30)
-
-
-
-<<<<<<< HEAD
-<a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v0.4.1...v) (2016-12-30)
-
-
-=======
-<a name="0.4.1"></a>
-# [0.4.1](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.4.1...v0.4.1) (2016-12-30)
-
-### Bug Fixes
-
-* **config:** Read correct jenkins/RocketChat server url
->>>>>>> refs/heads/release-0.4.3
-
-<a name="0.4.0"></a>
-# [0.4.0](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v0.3.0...v0.4.0) (2016-12-28)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.4.3...v) (2016-12-30)
 
 
 ### Bug Fixes
 
 * **build:** Use name for plugin ([e99f771](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/e99f771))
+* **dependencies:** resolve classpath error ([c88cb48](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/c88cb48))
 * **docker-tests:** Fix docker setup (see #JENKINS-40673) ([52c6316](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/52c6316)), closes [#JENKINS-40673](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40673)
+* **findbugs:** resolve findbugs error ([c972250](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/c972250))
 
 
 ### Features
