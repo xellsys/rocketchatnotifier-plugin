@@ -28,6 +28,8 @@ public class RocketClientImpl implements RocketClient {
     try {
       this.client.getChannels();
     } catch (IOException e) {
+      LOG.severe("I/O error");
+      LOG.throwing(RocketClientImpl.class.getName(), "_constructor", e);
       // TODO remove this dirty check
       this.client = new LegacyRocketChatClient(serverUrl + API_PATH, user, password);
     }

@@ -19,15 +19,19 @@ import org.kohsuke.stapler.DataBoundSetter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
  * Workflow step to send a rocket channel notification.
  */
 public class RocketSendStep extends AbstractStepImpl {
-  private final
+
+  private static final Logger LOG = Logger.getLogger(RocketSendStep.class.getName());
+
   @Nonnull
-  String message;
+  private final String message;
   private String channel;
   private boolean failOnError;
 
@@ -93,6 +97,11 @@ public class RocketSendStep extends AbstractStepImpl {
 
     @Override
     protected Void run() throws Exception {
+      Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+        public void uncaughtException(Thread t, Throwable e) {
+          LOG.log(Level.SEVERE, t + " runStep threw an exception: ", e);
+        }
+      });
 
       //default to global config values if not set in step, but allow step to override all global settings
       Jenkins jenkins;

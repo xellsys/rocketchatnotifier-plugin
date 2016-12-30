@@ -1,5 +1,6 @@
 package jenkins.plugins.rocketchatnotifier.rocket;
 
+import jenkins.plugins.rocketchatnotifier.RocketClientImpl;
 import jenkins.plugins.rocketchatnotifier.model.Response;
 import jenkins.plugins.rocketchatnotifier.model.Room;
 import jenkins.plugins.rocketchatnotifier.model.User;
@@ -8,6 +9,7 @@ import sun.security.validator.ValidatorException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Client for Rocket.Chat which relies on the REST API v1.
@@ -19,6 +21,8 @@ import java.util.Map;
  */
 public class RocketChatClientImpl implements RocketChatClient {
   private RocketChatClientCallBuilder callBuilder;
+
+  private static final Logger LOG = Logger.getLogger(RocketClientImpl.class.getName());
 
   /**
    * Initialize a new instance of the client providing the server's url along with username and
@@ -38,9 +42,11 @@ public class RocketChatClientImpl implements RocketChatClient {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.UsersList);
 
     if (!res.isSuccessful()) {
+      LOG.severe("Could not read users information: " + res.getMessage().getMsg());
       throw new IOException("The call to get the User's Information was unsuccessful.");
     }
     if (!res.isUsers()) {
+      LOG.severe("Failed to read users information: " + res.getMessage().getMsg());
       throw new IOException("Get User Information failed to retrieve a user.");
     }
     return res.getUsers();
@@ -50,12 +56,14 @@ public class RocketChatClientImpl implements RocketChatClient {
   public User getUser(String userId) throws IOException {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.UsersInfo, new RocketChatQueryParams("userId", userId));
 
-    if (!res.isSuccessful())
+    if (!res.isSuccessful()) {
+      LOG.severe("Could not read user information: " + res.getMessage().getMsg());
       throw new IOException("The call to get the User's Information was unsuccessful.");
-
-    if (!res.isUser())
+    }
+    if (!res.isUser()) {
+      LOG.severe("Failed to read users information: " + res.getMessage().getMsg());
       throw new IOException("Get User Information failed to retrieve a user.");
-
+    }
     return res.getUser();
   }
 
@@ -64,6 +72,7 @@ public class RocketChatClientImpl implements RocketChatClient {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.ChannelsList);
 
     if (!res.isSuccessful()) {
+      LOG.severe("Could not read channels information: " + res.getMessage().getMsg());
       throw new IOException("The call to get the all Channel Information was unsuccessful.");
     }
     return res.getChannels();
@@ -82,6 +91,7 @@ public class RocketChatClientImpl implements RocketChatClient {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.PostMessage,
       null, body);
     if (!res.isSuccessful()) {
+      LOG.severe("Could not sebd message: " + res.getMessage().getMsg());
       throw new IOException("The send of the message was unsuccessful.");
     }
   }
