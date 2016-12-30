@@ -7,7 +7,9 @@ import sun.security.validator.ValidatorException;
 import java.io.IOException;
 
 /**
+ * API used by this Jenkins plugin to communicate to RocketChat server backend
  *
+ * @author Martin Reinhardt (hypery2k)
  */
 public interface RocketChatClient {
   /**
@@ -31,19 +33,28 @@ public interface RocketChatClient {
   User getUser(String userId) throws IOException;
 
   /**
-   * @return
-   * @throws IOException
+   * @return an array of channels as room object
+   * @throws IOException in case of communication errors with the RocketChat server backend
    */
   Room[] getChannels() throws IOException;
 
+  /**
+   * sends a message to a channel
+   *
+   * @param room    to use (aka channel)
+   * @param message to send
+   * @throws ValidatorException in case of SSL errors
+   * @throws IOException        in case of communication errors with the RocketChat server backend
+   */
   void send(Room room, String message) throws ValidatorException, IOException;
 
   /**
+   * sends a message to a channel
    *
-   * @param channelName
-   * @param message
-   * @throws ValidatorException
-   * @throws IOException
+   * @param channelName to use
+   * @param message     to send
+   * @throws ValidatorException in case of SSL errors
+   * @throws IOException        in case of communication errors with the RocketChat server backend
    */
   void send(String channelName, String message) throws ValidatorException, IOException;
 

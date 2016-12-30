@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 /**
- * Created by mreinhardt on 08.09.16.
+ * Concrete RocketChat client implementation (@see {@link RocketChatClient})
+ *
+ * @author Martin Reinhardt (hypery2k)
  */
 public class RocketClientImpl implements RocketClient {
 

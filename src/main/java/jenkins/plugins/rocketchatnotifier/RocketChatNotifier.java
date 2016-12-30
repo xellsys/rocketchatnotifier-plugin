@@ -343,7 +343,7 @@ public class RocketChatNotifier extends Notifier {
       } catch (Exception e) {
         LOGGER.severe("Client error during trying to send rocket message");
         LOGGER.throwing(RocketChatNotifier.class.getName(), "doTestConnection", e);
-        return FormValidation.error(e, "Client error: " + e.getMessage());
+        return FormValidation.error(e, "Client error - Could not send message");
       }
     }
   }
