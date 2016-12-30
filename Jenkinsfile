@@ -56,6 +56,7 @@ node('docker') {
 }
 
 def version() {
-  def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
-  matcher ? matcher[0][1] : null
+  def file = readFile('pom.xml')
+  def project = new XmlSlurper().parseText(file)
+  return project.version.text()
 }
