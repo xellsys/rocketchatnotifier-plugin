@@ -1,7 +1,9 @@
-<a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.4.1...v) (2016-12-30)
+<a name="0.4.1"></a>
+# [0.4.1](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.4.1...v0.4.1) (2016-12-30)
 
+### Bug Fixes
 
+* **config:** Read correct jenkins/RocketChat server url
 
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v0.3.0...v0.4.0) (2016-12-28)
