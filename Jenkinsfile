@@ -16,6 +16,7 @@ node('docker') {
 
   // PRINT ENVIRONMENT TO JOB
   echo "workspace directory is $workspace"
+  echo "projectVersion is $projectVersion"
   echo "build URL is $buildUrl"
   echo "build Number is $buildNumber"
   echo "PATH is $env.PATH"
