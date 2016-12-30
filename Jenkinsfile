@@ -34,7 +34,7 @@ node('docker') {
       sh "mvn -Pdocker clean verify"
     }
 
-    junit testResults: 'target/surefire-reports/TEST-*.xml'
+    junit testResults: 'target/surefire-reports/TEST-*.xml,target/failsafe-reports/TEST-*.xml'
     archiveArtifacts artifacts: 'target/*.hpi'
 
     stage('Deploy') {
