@@ -337,12 +337,10 @@ public class RocketChatNotifier extends Notifier {
         LOGGER.fine("Done publishing message");
         return FormValidation.ok("Success");
       } catch (ValidatorException e) {
-        LOGGER.severe("SSL Error during trying to send rocket message");
-        LOGGER.throwing(RocketChatNotifier.class.getName(), "doTestConnection", e);
+        LOGGER.log(Level.SEVERE, "SSL error during trying to send rocket message", e);
         return FormValidation.error(e, "SSL error", e);
       } catch (Exception e) {
-        LOGGER.severe("Client error during trying to send rocket message");
-        LOGGER.throwing(RocketChatNotifier.class.getName(), "doTestConnection", e);
+        LOGGER.log(Level.SEVERE, "Client error during trying to send rocket message", e);
         return FormValidation.error(e, "Client error - Could not send message");
       }
     }

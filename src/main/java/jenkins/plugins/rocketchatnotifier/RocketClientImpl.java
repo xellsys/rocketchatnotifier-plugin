@@ -7,6 +7,7 @@ import jenkins.plugins.rocketchatnotifier.rocket.RocketChatClientImpl;
 import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class RocketClientImpl implements RocketClient {
 
-  private static final Logger LOG = Logger.getLogger(RocketClientImpl.class.getName());
+  private static final Logger LOGGER = Logger.getLogger(RocketClientImpl.class.getName());
 
   public static final String API_PATH = "/api/";
 
@@ -26,12 +27,11 @@ public class RocketClientImpl implements RocketClient {
 
 
   public RocketClientImpl(String serverUrl, String user, String password, String channel) {
-    this.client = new RocketChatClientImpl(serverUrl + API_PATH, user, password);
+    this.client = new RocketChatClientImpl(serverUrl, user, password);
     try {
       this.client.getChannels();
     } catch (IOException e) {
-      LOG.severe("I/O error");
-      LOG.throwing(RocketClientImpl.class.getName(), "_constructor", e);
+      LOGGER.log(Level.SEVERE, "I/O error error during init", e);
       // TODO remove this dirty check
       this.client = new LegacyRocketChatClient(serverUrl + API_PATH, user, password);
     }
@@ -40,23 +40,21 @@ public class RocketClientImpl implements RocketClient {
 
   public boolean publish(String message) {
     try {
-      LOG.fine("Starting sending message to channel " + this.channel);
+      LOGGER.fine("Starting sending message to channel " + this.channel);
       this.client.send(this.channel, message);
       return true;
     } catch (IOException e) {
-      LOG.severe("I/O error");
-      LOG.throwing(RocketClientImpl.class.getName(), "publish", e);
+      LOGGER.log(Level.SEVERE, "I/O error error during publishing message", e);
       return false;
     } catch (Exception e) {
-      LOG.severe("Unknown error");
-      LOG.throwing(RocketClientImpl.class.getName(), "publish", e);
+      LOGGER.log(Level.SEVERE, "Unknown error error during publishing message", e);
       return false;
     }
   }
 
   @Override
   public void validate() throws ValidatorException, IOException {
-    LOG.fine("Starting validating");
+    LOGGER.fine("Starting validating");
     this.client.getChannels();
   }
 }
