@@ -338,7 +338,7 @@
   <issueManagement>
     <system>JIRA</system>
     <url>
-      https://issues.jenkins-ci.org/browse/JENKINS-40595?jql=project%20%3D%20JENKINS%20AND%20component%20%3D%20rocket-chat-notifier-plugin
+      https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+component+%3D+rocket-chat-notifier-plugin
     </url>
   </issueManagement>
 
