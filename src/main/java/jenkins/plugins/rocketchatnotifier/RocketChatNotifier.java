@@ -308,7 +308,7 @@ public class RocketChatNotifier extends Notifier {
                                            @QueryParameter("rocketBuildServerUrl") final String buildServerUrl) throws FormException {
       try {
         String targetServerUrl = rocketServerURL + RocketClientImpl.API_PATH;
-        if (StringUtils.isEmpty(targetServerUrl)) {
+        if (StringUtils.isEmpty(rocketServerURL)) {
           targetServerUrl = this.rocketServerUrl;
         }
         String targetUsername = username;
