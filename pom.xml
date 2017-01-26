@@ -38,6 +38,13 @@
   <artifactId>rocketchatnotifier${artifactSuffix}</artifactId>
   <version>0.4.5</version>
   <packaging>hpi</packaging>
+  
+  <licenses>
+    <license>
+      <name>Apache-2.0</name>
+      <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+    </license>
+  </licenses>
 
   <!-- get every artifact through repo.jenkins-ci.org, which proxies all the
         artifacts that we need -->
