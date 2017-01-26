@@ -193,6 +193,13 @@ public class RocketChatNotifier extends Notifier {
 
   @Override
   public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
+    Map<Descriptor<Publisher>, Publisher> map = build.getProject().getPublishersList().toMap();
+    for (Publisher publisher : map.values()) {
+      if (publisher instanceof RocketChatNotifier) {
+        LOGGER.info("Invoking Completed...");
+        new ActiveNotifier((RocketChatNotifier) publisher, listener).completed(build);
+      }
+    }
     return true;
   }
 

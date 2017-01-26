@@ -8,6 +8,7 @@
   </parent>
 
   <properties>
+    <artifactSuffix />
     <jenkins.version>1.653</jenkins.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
@@ -34,8 +35,8 @@
   </properties>
 
   <name>RocketChat Notifier</name>
-  <artifactId>rocketchatnotifier</artifactId>
-  <version>0.4.4</version>
+  <artifactId>rocketchatnotifier${artifactSuffix}</artifactId>
+  <version>0.4.5</version>
   <packaging>hpi</packaging>
   
   <licenses>
@@ -65,6 +66,9 @@
   </pluginRepositories>
 
   <build>
+
+    <defaultGoal>clean test</defaultGoal>
+    <finalName>${finalName}</finalName>
 
     <pluginManagement>
       <plugins>
@@ -341,7 +345,7 @@
   <issueManagement>
     <system>JIRA</system>
     <url>
-      https://issues.jenkins-ci.org/browse/JENKINS-40595?jql=project%20%3D%20JENKINS%20AND%20component%20%3D%20rocket-chat-notifier-plugin
+      https://issues.jenkins-ci.org/issues/?jql=project+%3D+JENKINS+AND+component+%3D+rocket-chat-notifier-plugin
     </url>
   </issueManagement>
 

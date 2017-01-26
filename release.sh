@@ -6,4 +6,5 @@ mvn jgitflow:release-start && \
  conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && \
  git add CHANGELOG.md && \
  git commit -m "Changelog" && \
- git push --all
+ git push --all && \
+ git checkout develop

@@ -91,7 +91,7 @@ public class RocketChatClientImpl implements RocketChatClient {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.PostMessage,
       null, body);
     if (!res.isSuccessful()) {
-      LOG.severe("Could not sebd message: " + res.getMessage().getMsg());
+      LOG.severe("Could not send message: " + res.getMessage() != null ? res.getMessage().getMsg() : "");
       throw new IOException("The send of the message was unsuccessful.");
     }
   }
