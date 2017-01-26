@@ -1,5 +1,15 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.4.4...v) (2016-12-30)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.4.5...v) (2017-01-26)
+
+
+### Bug Fixes
+
+* **NPE:** Corrected NPE error. ([583b847](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/583b847))
+
+
+
+<a name="0.4.4"></a>
+## [0.4.4](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.4.4...v0.4.4) (2016-12-30)
 
 
 ### Bug Fixes
