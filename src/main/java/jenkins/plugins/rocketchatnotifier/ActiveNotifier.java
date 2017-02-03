@@ -51,7 +51,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
     if (causeAction != null) {
       Cause scmCause = causeAction.findCause(SCMTrigger.SCMTriggerCause.class);
       if (scmCause == null) {
-        MessageBuilder message = new MessageBuilder(notifier, build);
+        MessageBuilder message = new MessageBuilder(notifier, build, false);
         message.append(causeAction.getShortDescription());
         notifyStart(build, message.appendOpenLink().toString());
         // Cause was found, exit early to prevent double-message
@@ -59,11 +59,11 @@ public class ActiveNotifier implements FineGrainedNotifier {
       }
     }
 
-    String changes = getChanges(build, notifier.includeCustomMessage());
+    String changes = getChanges(build, notifier.includeCustomMessage(), false);
     if (changes != null) {
       notifyStart(build, changes);
     } else {
-      notifyStart(build, getBuildStatusMessage(build, false, notifier.includeCustomMessage()));
+      notifyStart(build, getBuildStatusMessage(build, false, notifier.includeCustomMessage(), false));
     }
   }
 
@@ -102,7 +102,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
             || (result == Result.SUCCESS && notifier.getNotifySuccess())
             || (result == Result.UNSTABLE && notifier.getNotifyUnstable())) {
             getRocket(r).publish(getBuildStatusMessage(r, notifier.includeTestSummary(),
-              notifier.includeCustomMessage()));//, getBuildColor(r));
+              notifier.includeCustomMessage(), true));//, getBuildColor(r));
             if (notifier.getCommitInfoChoice().showAnything()) {
               getRocket(r).publish(getCommitList(r));//, getBuildColor(r));
             }
@@ -112,7 +112,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
     }
   }
 
-  String getChanges(AbstractBuild r, boolean includeCustomMessage) {
+  String getChanges(AbstractBuild r, boolean includeCustomMessage, boolean finished) {
     if (!r.hasChangeSetComputed()) {
       LOGGER.info("No change set computed...");
       return null;
@@ -134,7 +134,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
     for (Entry entry : entries) {
       authors.add(entry.getAuthor().getDisplayName());
     }
-    MessageBuilder message = new MessageBuilder(notifier, r);
+    MessageBuilder message = new MessageBuilder(notifier, r, finished);
     message.append("Started by changes from ");
     message.append(StringUtils.join(authors, ", "));
     message.append(" (");
@@ -181,14 +181,14 @@ public class ActiveNotifier implements FineGrainedNotifier {
       }
       commits.add(commit.toString());
     }
-    MessageBuilder message = new MessageBuilder(notifier, r);
+    MessageBuilder message = new MessageBuilder(notifier, r, true);
     message.append("Changes:\n- ");
     message.append(StringUtils.join(commits, "\n- "));
     return message.toString();
   }
 
-  String getBuildStatusMessage(AbstractBuild r, boolean includeTestSummary, boolean includeCustomMessage) {
-    MessageBuilder message = new MessageBuilder(notifier, r);
+  String getBuildStatusMessage(AbstractBuild r, boolean includeTestSummary, boolean includeCustomMessage, boolean finished) {
+    MessageBuilder message = new MessageBuilder(notifier, r, finished);
     message.appendStatusMessage();
     message.appendDuration();
     message.appendOpenLink();
@@ -204,6 +204,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
   public static class MessageBuilder {
 
     private static final String STARTING_STATUS_MESSAGE = "Starting...",
+      END_STATUS_MESSAGE = "Finished",
       BACK_TO_NORMAL_STATUS_MESSAGE = "Back to normal",
       STILL_FAILING_STATUS_MESSAGE = "Still Failing",
       SUCCESS_STATUS_MESSAGE = "Success",
@@ -216,23 +217,29 @@ public class ActiveNotifier implements FineGrainedNotifier {
     private StringBuffer message;
     private RocketChatNotifier notifier;
     private AbstractBuild build;
+    private boolean finished = false;
 
-    public MessageBuilder(RocketChatNotifier notifier, AbstractBuild build) {
+    public MessageBuilder(RocketChatNotifier notifier, AbstractBuild build, boolean finished) {
       this.notifier = notifier;
       this.message = new StringBuffer();
       this.build = build;
+      this.finished = finished;
       startMessage();
     }
 
     public MessageBuilder appendStatusMessage() {
-      message.append(this.escape(getStatusMessage(build)));
+      message.append(this.escape(getStatusMessage(build, this.finished)));
       return this;
     }
 
     @SuppressWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
-    static String getStatusMessage(AbstractBuild r) {
+    static String getStatusMessage(AbstractBuild r, boolean finished) {
       if (r.isBuilding()) {
-        return STARTING_STATUS_MESSAGE;
+        if (finished) {
+          return END_STATUS_MESSAGE;
+        } else {
+          return STARTING_STATUS_MESSAGE;
+        }
       }
       Result result = r.getResult();
       Result previousResult;
