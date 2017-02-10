@@ -1,10 +1,13 @@
 package jenkins.plugins.rocketchatnotifier.rocket;
 
+import jenkins.plugins.rocketchatnotifier.model.Info;
 import jenkins.plugins.rocketchatnotifier.model.Room;
 import jenkins.plugins.rocketchatnotifier.model.User;
 import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 /**
  * API used by this Jenkins plugin to communicate to RocketChat server backend
@@ -57,5 +60,38 @@ public interface RocketChatClient {
    * @throws IOException        in case of communication errors with the RocketChat server backend
    */
   void send(String channelName, String message) throws ValidatorException, IOException;
+
+  /**
+   * sends a message to a channel.
+   * If emoji and avatar are difined, only emoji will be displayed
+   *
+   * @param channelName to use
+   * @param message     to send
+   * @param emoji       to display
+   * @param avatar      to display
+   * @throws ValidatorException in case of SSL errors
+   * @throws IOException        in case of communication errors with the RocketChat server backend
+   */
+  void send(String channelName, String message, String emoji, String avatar) throws ValidatorException, IOException;
+
+  /**
+   * sends a message to a channel.
+   * If emoji and avatar are difined, only emoji will be displayed
+   *
+   * @param channelName to use
+   * @param message     to send
+   * @param emoji       to display
+   * @param avatar      to display
+   * @param attachments to send
+   * @throws ValidatorException in case of SSL errors
+   * @throws IOException        in case of communication errors with the RocketChat server backend
+   */
+  void send(String channelName, String message, String emoji, String avatar, List<Map<String, Object>> attachments)
+    throws ValidatorException, IOException;
+
+  /**
+   * Retrieves server information
+   */
+  Info getInfo() throws IOException;
 
 }

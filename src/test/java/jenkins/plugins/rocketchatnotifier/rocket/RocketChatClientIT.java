@@ -4,6 +4,11 @@ import jenkins.plugins.rocketchatnotifier.model.Room;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -19,11 +24,12 @@ public class RocketChatClientIT {
     String rocketVersionString = System.getProperty("rocket.version", "0.48.2");
     int rocketVersion = 48;
     try {
-      rocketVersion= Integer.parseInt(rocketVersionString.split("\\.")[1]);
+      rocketVersion = Integer.parseInt(rocketVersionString.split("\\.")[1]);
     } catch (Exception ignored) {
     }
     if (rocketVersion >= 48) {
-      this.client = new RocketChatClientImpl("http://localhost:4443/api/", "admin", "supersecret"); // TODO read from env
+      this.client = new RocketChatClientImpl("http://localhost:4443/api/", "admin",
+                                             "supersecret"); // TODO read from env
     } else {
       this.client = new LegacyRocketChatClient("http://localhost:4443/api/", "admin", "supersecret");
     }
@@ -40,5 +46,21 @@ public class RocketChatClientIT {
     this.client.send("general", "test");
   }
 
+  @Test
+  public void shouldSendMessageAndEmojiAndAvatar() throws Exception {
+    this.client.send("general", "test", ":sod:",
+                     "https://talks.bitexpert.de/zendcon16-jenkins-for-php-projects/images/jenkins.png");
+  }
+
+  @Test
+  public void shouldSendMessageWithAttachment() throws Exception {
+    List<Map<String, Object>> attachments = new ArrayList<Map<String, Object>>();
+    Map<String, Object> attachment = new HashMap<String, Object>();
+    attachment.put("color", "green");
+    attachment.put("text", "Ok les gars");
+    attachment.put("collapsed", Boolean.TRUE);
+    attachments.add(attachment);
+    this.client.send("general", "test", null, null, attachments);
+  }
 
 }
