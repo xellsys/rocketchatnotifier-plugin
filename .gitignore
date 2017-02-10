@@ -13,4 +13,6 @@ buildNumber.properties
 /.settings
 .idea/*
 
-rocket-chat-notifier.iml
+*.iml
+*.iws
+*.ipr

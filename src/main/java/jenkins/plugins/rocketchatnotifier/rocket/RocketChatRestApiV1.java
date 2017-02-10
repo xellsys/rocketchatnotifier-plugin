@@ -1,6 +1,5 @@
 package jenkins.plugins.rocketchatnotifier.rocket;
 
-
 /**
  * Enumeration of the available REST API methods.
  *
@@ -12,23 +11,22 @@ public enum RocketChatRestApiV1 {
   /**
    * Retrieves a list of all the users in the server.
    */
-  UsersList("users.list", HttpMethods.GET, true),
-  /**
+  UsersList("users.list", HttpMethods.GET, true), /**
    * Retrieves the user information from the server.
    */
-  UsersInfo("users.info", HttpMethods.GET, true),
-  /**
+  UsersInfo("users.info", HttpMethods.GET, true), /**
    * Retrieves a list of all the channels in the server.
    */
-  ChannelsList("channels.list", HttpMethods.GET, true),
-  /**
+  ChannelsList("channels.list", HttpMethods.GET, true), /**
    * Retrieves a list of all the channels in the server.
    */
-  ChannelsInfo("channels.info", HttpMethods.GET, true),
-  /**
+  ChannelsInfo("channels.info", HttpMethods.GET, true), /**
    * Retrieves a list of all the channels in the server.
    */
-  PostMessage("chat.postMessage", HttpMethods.POST, true);
+  PostMessage("chat.postMessage", HttpMethods.POST, true), /**
+   * Retrieves miscellaneous information from rocket.chat instance, like version number
+   */
+  Info("info", HttpMethods.GET, false);
 
   private String methodName;
   private HttpMethods httpMethod;

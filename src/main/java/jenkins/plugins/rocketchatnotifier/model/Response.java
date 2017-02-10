@@ -1,6 +1,5 @@
 package jenkins.plugins.rocketchatnotifier.model;
 
-
 public class Response {
   private boolean success;
   private Message[] messages;
@@ -9,6 +8,7 @@ public class Response {
   private User user;
   private Room[] channels;
   private Room channel;
+  private Info info;
 
   public void setSuccess(boolean result) {
     this.success = result;
@@ -68,5 +68,13 @@ public class Response {
 
   public boolean isUser() {
     return this.user != null;
+  }
+
+  public Info getInfo() {
+    return info;
+  }
+
+  public void setInfo(final Info info) {
+    this.info = info;
   }
 }

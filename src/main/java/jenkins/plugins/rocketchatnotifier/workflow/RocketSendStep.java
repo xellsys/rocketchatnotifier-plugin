@@ -1,8 +1,12 @@
 package jenkins.plugins.rocketchatnotifier.workflow;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import hudson.AbortException;
 import hudson.Extension;
 import hudson.Util;
+import hudson.model.AbstractDescribableImpl;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import jenkins.model.Jenkins;
@@ -10,6 +14,7 @@ import jenkins.plugins.rocketchatnotifier.Messages;
 import jenkins.plugins.rocketchatnotifier.RocketChatNotifier;
 import jenkins.plugins.rocketchatnotifier.RocketClient;
 import jenkins.plugins.rocketchatnotifier.RocketClientImpl;
+import jenkins.plugins.rocketchatnotifier.workflow.attachments.MessageAttachment;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
 import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
@@ -19,9 +24,11 @@ import org.kohsuke.stapler.DataBoundSetter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 /**
  * Workflow step to send a rocket channel notification.
@@ -35,6 +42,11 @@ public class RocketSendStep extends AbstractStepImpl {
   private String channel;
   private boolean failOnError;
 
+  private String emoji;
+  private String avatar;
+  private boolean rawMessage;
+  private List<MessageAttachment> attachments;
+
   @Nonnull
   public String getMessage() {
     return message;
@@ -42,6 +54,37 @@ public class RocketSendStep extends AbstractStepImpl {
 
   public String getChannel() {
     return channel;
+  }
+
+  public String getEmoji() {
+    return emoji;
+  }
+
+  public String getAvatar() {
+    return avatar;
+  }
+
+  public boolean isRawMessage() {
+    return rawMessage;
+  }
+
+  public List<MessageAttachment> getAttachments() {
+    return attachments;
+  }
+
+  @DataBoundSetter
+  public void setEmoji(final String emoji) {
+    this.emoji = Util.fixEmpty(emoji);
+  }
+
+  @DataBoundSetter
+  public void setAvatar(final String avatar) {
+    this.avatar = Util.fixEmpty(avatar);
+  }
+
+  @DataBoundSetter
+  public void setAttachments(final List<MessageAttachment> attachments) {
+    this.attachments = attachments;
   }
 
   @DataBoundSetter
@@ -58,11 +101,15 @@ public class RocketSendStep extends AbstractStepImpl {
     this.failOnError = failOnError;
   }
 
+  @DataBoundSetter
+  public void setRawMessage(final boolean rawMessage) {
+    this.rawMessage = rawMessage;
+  }
+
   @DataBoundConstructor
   public RocketSendStep(@Nonnull String message) {
     this.message = message;
   }
-
 
   @Extension
   public static class DescriptorImpl extends AbstractStepDescriptorImpl {
@@ -80,6 +127,7 @@ public class RocketSendStep extends AbstractStepImpl {
     public String getDisplayName() {
       return Messages.RocketSendStepDisplayName();
     }
+
   }
 
   public static class RocketSendStepExecution extends AbstractSynchronousNonBlockingStepExecution<Void> {
@@ -112,7 +160,8 @@ public class RocketSendStep extends AbstractStepImpl {
         listener.error(Messages.NotificationFailedWithException(ne));
         return null;
       }
-      RocketChatNotifier.DescriptorImpl rocketDesc = jenkins.getDescriptorByType(RocketChatNotifier.DescriptorImpl.class);
+      RocketChatNotifier.DescriptorImpl rocketDesc = jenkins.getDescriptorByType(
+        RocketChatNotifier.DescriptorImpl.class);
       String server = rocketDesc.getRocketServerURL();
       String user = rocketDesc.getUsername();
       String password = rocketDesc.getPassword();
@@ -123,10 +172,13 @@ public class RocketSendStep extends AbstractStepImpl {
 
       RocketClient rocketClient = getRocketClient(server, user, password, channel);
 
-      String msgWithJobLink = step.message
-        + "," + run.getFullDisplayName()
-        + "," + jenkinsUrl + run.getUrl() + "";
-      boolean publishSuccess = rocketClient.publish(msgWithJobLink);
+      String msg = step.message;
+      if (!step.rawMessage) {
+        msg += "," + run.getFullDisplayName() + "," + jenkinsUrl + run.getUrl() + "";
+      }
+
+      boolean publishSuccess = rocketClient.publish(msg, step.emoji, step.avatar,
+                                                    convertMessageAttachmentsToMaps(step.attachments));
       if (!publishSuccess && step.failOnError) {
         throw new AbortException(Messages.NotificationFailed());
       } else if (!publishSuccess) {
@@ -140,5 +192,25 @@ public class RocketSendStep extends AbstractStepImpl {
       return new RocketClientImpl(server, user, password, channel);
     }
 
+    protected List<Map<String, Object>> convertMessageAttachmentsToMaps(List<MessageAttachment> attachments) {
+      List<Map<String, Object>> returnedList = new ArrayList<Map<String, Object>>();
+      if (attachments != null && attachments.size() > 0) {
+        ObjectMapper oMapper = new ObjectMapper();
+        oMapper.setAnnotationIntrospector(new IgnoreInheritedIntrospector());
+        for (MessageAttachment attachment : attachments) {
+          returnedList.add(oMapper.convertValue(attachment, Map.class));
+        }
+      }
+      return returnedList;
+
+    }
+
+  }
+
+  private static class IgnoreInheritedIntrospector extends JacksonAnnotationIntrospector {
+    @Override
+    public boolean hasIgnoreMarker(final AnnotatedMember m) {
+      return m.getDeclaringClass() == AbstractDescribableImpl.class || super.hasIgnoreMarker(m);
+    }
   }
 }
