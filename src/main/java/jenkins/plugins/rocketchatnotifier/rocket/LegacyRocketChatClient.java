@@ -6,6 +6,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import jenkins.plugins.rocketchatnotifier.model.Info;
 import jenkins.plugins.rocketchatnotifier.model.Message;
 import jenkins.plugins.rocketchatnotifier.model.Room;
 import jenkins.plugins.rocketchatnotifier.model.Rooms;
@@ -14,7 +15,11 @@ import org.json.JSONObject;
 import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by mreinhardt on 26.12.16.
@@ -56,7 +61,8 @@ public class LegacyRocketChatClient implements RocketChatClient {
 
   private <T> T authenticatedGet(String method, Class<T> reponseClass) throws IOException {
     try {
-      HttpResponse e = Unirest.get(this.serverUrl + method).header("X-Auth-Token", this.xAuthToken).header("X-User-Id", this.xUserId).asString();
+      HttpResponse e = Unirest.get(this.serverUrl + method).header("X-Auth-Token", this.xAuthToken).header("X-User-Id",
+                                                                                                           this.xUserId).asString();
       if (e.getStatus() == 401) {
         this.login();
         return this.authenticatedGet(method, reponseClass);
@@ -72,9 +78,12 @@ public class LegacyRocketChatClient implements RocketChatClient {
     this.authenticatedPost(method, request, (Class) null);
   }
 
-  private <T> T authenticatedPost(String method, Object request, Class<T> reponseClass) throws ValidatorException, IOException {
+  private <T> T authenticatedPost(String method, Object request, Class<T> reponseClass)
+    throws ValidatorException, IOException {
     try {
-      HttpResponse e = Unirest.post(this.serverUrl + method).header("X-Auth-Token", this.xAuthToken).header("X-User-Id", this.xUserId).header("Content-Type", "application/json").body(this.jacksonObjectMapper.writeValueAsString(request)).asString();
+      HttpResponse e = Unirest.post(this.serverUrl + method).header("X-Auth-Token", this.xAuthToken).header("X-User-Id",
+                                                                                                            this.xUserId).header(
+        "Content-Type", "application/json").body(this.jacksonObjectMapper.writeValueAsString(request)).asString();
       if (e.getStatus() == 401) {
         this.login();
         return this.authenticatedPost(method, request, reponseClass);
@@ -87,7 +96,8 @@ public class LegacyRocketChatClient implements RocketChatClient {
   }
 
   void login() throws UnirestException {
-    HttpResponse asJson = Unirest.post(this.serverUrl + "login").field("user", this.user).field("password", this.password).asJson();
+    HttpResponse asJson = Unirest.post(this.serverUrl + "login").field("user", this.user).field("password",
+                                                                                                this.password).asJson();
     if (asJson.getStatus() == 401) {
       throw new UnirestException("401 - Unauthorized");
     } else {
@@ -99,7 +109,8 @@ public class LegacyRocketChatClient implements RocketChatClient {
 
   public void logout() throws IOException {
     try {
-      Unirest.post(this.serverUrl + "logout").header("X-Auth-Token", this.xAuthToken).header("X-User-Id", this.xUserId).asJson();
+      Unirest.post(this.serverUrl + "logout").header("X-Auth-Token", this.xAuthToken).header("X-User-Id",
+                                                                                             this.xUserId).asJson();
     } catch (UnirestException var2) {
       throw new IOException(var2);
     }
@@ -116,7 +127,8 @@ public class LegacyRocketChatClient implements RocketChatClient {
   private JSONObject getVersions() throws IOException {
     if (this.lazyVersions == null) {
       try {
-        this.lazyVersions = ((JsonNode) Unirest.get(this.serverUrl + "version").asJson().getBody()).getObject().getJSONObject("versions");
+        this.lazyVersions = ((JsonNode) Unirest.get(
+          this.serverUrl + "version").asJson().getBody()).getObject().getJSONObject("versions");
       } catch (UnirestException var2) {
         throw new IOException(var2);
       }
@@ -128,7 +140,7 @@ public class LegacyRocketChatClient implements RocketChatClient {
   public void send(String roomName, String message) throws ValidatorException, IOException {
     Room room = this.getRoom(roomName);
     if (room == null) {
-      throw new IOException(String.format("unknown room : %s", new Object[]{roomName}));
+      throw new IOException(String.format("unknown room : %s", new Object[] { roomName }));
     } else {
       this.send(room, message);
     }
@@ -160,6 +172,25 @@ public class LegacyRocketChatClient implements RocketChatClient {
 
   @Override
   public Room[] getChannels() throws IOException {
-   return this.getPublicRooms().toArray(new Room[0]);
+    return this.getPublicRooms().toArray(new Room[0]);
+  }
+
+  @Override
+  public void send(final String channelName, final String message, final String emoji, final String avatar)
+    throws ValidatorException, IOException {
+    this.send(channelName, message);
+  }
+
+  @Override
+  public void send(final String channelName, final String message, final String emoji, final String avatar, final List<Map<String, Object>> attachments)
+    throws ValidatorException, IOException {
+    this.send(channelName, message);
+  }
+
+  @Override
+  public Info getInfo() throws IOException {
+    Info info = new Info();
+    info.setVersion(this.getRocketChatVersion());
+    return info;
   }
 }
