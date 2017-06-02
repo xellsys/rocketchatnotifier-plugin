@@ -148,7 +148,7 @@ public class MessageBuilder {
     if (message.toString().contains(BACK_TO_NORMAL_STATUS_MESSAGE)) {
       durationString = createBackToNormalDurationString();
     } else {
-      durationString = build.getDurationString();
+      durationString = Util.getTimeSpanString(build.getDuration());
     }
     message.append(durationString);
     return this;
