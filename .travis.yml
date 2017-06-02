@@ -8,6 +8,14 @@ language: java
 env:
   matrix:
    - RC_VERSION=latest
+   - RC_VERSION=0.56.0
+   - RC_VERSION=0.55.1
+   - RC_VERSION=0.55.0
+   - RC_VERSION=0.54.2
+   - RC_VERSION=0.54.1
+   - RC_VERSION=0.54.0
+   - RC_VERSION=0.53.0
+   - RC_VERSION=0.52.0
    - RC_VERSION=0.51.0
    - RC_VERSION=0.50.1
    - RC_VERSION=0.50.0
@@ -37,6 +45,7 @@ cache:
 branches:
   only:
     - master
+    - develop
 
 install:
   -
