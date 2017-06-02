@@ -1,10 +1,16 @@
-<a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.4.5...v) (2017-01-26)
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.4.4...v0.5.0) (2017-02-10)
 
 
 ### Bug Fixes
 
 * **NPE:** Corrected NPE error. ([583b847](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/583b847))
+* **status-msg:** Corrected status message ([724c625](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/724c625))
+
+
+### Features
+
+* add the posibility to send attachments. ([c56748e](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/c56748e))
 
 
 
