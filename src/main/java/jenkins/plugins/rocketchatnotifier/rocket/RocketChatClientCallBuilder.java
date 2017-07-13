@@ -9,9 +9,12 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import jenkins.plugins.rocketchatnotifier.model.Response;
+import jenkins.plugins.rocketchatnotifier.utils.Environment;
+import org.apache.http.HttpHost;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Map.Entry;
 
 /**
@@ -36,12 +39,32 @@ public class RocketChatClientCallBuilder {
       this.serverUrl = serverUrl;
     }
 
+    if (this.hasProxyEnvironment()) {
+      URI uri = URI.create(this.getProxy());
+      Unirest.setProxy(new HttpHost(uri.getHost(), uri.getPort()));
+    }
+
     this.user = user;
     this.password = password;
     this.authToken = "";
     this.userId = "";
     this.objectMapper = new ObjectMapper();
     this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+  }
+
+  private boolean isSsl() {
+    URI serverUri = URI.create(this.serverUrl);
+    return serverUri.getScheme().equals("https");
+  }
+
+  private boolean hasProxyEnvironment() {
+    return !this.getProxy().isEmpty();
+  }
+
+  private String getProxy() {
+    Environment env = new Environment();
+    return this.isSsl() ? env.getHttpsProxy() : env.getHttpProxy();
   }
 
   protected Response buildCall(RocketChatRestApiV1 call) throws IOException {
