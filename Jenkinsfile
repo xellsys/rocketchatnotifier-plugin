@@ -3,7 +3,6 @@
 // only 20 builds
 properties([
   disableConcurrentBuilds(),
-  [$class: 'GithubProjectProperty', displayName: '', projectUrlStr: 'https://github.com/jenkinsci/rocketchatnotifier-plugin/'],
   buildDiscarder(logRotator(artifactNumToKeepStr: '20', numToKeepStr: '20'))
 ])
 
