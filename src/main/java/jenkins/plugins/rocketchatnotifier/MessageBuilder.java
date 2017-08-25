@@ -54,13 +54,6 @@ public class MessageBuilder {
 
   @SuppressWarnings("NP_NULL_ON_SOME_PATH_FROM_RETURN_VALUE")
   String getStatusMessage() {
-    if (this.build.isBuilding()) {
-      if (this.finished) {
-        return END_STATUS_MESSAGE;
-      } else {
-        return STARTING_STATUS_MESSAGE;
-      }
-    }
     Result result = this.build.getResult();
     Result previousResult;
     Run previousBuild = this.build.getProject().getLastBuild().getPreviousBuild();
@@ -114,6 +107,14 @@ public class MessageBuilder {
     }
     if (result == Result.UNSTABLE) {
       return UNSTABLE_STATUS_MESSAGE;
+    }
+
+    if (this.build.isBuilding()) {
+      if (this.finished) {
+        return END_STATUS_MESSAGE;
+      } else {
+        return STARTING_STATUS_MESSAGE;
+      }
     }
     return UNKNOWN_STATUS_MESSAGE;
   }
