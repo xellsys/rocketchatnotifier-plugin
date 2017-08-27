@@ -11,13 +11,9 @@ node('docker') {
   def buildNumber = env.BUILD_NUMBER
   def workspace = env.WORKSPACE
   def buildUrl = env.BUILD_URL
-  def projectVersion = projectVersion()
-  def mavenVersion = mavenVersion()
 
   // PRINT ENVIRONMENT TO JOB
   echo "workspace directory is $workspace"
-  echo "mavenVersion is $mavenVersion"
-  echo "projectVersion is $projectVersion"
   echo "build URL is $buildUrl"
   echo "build Number is $buildNumber"
   echo "PATH is $env.PATH"
@@ -40,7 +36,8 @@ node('docker') {
 
     stage('Deploy') {
       sshagent(credentials: ['github-hypery2k']) {
-        if (mavenVersion && !mavenVersion.contains('SNAPSHOT')) {
+        def projectVersion = projectVersion()
+        if (projectVersion && !projectVersion.contains('SNAPSHOT')) {
           // release build
           sh "mvn deploy -DskipTests=true"
           // nightly build
@@ -56,14 +53,8 @@ node('docker') {
 
 }
 
-def mavenVersion() {
-  def file = readFile('pom.xml')
-  def project = new XmlSlurper().parseText(file)
-  return project.version.text()
-}
-
 def projectVersion() {
   def file = readFile('pom.xml')
   def project = new XmlSlurper().parseText(file)
-  return project.version.text().replaceAll("-RELEASE","").replaceAll("-SNAPSHOT","")
+  return project.version.text()
 }
