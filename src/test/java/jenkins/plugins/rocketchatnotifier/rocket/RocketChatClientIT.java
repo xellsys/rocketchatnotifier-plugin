@@ -21,18 +21,7 @@ public class RocketChatClientIT {
 
   @Before
   public void setup() throws Exception {
-    String rocketVersionString = System.getProperty("rocket.version", "0.48.2");
-    int rocketVersion = 48;
-    try {
-      rocketVersion = Integer.parseInt(rocketVersionString.split("\\.")[1]);
-    } catch (Exception ignored) {
-    }
-    if (rocketVersion >= 48) {
-      this.client = new RocketChatClientImpl("http://localhost:4443/api/", "admin",
-                                             "supersecret"); // TODO read from env
-    } else {
-      this.client = new LegacyRocketChatClient("http://localhost:4443/api/", "admin", "supersecret");
-    }
+    this.client = new RocketChatClientImpl("http://localhost:4443/api/", "admin", "supersecret");
   }
 
   @Test
@@ -49,7 +38,7 @@ public class RocketChatClientIT {
   @Test
   public void shouldSendMessageAndEmojiAndAvatar() throws Exception {
     this.client.send("general", "test", ":sod:",
-                     "https://talks.bitexpert.de/zendcon16-jenkins-for-php-projects/images/jenkins.png");
+      "https://talks.bitexpert.de/zendcon16-jenkins-for-php-projects/images/jenkins.png");
   }
 
   @Test

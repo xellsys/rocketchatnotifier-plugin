@@ -24,6 +24,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -178,7 +179,7 @@ public class RocketSendStep extends AbstractStepImpl {
       }
 
       boolean publishSuccess = rocketClient.publish(msg, step.emoji, step.avatar,
-                                                    convertMessageAttachmentsToMaps(step.attachments));
+        convertMessageAttachmentsToMaps(step.attachments));
       if (!publishSuccess && step.failOnError) {
         throw new AbortException(Messages.NotificationFailed());
       } else if (!publishSuccess) {
@@ -188,7 +189,7 @@ public class RocketSendStep extends AbstractStepImpl {
     }
 
     //streamline unit testing
-    RocketClient getRocketClient(String server, String user, String password, String channel) {
+    RocketClient getRocketClient(String server, String user, String password, String channel) throws IOException {
       return new RocketClientImpl(server, user, password, channel);
     }
 
