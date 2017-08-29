@@ -1,0 +1,45 @@
+version: '2.1'
+services:
+
+  db:
+    container_name: mongo_db
+    image: mongo:latest
+    environment:
+      - MONGO_PORT
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:${MONGO_PORT}"]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+
+  rocketchat:
+    container_name: rocketchat
+    image: rocketchat/base:4
+    environment:
+      - RC_VERSION
+      - RC_PORT
+      - MONGO_URL
+      - HOME
+      - PORT
+      - ROOT_URL
+      - Accounts_AvatarStorePath
+      - ADMIN_USERNAME
+      - ADMIN_PASS
+      - ADMIN_EMAIL
+    volumes:
+      - /app/uploads
+    working_dir: /app/bundle
+    command: bash -c "set -x && curl -SLf https://rocket.chat/releases/${RC_VERSION}/download -o rocket.chat.tgz && tar -zxf rocket.chat.tgz -C /app && rm rocket.chat.tgz && cd /app/bundle/programs/server && npm install && npm cache clear && cd /app/bundle && node main.js"
+    depends_on:
+      - db
+    links:
+      - db
+    ports:
+      - "${RC_PORT}:${RC_PORT}"
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:${RC_PORT}"]
+        interval: 30s
+        timeout: 30s
+        retries: 5

@@ -14,7 +14,7 @@ env:
    - RC_VERSION=0.57.3
    - RC_VERSION=0.57.2
    - RC_VERSION=0.57.1
-   - RC_VERSION=0.57.0   
+   - RC_VERSION=0.57.0
    - RC_VERSION=0.56.0
    - RC_VERSION=0.56.0
    - RC_VERSION=0.56.0
@@ -46,6 +46,7 @@ env:
 
 script:
   - mvn clean package --quiet
+  - ./docker-build-images.sh && ./docker-run.sh
   - mvn -Pdocker verify -Drocket.version=$RC_VERSION
 
 cache:
@@ -56,6 +57,7 @@ branches:
   only:
     - master
     - develop
+    - ci_build
 
 install:
   -
