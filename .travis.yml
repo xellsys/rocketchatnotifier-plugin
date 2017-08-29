@@ -47,11 +47,15 @@ env:
 script:
   - mvn clean package --quiet
   - ./docker-build-images.sh && ./docker-run.sh
-  - mvn -Pdocker verify -Drocket.version=$RC_VERSION
+  - mvn -Pdocker -Djava.awt.headless=true -Dmaven.test.redirectTestOutputToFile=true -Dcobertura.report.format=xml --fail-at-end --batch-mode cobertura:cobertura verify
 
 cache:
   directories:
   - ~/.m2
+
+after_success:
+  - cobertura:dump-datafile
+  - bash <(curl -s https://codecov.io/bash)
 
 branches:
   only:

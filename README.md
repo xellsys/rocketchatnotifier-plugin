@@ -1,8 +1,9 @@
 # Rocket Chat Notification Plugin for Jenkins
 
 [![Build Status](https://travis-ci.org/jenkinsci/rocketchatnotifier-plugin.svg?branch=master)](https://travis-ci.org/jenkinsci/rocketchatnotifier-plugin) 
-[![Build Status](https://ci.jenkins.io/job/Plugins/job/rocketchatnotifier-plugin/job/develop/badge/icon)](https://ci.jenkins.io/job/Plugins/job/rocketchatnotifier-plugin)
+[![Build Status](https://ci.jenkins.io/job/Plugins/job/rocketchatnotifier-plugin/job/develop/badge/icon)](https://ci.jenkins.io/blue/organizations/jenkins/Plugins%2Frocketchatnotifier-plugin/branches/)
 [![Build Status](https://martinreinhardt-online.de/jenkins/buildStatus/icon?job=rocketchatnotifier-plugin/master)](https://martinreinhardt-online.de/jenkins/job/rocketchatnotifier-plugin/job/master/)
+[![codecov](https://codecov.io/gh/jenkinsci/rocketchatnotifier-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/jenkinsci/rocketchatnotifier-plugin)
 
 The latest stable version is available at Plugins Center. Dev builds are available via the [Experimental Plugins Update Center](https://jenkins.io/blog/2013/09/23/experimental-plugins-update-center/).
 
