@@ -1,5 +1,15 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.2...v) (2017-07-13)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.3...v) (2017-09-13)
+
+
+### Features
+
+* **drop-old-rocket-api:** Drop support for older rocket.chat versions ([40dad98](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/40dad98))
+
+
+
+<a name="0.5.2"></a>
+## [0.5.2](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.2...v0.5.2) (2017-07-13)
 
 
 
