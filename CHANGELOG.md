@@ -1,10 +1,24 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.1...v) (2017-06-02)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.2...v) (2017-07-13)
+
+
+
+<a name="0.5.1"></a>
+## [0.5.1](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v0.5.0...v0.5.1) (2017-06-02)
 
 
 ### Bug Fixes
 
 * **message-label:** Corrected message label ([451b497](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/451b497))
+
+
+
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v0.4.4...v0.5.0) (2017-02-10)
+
+
+### Bug Fixes
+
 * **NPE:** Corrected NPE error. ([583b847](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/583b847))
 * **status-msg:** Corrected status message ([724c625](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/724c625))
 
