@@ -8,6 +8,7 @@ import hudson.scm.ChangeLogSet.Entry;
 import hudson.triggers.SCMTrigger;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
     this.listener = listener;
   }
 
-  private RocketClient getRocket(AbstractBuild r) {
+  private RocketClient getRocket(AbstractBuild r) throws IOException {
     return notifier.newRocketChatClient(r, listener);
   }
 
@@ -41,28 +42,32 @@ public class ActiveNotifier implements FineGrainedNotifier {
 
   public void started(AbstractBuild build) {
 
-    CauseAction causeAction = build.getAction(CauseAction.class);
+    try {
+      CauseAction causeAction = build.getAction(CauseAction.class);
 
-    if (causeAction != null) {
-      Cause scmCause = causeAction.findCause(SCMTrigger.SCMTriggerCause.class);
-      if (scmCause == null) {
-        MessageBuilder message = new MessageBuilder(notifier, build, false);
-        message.append(causeAction.getShortDescription());
-        notifyStart(build, message.appendOpenLink().toString());
-        // Cause was found, exit early to prevent double-message
-        return;
+      if (causeAction != null) {
+        Cause scmCause = causeAction.findCause(SCMTrigger.SCMTriggerCause.class);
+        if (scmCause == null) {
+          MessageBuilder message = new MessageBuilder(notifier, build, false);
+          message.append(causeAction.getShortDescription());
+          notifyStart(build, message.appendOpenLink().toString());
+          // Cause was found, exit early to prevent double-message
+          return;
+        }
       }
-    }
 
-    String changes = getChanges(build, notifier.includeCustomMessage(), false);
-    if (changes != null) {
-      notifyStart(build, changes);
-    } else {
-      notifyStart(build, getBuildStatusMessage(build, false, notifier.includeCustomMessage(), false));
+      String changes = getChanges(build, notifier.includeCustomMessage(), false);
+      if (changes != null) {
+        notifyStart(build, changes);
+      } else {
+        notifyStart(build, getBuildStatusMessage(build, false, notifier.includeCustomMessage(), false));
+      }
+    } catch (IOException e) {
+      LOGGER.info("Could not send rocket message");
     }
   }
 
-  private void notifyStart(AbstractBuild build, String message) {
+  private void notifyStart(AbstractBuild build, String message) throws IOException {
     getRocket(build).publish(message);
   }
 
@@ -70,40 +75,44 @@ public class ActiveNotifier implements FineGrainedNotifier {
   }
 
   public void completed(AbstractBuild r) {
-    if (LOGGER.isLoggable(Level.INFO)) {
-      LOGGER.info("Build completed. Checking for rocket notifiers");
-    }
-    if (r != null) {
-      AbstractProject<?, ?> project = r.getProject();
-      Result result = r.getResult();
-      if (project != null) {
-        AbstractBuild<?, ?> previousBuild = project.getLastBuild();
-        if (previousBuild != null) {
-          do {
-            previousBuild = previousBuild.getPreviousCompletedBuild();
-          } while (previousBuild != null && previousBuild.getResult() == Result.ABORTED);
-          Result previousResult = (previousBuild != null) ? previousBuild.getResult() : Result.SUCCESS;
-          if ((result == Result.ABORTED && notifier.getNotifyAborted())
-            || (result == Result.FAILURE //notify only on single failed build
-            && previousResult != Result.FAILURE
-            && notifier.getNotifyFailure())
-            || (result == Result.FAILURE //notify only on repeated failures
-            && previousResult == Result.FAILURE
-            && notifier.getNotifyRepeatedFailure())
-            || (result == Result.NOT_BUILT && notifier.getNotifyNotBuilt())
-            || (result == Result.SUCCESS
-            && (previousResult == Result.FAILURE || previousResult == Result.UNSTABLE)
-            && notifier.getNotifyBackToNormal())
-            || (result == Result.SUCCESS && notifier.getNotifySuccess())
-            || (result == Result.UNSTABLE && notifier.getNotifyUnstable())) {
-            getRocket(r).publish(getBuildStatusMessage(r, notifier.includeTestSummary(),
-              notifier.includeCustomMessage(), true));//, getBuildColor(r));
-            if (notifier.getCommitInfoChoice().showAnything()) {
-              getRocket(r).publish(getCommitList(r));//, getBuildColor(r));
+    try {
+      if (LOGGER.isLoggable(Level.INFO)) {
+        LOGGER.info("Build completed. Checking for rocket notifiers");
+      }
+      if (r != null) {
+        AbstractProject<?, ?> project = r.getProject();
+        Result result = r.getResult();
+        if (project != null) {
+          AbstractBuild<?, ?> previousBuild = project.getLastBuild();
+          if (previousBuild != null) {
+            do {
+              previousBuild = previousBuild.getPreviousCompletedBuild();
+            } while (previousBuild != null && previousBuild.getResult() == Result.ABORTED);
+            Result previousResult = (previousBuild != null) ? previousBuild.getResult() : Result.SUCCESS;
+            if ((result == Result.ABORTED && notifier.getNotifyAborted())
+              || (result == Result.FAILURE //notify only on single failed build
+              && previousResult != Result.FAILURE
+              && notifier.getNotifyFailure())
+              || (result == Result.FAILURE //notify only on repeated failures
+              && previousResult == Result.FAILURE
+              && notifier.getNotifyRepeatedFailure())
+              || (result == Result.NOT_BUILT && notifier.getNotifyNotBuilt())
+              || (result == Result.SUCCESS
+              && (previousResult == Result.FAILURE || previousResult == Result.UNSTABLE)
+              && notifier.getNotifyBackToNormal())
+              || (result == Result.SUCCESS && notifier.getNotifySuccess())
+              || (result == Result.UNSTABLE && notifier.getNotifyUnstable())) {
+              getRocket(r).publish(getBuildStatusMessage(r, notifier.includeTestSummary(),
+                notifier.includeCustomMessage(), true));//, getBuildColor(r));
+              if (notifier.getCommitInfoChoice().showAnything()) {
+                getRocket(r).publish(getCommitList(r));//, getBuildColor(r));
+              }
             }
           }
         }
       }
+    } catch (IOException e) {
+      LOGGER.info("Could not send rocket message");
     }
   }
 

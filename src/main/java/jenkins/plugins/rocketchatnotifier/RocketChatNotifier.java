@@ -159,7 +159,7 @@ public class RocketChatNotifier extends Notifier {
     return BuildStepMonitor.NONE;
   }
 
-  public RocketClient newRocketChatClient(AbstractBuild r, BuildListener listener) {
+  public RocketClient newRocketChatClient(AbstractBuild r, BuildListener listener) throws IOException {
     String serverUrl = this.rocketServerUrl;
     if (StringUtils.isEmpty(serverUrl)) {
       serverUrl = getDescriptor().getRocketServerURL();

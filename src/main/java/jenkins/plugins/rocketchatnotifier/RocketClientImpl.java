@@ -1,6 +1,5 @@
 package jenkins.plugins.rocketchatnotifier;
 
-import jenkins.plugins.rocketchatnotifier.rocket.LegacyRocketChatClient;
 import jenkins.plugins.rocketchatnotifier.rocket.RocketChatClient;
 import jenkins.plugins.rocketchatnotifier.rocket.RocketChatClientImpl;
 import sun.security.validator.ValidatorException;
@@ -26,15 +25,9 @@ public class RocketClientImpl implements RocketClient {
 
   private String channel;
 
-  public RocketClientImpl(String serverUrl, String user, String password, String channel) {
+  public RocketClientImpl(String serverUrl, String user, String password, String channel) throws IOException {
     this.client = new RocketChatClientImpl(serverUrl, user, password);
-    try {
-      this.client.getChannels();
-    } catch (IOException e) {
-      LOGGER.log(Level.SEVERE, "I/O error error during init", e);
-      // TODO remove this dirty check
-      this.client = new LegacyRocketChatClient(serverUrl + API_PATH, user, password);
-    }
+    this.client.getChannels();
     this.channel = channel;
   }
 
