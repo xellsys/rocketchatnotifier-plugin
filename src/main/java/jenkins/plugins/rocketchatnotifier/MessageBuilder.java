@@ -149,7 +149,7 @@ public class MessageBuilder {
     if (message.toString().contains(BACK_TO_NORMAL_STATUS_MESSAGE)) {
       durationString = createBackToNormalDurationString();
     } else {
-      durationString = Util.getTimeSpanString(build.getDuration());
+      durationString = build.getDurationString().replace("and counting", "");
     }
     message.append(durationString);
     return this;
