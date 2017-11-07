@@ -41,7 +41,15 @@ node('docker') {
         sh "./docker-stop.sh"
         junit testResults: 'target/surefire-reports/TEST-*.xml,target/failsafe-reports/TEST-*.xml'
         archiveArtifacts artifacts: 'target/*.hpi'
-        step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'target/cobertura/cobertura.ser', failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
+        step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'target/site/cobertura/coverage.xml', failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
+        publishHTML(target: [
+          reportDir            : 'target/site/cobertura/',
+          reportFiles          : 'index.html',
+          reportName           : 'Code Coverage Test Report',
+          keepAll              : true,
+          alwaysLinkToLastBuild: true,
+          allowMissing         : false
+        ])
       }
     }
 
