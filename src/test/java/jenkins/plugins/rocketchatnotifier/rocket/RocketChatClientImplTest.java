@@ -2,6 +2,7 @@ package jenkins.plugins.rocketchatnotifier.rocket;
 
 import jenkins.plugins.rocketchatnotifier.model.Info;
 import jenkins.plugins.rocketchatnotifier.model.Response;
+import jenkins.plugins.rocketchatnotifier.model.Room;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +13,9 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
@@ -35,6 +39,55 @@ public class RocketChatClientImplTest {
     rocketChatClient = new RocketChatClientImpl("", "", "");
   }
 
+  @Test
+  public void shouldSendMessageToRoom() throws Exception {
+    // given
+    final Room room = new Room();
+    room.setName("room");
+    mockSuccess();
+    // when
+    rocketChatClient.send(room, "message");
+    // then no error
+  }
+
+  @Test
+  public void shouldWorkWithEmojiAndNoAvatarEmptyAttachments() throws Exception {
+    // given
+    mockSuccess();
+    // when
+    rocketChatClient.send("room", "message", "test", null);
+    // then no error
+  }
+
+  @Test
+  public void shouldWorkWithEmojiAndAvatarEmptyAttachments() throws Exception {
+    // given
+    mockSuccess();
+    // when
+    rocketChatClient.send("room", "message", "test", "avatar");
+    // then no error
+  }
+
+  @Test
+  public void shouldWorkWithNoEmojiAndNoAvatarEmptyAttachments() throws Exception {
+    // given
+    mockSuccess();
+    // when
+    rocketChatClient.send("room", "message");
+    // then no error
+  }
+
+  @Test
+  public void shouldWorkWithEmojiAndAvatarAndAttachments() throws Exception {
+    // given
+    mockSuccess();
+    final List<Map<String, Object>> attachements = new ArrayList<Map<String, Object>>();
+    attachements.add(new HashMap<String, Object>());
+    // when
+    rocketChatClient.send("room", "message", "test", "avatar", attachements);
+    // then no error
+  }
+
   @Test(expected = IOException.class)
   public void shouldFailOnEmptyResponseOnVersionInfo() throws Exception {
     // given
@@ -48,7 +101,7 @@ public class RocketChatClientImplTest {
 
   @Test(expected = IOException.class)
   public void shouldFailOnEmptyResponseOnSendMessage() throws Exception {
-    // givenv
+    // given
     final Response infoResponse = new Response();
     infoResponse.setSuccess(true);
     final Info info = new Info();
@@ -62,5 +115,20 @@ public class RocketChatClientImplTest {
     rocketChatClient.send("room", "message", null, null, null);
     // then error
   }
+
+  private Response mockSuccess() throws Exception {
+    final Response infoResponse = new Response();
+    infoResponse.setSuccess(true);
+    final Info info = new Info();
+    info.setVersion("0.52.1");
+    infoResponse.setInfo(info);
+    final Response response = new Response();
+    response.setSuccess(true);
+    when(callBuilder.buildCall(RocketChatRestApiV1.Info)).thenReturn(infoResponse);
+    when(callBuilder.buildCall(any(RocketChatRestApiV1.class), any(RocketChatQueryParams.class), any(Map.class))).thenReturn(response);
+
+    return response;
+  }
+
 
 }
