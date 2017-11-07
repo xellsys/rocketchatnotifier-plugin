@@ -76,11 +76,6 @@
           <version>${maven-release-plugin.version}</version>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>sql-maven-plugin</artifactId>
-          <version>${sql-maven-plugin.version}</version>
-        </plugin>
-        <plugin>
           <groupId>external.atlassian.jgitflow</groupId>
           <artifactId>jgitflow-maven-plugin</artifactId>
           <version>${jgitflow-maven-plugin.version}</version>
