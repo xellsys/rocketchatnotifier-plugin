@@ -1,5 +1,21 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.3...v) (2017-09-13)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.4...v) (2017-11-10)
+
+
+### Bug Fixes
+
+* **duration-display:** Fix for duration label error ([28c8594](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/28c8594))
+* **NPE:** Resolve null pointer in error log ([94b7308](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/94b7308)), closes [#JENKINS-47841](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-47841)
+
+
+### Features
+
+* **coverage:** Adding code coverage ([dfe4b4e](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/dfe4b4e))
+
+
+
+<a name="0.5.3"></a>
+## [0.5.3](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.3...v0.5.3) (2017-09-13)
 
 
 ### Features
