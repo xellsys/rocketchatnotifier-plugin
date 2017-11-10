@@ -1,5 +1,7 @@
 package jenkins.plugins.rocketchatnotifier.model;
 
+import com.google.common.base.Objects;
+
 public class Response {
   private boolean success;
   private Message[] messages;
@@ -76,5 +78,19 @@ public class Response {
 
   public void setInfo(final Info info) {
     this.info = info;
+  }
+
+  @Override
+  public String toString() {
+    return Objects.toStringHelper(this)
+      .add("success", success)
+      .add("messages", messages)
+      .add("message", message)
+      .add("users", users)
+      .add("user", user)
+      .add("channels", channels)
+      .add("channel", channel)
+      .add("info", info)
+      .toString();
   }
 }

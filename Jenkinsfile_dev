@@ -36,7 +36,7 @@ node('docker') {
 
     stage('Test') {
       try {
-        sh "mvn -Pdocker clean verify"
+        sh "mvn -Pdocker clean integration-test"
       } finally {
         sh "./docker-stop.sh"
         junit testResults: 'target/surefire-reports/TEST-*.xml,target/failsafe-reports/TEST-*.xml'

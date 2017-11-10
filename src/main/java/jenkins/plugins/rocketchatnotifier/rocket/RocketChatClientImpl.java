@@ -22,6 +22,7 @@ import java.util.logging.Logger;
  * @since 0.0.1
  */
 public class RocketChatClientImpl implements RocketChatClient {
+
   private RocketChatClientCallBuilder callBuilder;
 
   private static final Logger LOG = Logger.getLogger(RocketClientImpl.class.getName());
@@ -56,7 +57,7 @@ public class RocketChatClientImpl implements RocketChatClient {
   @Override
   public User getUser(String userId) throws IOException {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.UsersInfo,
-                                              new RocketChatQueryParams("userId", userId));
+      new RocketChatQueryParams("userId", userId));
 
     if (!res.isSuccessful()) {
       LOG.severe("Could not read user information: " + res.getMessage().getMsg());
@@ -84,11 +85,11 @@ public class RocketChatClientImpl implements RocketChatClient {
   public Info getInfo() throws IOException {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.Info);
 
-    if (!res.isSuccessful()) {
-      LOG.severe("Could not read information: " + res.getMessage().getMsg());
-      throw new IOException("The call to get informations was unsuccessful.");
+    if (res.isSuccessful()) {
+      return res.getInfo();
     }
-    return res.getInfo();
+    LOG.severe("Could not read information: " + res);
+    throw new IOException("The call to get informations was unsuccessful.");
   }
 
   @Override
@@ -121,10 +122,12 @@ public class RocketChatClientImpl implements RocketChatClient {
       if (attachments != null && attachments.size() > 0)
         body.put("attachments", attachments);
     }
-    Response res = this.callBuilder.buildCall(RocketChatRestApiV1.PostMessage, null, body);
+    final Response res = this.callBuilder.buildCall(RocketChatRestApiV1.PostMessage, null, body);
 
-    if (!res.isSuccessful()) {
-      LOG.severe("Could not send message: " + res.getMessage() != null ? res.getMessage().getMsg() : "");
+    if (res.isSuccessful()) {
+      LOG.fine("Message sent was successfull.");
+    } else {
+      LOG.severe("Could not send message: " + res);
       throw new IOException("The send of the message was unsuccessful.");
     }
   }
