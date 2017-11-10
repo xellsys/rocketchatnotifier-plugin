@@ -5,6 +5,7 @@ import jenkins.plugins.rocketchatnotifier.model.Info;
 import jenkins.plugins.rocketchatnotifier.model.Response;
 import jenkins.plugins.rocketchatnotifier.model.Room;
 import jenkins.plugins.rocketchatnotifier.model.User;
+import org.json.simple.JSONValue;
 import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class RocketChatClientImpl implements RocketChatClient {
    * @param password  of the user to authenticate with
    */
   public RocketChatClientImpl(String serverUrl, String user, String password) {
-    this.callBuilder = new RocketChatClientCallBuilder(serverUrl, user, password);
+    this.callBuilder = new RocketChatClientCallBuilder(serverUrl, JSONValue.escape(user), JSONValue.escape(password));
   }
 
   @Override
