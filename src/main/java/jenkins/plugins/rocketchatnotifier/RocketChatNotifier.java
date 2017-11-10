@@ -248,27 +248,29 @@ public class RocketChatNotifier extends Notifier {
     }
 
     @Override
-    @SuppressWarnings("NP_PARAMETER_MUST_BE_NONNULL_BUT_MARKED_AS_NULLABLE")
     public RocketChatNotifier newInstance(StaplerRequest sr, JSONObject json) {
-      String rocketServerUrl = sr.getParameter("rocketServer");
-      String username = sr.getParameter("rocketUsername");
-      String password = sr.getParameter("rocketPassword");
-      String channel = sr.getParameter("rocketChannel");
-      boolean startNotification = "true".equals(sr.getParameter("rocketStartNotification"));
-      boolean notifySuccess = "true".equals(sr.getParameter("rocketNotifySuccess"));
-      boolean notifyAborted = "true".equals(sr.getParameter("rocketNotifyAborted"));
-      boolean notifyNotBuilt = "true".equals(sr.getParameter("rocketNotifyNotBuilt"));
-      boolean notifyUnstable = "true".equals(sr.getParameter("rocketNotifyUnstable"));
-      boolean notifyFailure = "true".equals(sr.getParameter("rocketNotifyFailure"));
-      boolean notifyBackToNormal = "true".equals(sr.getParameter("rocketNotifyBackToNormal"));
-      boolean notifyRepeatedFailure = "true".equals(sr.getParameter("rocketNotifyRepeatedFailure"));
-      boolean includeTestSummary = "true".equals(sr.getParameter("includeTestSummary"));
-      CommitInfoChoice commitInfoChoice = CommitInfoChoice.forDisplayName(sr.getParameter("rocketCommitInfoChoice"));
-      boolean includeCustomMessage = "on".equals(sr.getParameter("includeCustomMessage"));
-      String customMessage = sr.getParameter("customMessage");
-      return new RocketChatNotifier(rocketServerUrl, username, password, channel, buildServerUrl, startNotification, notifyAborted,
-        notifyFailure, notifyNotBuilt, notifySuccess, notifyUnstable, notifyBackToNormal, notifyRepeatedFailure,
-        includeTestSummary, commitInfoChoice, includeCustomMessage, customMessage);
+      if (sr != null && json != null) {
+        String rocketServerUrl = sr.getParameter("rocketServer");
+        String username = sr.getParameter("rocketUsername");
+        String password = sr.getParameter("rocketPassword");
+        String channel = sr.getParameter("rocketChannel");
+        boolean startNotification = "true".equals(sr.getParameter("rocketStartNotification"));
+        boolean notifySuccess = "true".equals(sr.getParameter("rocketNotifySuccess"));
+        boolean notifyAborted = "true".equals(sr.getParameter("rocketNotifyAborted"));
+        boolean notifyNotBuilt = "true".equals(sr.getParameter("rocketNotifyNotBuilt"));
+        boolean notifyUnstable = "true".equals(sr.getParameter("rocketNotifyUnstable"));
+        boolean notifyFailure = "true".equals(sr.getParameter("rocketNotifyFailure"));
+        boolean notifyBackToNormal = "true".equals(sr.getParameter("rocketNotifyBackToNormal"));
+        boolean notifyRepeatedFailure = "true".equals(sr.getParameter("rocketNotifyRepeatedFailure"));
+        boolean includeTestSummary = "true".equals(sr.getParameter("includeTestSummary"));
+        CommitInfoChoice commitInfoChoice = CommitInfoChoice.forDisplayName(sr.getParameter("rocketCommitInfoChoice"));
+        boolean includeCustomMessage = "on".equals(sr.getParameter("includeCustomMessage"));
+        String customMessage = sr.getParameter("customMessage");
+        return new RocketChatNotifier(rocketServerUrl, username, password, channel, buildServerUrl, startNotification, notifyAborted,
+          notifyFailure, notifyNotBuilt, notifySuccess, notifyUnstable, notifyBackToNormal, notifyRepeatedFailure,
+          includeTestSummary, commitInfoChoice, includeCustomMessage, customMessage);
+      }
+      return null;
     }
 
     @Override
