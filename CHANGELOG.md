@@ -1,9 +1,6 @@
-<a name="0.5.3"></a>
-## [0.5.3](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.3...v0.5.3) (2017-09-13)
+<a name=""></a>
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.3...v) (2017-09-13)
 
-### Bug Fixes
-
-* **message-text:** "Finished" messages don't mention FAIL/SUCCESS, always 0 ms ([JENKINS-46583](https://issues.jenkins-ci.org/browse/JENKINS-46583))
 
 ### Features
 
