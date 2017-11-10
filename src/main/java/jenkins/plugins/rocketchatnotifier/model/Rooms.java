@@ -2,7 +2,7 @@ package jenkins.plugins.rocketchatnotifier.model;
 
 public class Rooms {
 
-  private Room[] rooms;
+  private Room[] rooms = new Room[0];
 
   public Room[] getRooms() {
     return rooms.clone();

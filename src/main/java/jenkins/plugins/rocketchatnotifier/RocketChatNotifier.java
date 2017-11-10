@@ -1,6 +1,5 @@
 package jenkins.plugins.rocketchatnotifier;
 
-import edu.umd.cs.findbugs.annotations.SuppressWarnings;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
@@ -27,7 +26,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@SuppressWarnings("rawtypes")
 public class RocketChatNotifier extends Notifier {
 
   private static final Logger LOGGER = Logger.getLogger(RocketChatNotifier.class.getName());
@@ -53,18 +51,6 @@ public class RocketChatNotifier extends Notifier {
   @Override
   public DescriptorImpl getDescriptor() {
     return (DescriptorImpl) super.getDescriptor();
-  }
-
-  public String getRocketServerURL() {
-    return rocketServerUrl;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public String getPassword() {
-    return password;
   }
 
   public String getChannel() {
@@ -162,7 +148,7 @@ public class RocketChatNotifier extends Notifier {
   public RocketClient newRocketChatClient(AbstractBuild r, BuildListener listener) throws IOException {
     String serverUrl = this.rocketServerUrl;
     if (StringUtils.isEmpty(serverUrl)) {
-      serverUrl = getDescriptor().getRocketServerURL();
+      serverUrl = getDescriptor().getRocketServerUrl();
     }
     String username = this.username;
     if (StringUtils.isEmpty(username)) {
@@ -232,7 +218,7 @@ public class RocketChatNotifier extends Notifier {
       load();
     }
 
-    public String getRocketServerURL() {
+    public String getRocketServerUrl() {
       return rocketServerUrl;
     }
 

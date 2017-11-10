@@ -163,7 +163,7 @@ public class RocketSendStep extends AbstractStepImpl {
       }
       RocketChatNotifier.DescriptorImpl rocketDesc = jenkins.getDescriptorByType(
         RocketChatNotifier.DescriptorImpl.class);
-      String server = rocketDesc.getRocketServerURL();
+      String server = rocketDesc.getRocketServerUrl();
       String user = rocketDesc.getUsername();
       String password = rocketDesc.getPassword();
       String channel = step.channel != null ? step.channel : rocketDesc.getChannel();

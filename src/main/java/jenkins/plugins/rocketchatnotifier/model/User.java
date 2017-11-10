@@ -11,7 +11,8 @@ import java.util.Date;
  */
 public class User extends Identified {
   private String username, name;
-  private Date createdAt, lastLogin;
+  private Date createdAt = new Date();
+  private Date lastLogin = new Date();
   private boolean active;
   private int utcOffset;
 
