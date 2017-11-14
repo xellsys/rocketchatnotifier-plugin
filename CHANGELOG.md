@@ -1,10 +1,11 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.4...v) (2017-11-10)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.5...v) (2017-11-14)
 
 
 ### Bug Fixes
 
 * **duration-display:** Fix for duration label error ([28c8594](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/28c8594))
+* **error-handling:** Improved error handling for special characters in fields (see #JENKINS-47858) ([2a3a542](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/2a3a542))
 * **NPE:** Resolve null pointer in error log ([94b7308](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/94b7308)), closes [#JENKINS-47841](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-47841)
 
 
