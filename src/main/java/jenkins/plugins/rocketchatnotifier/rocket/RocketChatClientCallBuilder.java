@@ -92,11 +92,12 @@ public class RocketChatClientCallBuilder {
 
   private void login() throws IOException {
     HttpResponse<JsonNode> loginResult;
+    String apiURL = serverUrl + "v1/login";
 
     try {
-      loginResult = Unirest.post(serverUrl + "v1/login").field("user", user).field("password", password).asJson();
+      loginResult = Unirest.post(apiURL).field("user", user).field("password", password).asJson();
     } catch (UnirestException e) {
-      throw new IOException(e);
+      throw new IOException("Please check if the server API " + apiURL + " is correct");
     } catch (Exception e) {
       throw new IOException(e);
     }
