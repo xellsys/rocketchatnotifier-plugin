@@ -164,6 +164,7 @@ public class RocketSendStep extends AbstractStepImpl {
       RocketChatNotifier.DescriptorImpl rocketDesc = jenkins.getDescriptorByType(
         RocketChatNotifier.DescriptorImpl.class);
       String server = rocketDesc.getRocketServerUrl();
+      boolean trustSSL = rocketDesc.isTrustSSL();
       String user = rocketDesc.getUsername();
       String password = rocketDesc.getPassword();
       String channel = step.channel != null ? step.channel : rocketDesc.getChannel();
@@ -171,7 +172,7 @@ public class RocketSendStep extends AbstractStepImpl {
       // placing in console log to simplify testing of retrieving values from global config or from step field; also used for tests
       listener.getLogger().println(Messages.RocketSendStepConfig(channel, step.message));
 
-      RocketClient rocketClient = getRocketClient(server, user, password, channel);
+      RocketClient rocketClient = getRocketClient(server, trustSSL, user, password, channel);
 
       String msg = step.message;
       if (!step.rawMessage) {
@@ -189,8 +190,8 @@ public class RocketSendStep extends AbstractStepImpl {
     }
 
     //streamline unit testing
-    RocketClient getRocketClient(String server, String user, String password, String channel) throws IOException {
-      return new RocketClientImpl(server, user, password, channel);
+    RocketClient getRocketClient(String server, boolean trustSSL, String user, String password, String channel) throws IOException {
+      return new RocketClientImpl(server, trustSSL, user, password, channel);
     }
 
     protected List<Map<String, Object>> convertMessageAttachmentsToMaps(List<MessageAttachment> attachments) {

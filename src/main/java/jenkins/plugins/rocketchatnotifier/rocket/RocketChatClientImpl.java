@@ -33,11 +33,12 @@ public class RocketChatClientImpl implements RocketChatClient {
    * password to use.
    *
    * @param serverUrl of the Rocket.Chat server, with or without it ending in "/api/"
+   * @param trustSSL  if set set the SSL certificate of the rpcket server will not be checked
    * @param user      which to authenticate with
    * @param password  of the user to authenticate with
    */
-  public RocketChatClientImpl(String serverUrl, String user, String password) {
-    this.callBuilder = new RocketChatClientCallBuilder(serverUrl, JSONValue.escape(user), JSONValue.escape(password));
+  public RocketChatClientImpl(String serverUrl, boolean trustSSL, String user, String password) {
+    this.callBuilder = new RocketChatClientCallBuilder(serverUrl, trustSSL, JSONValue.escape(user), JSONValue.escape(password));
   }
 
   @Override
@@ -112,8 +113,24 @@ public class RocketChatClientImpl implements RocketChatClient {
   @Override
   public void send(final String channelName, final String message, final String emoji, final String avatar, final List<Map<String, Object>> attachments)
     throws ValidatorException, IOException {
+    if (!channelName.contains(",")) {
+      sendSingleMessage(channelName, message, emoji, avatar, attachments);
+      return;
+    }
+
+    for (String singleChanelName : channelName.split(",")) {
+      sendSingleMessage(singleChanelName, message, emoji, avatar, attachments);
+    }
+  }
+
+  private void sendSingleMessage(final String singleChannelName, final String message, final String emoji, final String avatar, final List<Map<String, Object>> attachments) throws IOException {
     Map body = new HashMap<String, String>();
-    body.put("channel", "#" + channelName);
+    String targetChannelName = singleChannelName.trim();
+    if (!targetChannelName.matches("^[@#].+")) {
+      targetChannelName = "#" + targetChannelName;
+    }
+
+    body.put("channel", targetChannelName);
     body.put("text", message);
     if (this.getInfo().getVersion().compareTo("0.50.1") >= 0) {
       if (emoji != null)
