@@ -257,7 +257,7 @@ public class RocketChatNotifier extends Notifier {
     @Override
     public RocketChatNotifier newInstance(StaplerRequest sr, JSONObject json) {
       if (sr != null && json != null) {
-        String rocketServerUrl = sr.getParameter("rocketServer");
+        String rocketServerUrl = sr.getParameter("rocketServerUrl");
         boolean trustSSL = BooleanUtils.toBoolean(sr.getParameter("trustSSL"));
         String username = sr.getParameter("rocketUsername");
         String password = sr.getParameter("rocketPassword");
@@ -304,16 +304,16 @@ public class RocketChatNotifier extends Notifier {
     public String getDisplayName() {
       return "RocketChat Notifications";
     }
-
-    public FormValidation doTestConnection(@QueryParameter("rocketServer") final String rocketServerURL,
+    
+    public FormValidation doTestConnection(@QueryParameter("rocketServerUrl") final String rocketServerURL,
                                            @QueryParameter("trustSSL") final String trustSSL,
                                            @QueryParameter("rocketUsername") final String username,
                                            @QueryParameter("rocketPassword") final String password,
                                            @QueryParameter("rocketChannel") final String channel,
                                            @QueryParameter("rocketBuildServerUrl") final String buildServerUrl) throws FormException {
       try {
-        String targetServerUrl = rocketServerURL + RocketClientImpl.API_PATH;
-        if (StringUtils.isEmpty(rocketServerURL)) {
+        String targetServerUrl = rocketServerUrl + RocketClientImpl.API_PATH;
+        if (StringUtils.isEmpty(rocketServerUrl)) {
           targetServerUrl = this.rocketServerUrl;
         }
         boolean targetTrustSSL = this.trustSSL;
