@@ -91,6 +91,9 @@ public interface RocketChatClient {
 
   /**
    * Retrieves server information
+   *
+   * @return Info
+   * @throws IOException in case of communications errors
    */
   Info getInfo() throws IOException;
 

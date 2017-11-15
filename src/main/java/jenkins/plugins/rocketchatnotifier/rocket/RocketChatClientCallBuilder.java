@@ -11,10 +11,22 @@ import com.mashape.unirest.request.HttpRequestWithBody;
 import jenkins.plugins.rocketchatnotifier.model.Response;
 import jenkins.plugins.rocketchatnotifier.utils.Environment;
 import org.apache.http.HttpHost;
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.SingleClientConnManager;
 import org.json.JSONObject;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.net.URI;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.Map.Entry;
 
 /**
@@ -32,7 +44,7 @@ public class RocketChatClientCallBuilder {
   private String authToken;
   private String userId;
 
-  protected RocketChatClientCallBuilder(String serverUrl, String user, String password) {
+  protected RocketChatClientCallBuilder(String serverUrl, boolean trustSSL, String user, String password) {
     if (!serverUrl.endsWith("api/")) {
       this.serverUrl = serverUrl + (serverUrl.endsWith("/") ? "" : "/") + "api/";
     } else {
@@ -43,6 +55,8 @@ public class RocketChatClientCallBuilder {
       URI uri = URI.create(this.getProxy());
       Unirest.setProxy(new HttpHost(uri.getHost(), uri.getPort()));
     }
+
+    Unirest.setHttpClient(createHttpClient(trustSSL));
 
     this.user = user;
     this.password = password;
@@ -97,7 +111,7 @@ public class RocketChatClientCallBuilder {
     try {
       loginResult = Unirest.post(apiURL).field("user", user).field("password", password).asJson();
     } catch (UnirestException e) {
-      throw new IOException("Please check if the server API " + apiURL + " is correct");
+      throw new IOException("Please check if the server API " + apiURL + " is correct: " + e.getMessage(), e);
     } catch (Exception e) {
       throw new IOException(e);
     }
@@ -160,6 +174,43 @@ public class RocketChatClientCallBuilder {
       return objectMapper.readValue(res.getBody(), Response.class);
     } catch (UnirestException e) {
       throw new IOException(e);
+    }
+  }
+
+  private HttpClient createHttpClient(boolean trustSSL) {
+    if (!trustSSL) {
+      return new DefaultHttpClient();
+    }
+
+    try {
+      SSLContext sslContext = SSLContext.getInstance("SSL");
+
+      // set up a TrustManager that trusts everything
+      sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+        public X509Certificate[] getAcceptedIssuers() {
+          return null;
+        }
+
+        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+          // intentionally left blank
+        }
+
+        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+          // intentionally left blank
+        }
+      }}, new SecureRandom());
+
+      SSLSocketFactory sf = new SSLSocketFactory(sslContext);
+      Scheme httpsScheme = new Scheme("https", 443, sf);
+      SchemeRegistry schemeRegistry = new SchemeRegistry();
+      schemeRegistry.register(httpsScheme);
+
+      // apache HttpClient version >4.2 should use BasicClientConnectionManager
+      ClientConnectionManager cm = new SingleClientConnManager(schemeRegistry);
+      HttpClient httpClient = new DefaultHttpClient(cm);
+      return httpClient;
+    } catch (Exception e) {
+      throw new IllegalStateException(e.getMessage(), e);
     }
   }
 }

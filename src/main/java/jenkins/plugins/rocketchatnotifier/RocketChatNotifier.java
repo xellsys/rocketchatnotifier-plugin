@@ -14,6 +14,7 @@ import hudson.tasks.Publisher;
 import hudson.util.FormValidation;
 import jenkins.model.JenkinsLocationConfiguration;
 import net.sf.json.JSONObject;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
@@ -29,8 +30,8 @@ import java.util.logging.Logger;
 public class RocketChatNotifier extends Notifier {
 
   private static final Logger LOGGER = Logger.getLogger(RocketChatNotifier.class.getName());
-
   private String rocketServerUrl;
+  private boolean trustSSL;
   private String username;
   private String password;
   private String channel;
@@ -116,13 +117,14 @@ public class RocketChatNotifier extends Notifier {
   }
 
   @DataBoundConstructor
-  public RocketChatNotifier(final String rocketServerUrl, final String username, final String password, final String channel, final String buildServerUrl,
+  public RocketChatNotifier(final String rocketServerUrl, final boolean trustSSL, final String username, final String password, final String channel, final String buildServerUrl,
                             final boolean startNotification, final boolean notifyAborted, final boolean notifyFailure,
                             final boolean notifyNotBuilt, final boolean notifySuccess, final boolean notifyUnstable, final boolean notifyBackToNormal,
                             final boolean notifyRepeatedFailure, final boolean includeTestSummary, CommitInfoChoice commitInfoChoice,
                             boolean includeCustomMessage, String customMessage) {
     super();
     this.rocketServerUrl = rocketServerUrl;
+    this.trustSSL = trustSSL;
     this.username = username;
     this.password = password;
     this.buildServerUrl = buildServerUrl;
@@ -174,7 +176,7 @@ public class RocketChatNotifier extends Notifier {
     username = env.expand(username);
     password = env.expand(password);
 
-    return new RocketClientImpl(serverUrl, username, password, channel);
+    return new RocketClientImpl(serverUrl, trustSSL, username, password, channel);
   }
 
   @Override
@@ -207,6 +209,7 @@ public class RocketChatNotifier extends Notifier {
   public static class DescriptorImpl extends BuildStepDescriptor<Publisher> {
 
     private String rocketServerUrl;
+    private boolean trustSSL;
     private String username;
     private String password;
     private String channel;
@@ -220,6 +223,10 @@ public class RocketChatNotifier extends Notifier {
 
     public String getRocketServerUrl() {
       return rocketServerUrl;
+    }
+
+    public boolean isTrustSSL() {
+      return trustSSL;
     }
 
     public String getUsername() {
@@ -251,6 +258,7 @@ public class RocketChatNotifier extends Notifier {
     public RocketChatNotifier newInstance(StaplerRequest sr, JSONObject json) {
       if (sr != null && json != null) {
         String rocketServerUrl = sr.getParameter("rocketServer");
+        boolean trustSSL = BooleanUtils.toBoolean(sr.getParameter("trustSSL"));
         String username = sr.getParameter("rocketUsername");
         String password = sr.getParameter("rocketPassword");
         String channel = sr.getParameter("rocketChannel");
@@ -266,7 +274,7 @@ public class RocketChatNotifier extends Notifier {
         CommitInfoChoice commitInfoChoice = CommitInfoChoice.forDisplayName(sr.getParameter("rocketCommitInfoChoice"));
         boolean includeCustomMessage = "on".equals(sr.getParameter("includeCustomMessage"));
         String customMessage = sr.getParameter("customMessage");
-        return new RocketChatNotifier(rocketServerUrl, username, password, channel, buildServerUrl, startNotification, notifyAborted,
+        return new RocketChatNotifier(rocketServerUrl, trustSSL, username, password, channel, buildServerUrl, startNotification, notifyAborted,
           notifyFailure, notifyNotBuilt, notifySuccess, notifyUnstable, notifyBackToNormal, notifyRepeatedFailure,
           includeTestSummary, commitInfoChoice, includeCustomMessage, customMessage);
       }
@@ -276,6 +284,7 @@ public class RocketChatNotifier extends Notifier {
     @Override
     public boolean configure(StaplerRequest sr, JSONObject formData) throws FormException {
       rocketServerUrl = sr.getParameter("rocketServer");
+      trustSSL = BooleanUtils.toBoolean(sr.getParameter("trustSSL"));
       username = sr.getParameter("rocketUsername");
       password = sr.getParameter("rocketPassword");
       channel = sr.getParameter("rocketChannel");
@@ -297,6 +306,7 @@ public class RocketChatNotifier extends Notifier {
     }
 
     public FormValidation doTestConnection(@QueryParameter("rocketServer") final String rocketServerURL,
+                                           @QueryParameter("trustSSL") final String trustSSL,
                                            @QueryParameter("rocketUsername") final String username,
                                            @QueryParameter("rocketPassword") final String password,
                                            @QueryParameter("rocketChannel") final String channel,
@@ -305,6 +315,10 @@ public class RocketChatNotifier extends Notifier {
         String targetServerUrl = rocketServerURL + RocketClientImpl.API_PATH;
         if (StringUtils.isEmpty(rocketServerURL)) {
           targetServerUrl = this.rocketServerUrl;
+        }
+        boolean targetTrustSSL = this.trustSSL;
+        if (StringUtils.isNotEmpty(trustSSL)) {
+          targetTrustSSL = BooleanUtils.toBoolean(trustSSL);
         }
         String targetUsername = username;
         if (StringUtils.isEmpty(targetUsername)) {
@@ -322,7 +336,7 @@ public class RocketChatNotifier extends Notifier {
         if (StringUtils.isEmpty(targetBuildServerUrl)) {
           targetBuildServerUrl = this.buildServerUrl;
         }
-        RocketClient rocketChatClient = new RocketClientImpl(targetServerUrl, targetUsername, targetPassword, targetChannel);
+        RocketClient rocketChatClient = new RocketClientImpl(targetServerUrl, targetTrustSSL, targetUsername, targetPassword, targetChannel);
         String message = "RocketChat/Jenkins plugin: you're all set on " + targetBuildServerUrl;
         LOGGER.fine("Start validating config");
         rocketChatClient.validate();
@@ -348,6 +362,7 @@ public class RocketChatNotifier extends Notifier {
     private String username;
     private String password;
     private String channel;
+    private boolean trustSSL;
     private boolean startNotification;
     private boolean notifySuccess;
     private boolean notifyAborted;
@@ -363,6 +378,7 @@ public class RocketChatNotifier extends Notifier {
 
     @DataBoundConstructor
     public RocketJobProperty(String rocketServerUrl,
+                             boolean trustSSL,
                              String username,
                              String password,
                              String channel,
@@ -379,6 +395,7 @@ public class RocketChatNotifier extends Notifier {
                              boolean includeCustomMessage,
                              String customMessage) {
       this.rocketServerUrl = rocketServerUrl;
+      this.trustSSL = trustSSL;
       this.username = username;
       this.password = password;
       this.channel = channel;
@@ -399,6 +416,11 @@ public class RocketChatNotifier extends Notifier {
     @Exported
     public String getRocketServerUrl() {
       return rocketServerUrl;
+    }
+
+    @Exported
+    public boolean isTrustSSL() {
+      return trustSSL;
     }
 
     @Exported
