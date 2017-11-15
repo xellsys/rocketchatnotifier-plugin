@@ -17,6 +17,9 @@
     <f:entry title="Rocket Server URL">
         <f:textbox field="rocketServerUrl" name="rocketServerUrl" value="${descriptor.getRocketServerUrl()}" />
     </f:entry>
+    <f:entry title="Trust Server Certificate?" description="If checked, the SSL certificate of the Rocket Server will not be checked">
+      <f:checkbox field="trustSSL" name="trustSSL" checked="${descriptor.isTrustSSL()}"/>
+    </f:entry>
     <f:entry title="Login Username">
         <f:textbox field="username" name="rocketUsername" value="${descriptor.getUsername()}" />
     </f:entry>
@@ -31,6 +34,6 @@
     </f:entry>
     <f:validateButton
         title="${%Test Connection}" progress="${%Testing...}"
-        method="testConnection" with="rocketServerUrl,rocketUsername,rocketPassword,rocketChannel,rocketBuildServerUrl" />
+        method="testConnection" with="rocketServerUrl,trustSSL,rocketUsername,rocketPassword,rocketChannel,rocketBuildServerUrl" />
   </f:section>
 </j:jelly>

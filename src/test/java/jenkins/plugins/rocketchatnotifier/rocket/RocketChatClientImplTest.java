@@ -41,8 +41,8 @@ public class RocketChatClientImplTest {
   @Before
   public void setup() throws Exception {
     callBuilder = mock(RocketChatClientCallBuilder.class);
-    PowerMockito.whenNew(RocketChatClientCallBuilder.class).withArguments(Mockito.anyString(), Mockito.anyString(), Mockito.anyString()).thenReturn(callBuilder);
-    rocketChatClient = new RocketChatClientImpl("", "", "");
+    PowerMockito.whenNew(RocketChatClientCallBuilder.class).withArguments(Mockito.anyString(), Mockito.anyBoolean(), Mockito.anyString(), Mockito.anyString()).thenReturn(callBuilder);
+    rocketChatClient = new RocketChatClientImpl("", false, "", "");
   }
 
   @Test

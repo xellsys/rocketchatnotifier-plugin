@@ -15,7 +15,7 @@ public class RocketClientIT {
 
   @Before
   public void setup() throws Exception {
-    this.client = new RocketClientImpl("http://localhost:4443/", "admin", "supersecret",
+    this.client = new RocketClientImpl("http://localhost:4443/", false, "admin", "supersecret",
                                        "general"); // TODO read from env
   }
 

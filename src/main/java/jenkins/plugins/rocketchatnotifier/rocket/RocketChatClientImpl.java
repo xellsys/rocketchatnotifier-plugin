@@ -33,11 +33,12 @@ public class RocketChatClientImpl implements RocketChatClient {
    * password to use.
    *
    * @param serverUrl of the Rocket.Chat server, with or without it ending in "/api/"
+   * @param trustSSL  if set set the SSL certificate of the rpcket server will not be checked
    * @param user      which to authenticate with
    * @param password  of the user to authenticate with
    */
-  public RocketChatClientImpl(String serverUrl, String user, String password) {
-    this.callBuilder = new RocketChatClientCallBuilder(serverUrl, JSONValue.escape(user), JSONValue.escape(password));
+  public RocketChatClientImpl(String serverUrl, boolean trustSSL, String user, String password) {
+    this.callBuilder = new RocketChatClientCallBuilder(serverUrl, trustSSL, JSONValue.escape(user), JSONValue.escape(password));
   }
 
   @Override

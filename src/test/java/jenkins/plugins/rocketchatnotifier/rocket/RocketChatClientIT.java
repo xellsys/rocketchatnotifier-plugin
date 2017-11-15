@@ -21,7 +21,7 @@ public class RocketChatClientIT {
 
   @Before
   public void setup() throws Exception {
-    this.client = new RocketChatClientImpl("http://localhost:4443/api/", "admin", "supersecret");
+    this.client = new RocketChatClientImpl("http://localhost:4443/api/", false, "admin", "supersecret");
   }
 
   @Test
