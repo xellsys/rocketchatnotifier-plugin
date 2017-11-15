@@ -1,5 +1,5 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.5...v) (2017-11-14)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.5...v) (2017-11-15)
 
 
 ### Bug Fixes
