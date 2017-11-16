@@ -1,5 +1,10 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.5...v) (2017-11-15)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/1.0.1...v) (2017-11-16)
+
+
+
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.5...v1.0.0) (2017-11-15)
 
 
 ### Bug Fixes
