@@ -304,7 +304,7 @@ public class RocketChatNotifier extends Notifier {
     public String getDisplayName() {
       return "RocketChat Notifications";
     }
-    
+
     public FormValidation doTestConnection(@QueryParameter("rocketServerUrl") final String rocketServerURL,
                                            @QueryParameter("trustSSL") final String trustSSL,
                                            @QueryParameter("rocketUsername") final String username,
@@ -312,7 +312,7 @@ public class RocketChatNotifier extends Notifier {
                                            @QueryParameter("rocketChannel") final String channel,
                                            @QueryParameter("rocketBuildServerUrl") final String buildServerUrl) throws FormException {
       try {
-        String targetServerUrl = rocketServerUrl + RocketClientImpl.API_PATH;
+        String targetServerUrl = rocketServerURL + RocketClientImpl.API_PATH;
         if (StringUtils.isEmpty(rocketServerUrl)) {
           targetServerUrl = this.rocketServerUrl;
         }
