@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export MONGO_PORT=27017
-export RC_PORT=4443
+export RC_PORT=44443
 export RC_VERSION=${RC_VERSION:-"0.58.2"}
 
 # Rocket
