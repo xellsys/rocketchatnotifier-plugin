@@ -283,7 +283,7 @@ public class RocketChatNotifier extends Notifier {
 
     @Override
     public boolean configure(StaplerRequest sr, JSONObject formData) throws FormException {
-      rocketServerUrl = sr.getParameter("rocketServer");
+      rocketServerUrl = sr.getParameter("rocketServerUrl");
       trustSSL = BooleanUtils.toBoolean(sr.getParameter("trustSSL"));
       username = sr.getParameter("rocketUsername");
       password = sr.getParameter("rocketPassword");
