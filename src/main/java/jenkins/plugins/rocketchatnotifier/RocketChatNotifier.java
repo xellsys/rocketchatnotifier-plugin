@@ -17,6 +17,7 @@ import net.sf.json.JSONObject;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
@@ -33,6 +34,7 @@ public class RocketChatNotifier extends Notifier {
   private String rocketServerUrl;
   private boolean trustSSL;
   private String username;
+
   private String password;
   private String channel;
   private String buildServerUrl;
@@ -63,7 +65,8 @@ public class RocketChatNotifier extends Notifier {
     if (buildServerUrl == null || buildServerUrl.equalsIgnoreCase("")) {
       JenkinsLocationConfiguration jenkinsConfig = new JenkinsLocationConfiguration();
       return jenkinsConfig.getUrl();
-    } else {
+    }
+    else {
       return buildServerUrl;
     }
   }
@@ -116,7 +119,104 @@ public class RocketChatNotifier extends Notifier {
     return customMessage;
   }
 
+  public String getRocketServerUrl() {
+    return rocketServerUrl;
+  }
+
+  @DataBoundSetter
+  public void setRocketServerUrl(String rocketServerUrl) {
+    this.rocketServerUrl = rocketServerUrl;
+  }
+
+  public boolean isTrustSSL() {
+    return trustSSL;
+  }
+
+  @DataBoundSetter
+  public void setTrustSSL(boolean trustSSL) {
+    this.trustSSL = trustSSL;
+  }
+
+  public String getUsername() {
+    return username;
+  }
+
+  @DataBoundSetter
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  public String getPassword() {
+    return password;
+  }
+
+  @DataBoundSetter
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  @DataBoundSetter
+  public void setChannel(String channel) {
+    this.channel = channel;
+  }
+
+  @DataBoundSetter
+  public void setStartNotification(boolean startNotification) {
+    this.startNotification = startNotification;
+  }
+
+  @DataBoundSetter
+  public void setNotifySuccess(boolean notifySuccess) {
+    this.notifySuccess = notifySuccess;
+  }
+
+  @DataBoundSetter
+  public void setCommitInfoChoice(CommitInfoChoice commitInfoChoice) {
+    this.commitInfoChoice = commitInfoChoice;
+  }
+
+  @DataBoundSetter
+  public void setNotifyAborted(boolean notifyAborted) {
+    this.notifyAborted = notifyAborted;
+  }
+
+  @DataBoundSetter
+  public void setNotifyFailure(boolean notifyFailure) {
+    this.notifyFailure = notifyFailure;
+  }
+
+  @DataBoundSetter
+  public void setNotifyNotBuilt(boolean notifyNotBuilt) {
+    this.notifyNotBuilt = notifyNotBuilt;
+  }
+
+  @DataBoundSetter
+  public void setNotifyUnstable(boolean notifyUnstable) {
+    this.notifyUnstable = notifyUnstable;
+  }
+
+  @DataBoundSetter
+  public void setNotifyBackToNormal(boolean notifyBackToNormal) {
+    this.notifyBackToNormal = notifyBackToNormal;
+  }
+
+  @DataBoundSetter
+  public void setIncludeTestSummary(boolean includeTestSummary) {
+    this.includeTestSummary = includeTestSummary;
+  }
+
+  @DataBoundSetter
+  public void setNotifyRepeatedFailure(boolean notifyRepeatedFailure) {
+    this.notifyRepeatedFailure = notifyRepeatedFailure;
+  }
+
+
   @DataBoundConstructor
+  public RocketChatNotifier() {
+    super();
+    this.buildServerUrl = getBuildServerUrl();
+  }
+
   public RocketChatNotifier(final String rocketServerUrl, final boolean trustSSL, final String username, final String password, final String channel, final String buildServerUrl,
                             final boolean startNotification, final boolean notifyAborted, final boolean notifyFailure,
                             final boolean notifyNotBuilt, final boolean notifySuccess, final boolean notifyUnstable, final boolean notifyBackToNormal,
@@ -168,7 +268,8 @@ public class RocketChatNotifier extends Notifier {
     EnvVars env = null;
     try {
       env = r.getEnvironment(listener);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       listener.getLogger().println("Error retrieving environment vars: " + e.getMessage());
       env = new EnvVars();
     }
@@ -245,7 +346,8 @@ public class RocketChatNotifier extends Notifier {
       if (buildServerUrl == null || buildServerUrl.equalsIgnoreCase("")) {
         JenkinsLocationConfiguration jenkinsConfig = new JenkinsLocationConfiguration();
         return jenkinsConfig.getUrl();
-      } else {
+      }
+      else {
         return buildServerUrl;
       }
     }
@@ -345,10 +447,12 @@ public class RocketChatNotifier extends Notifier {
         rocketChatClient.publish(message);
         LOGGER.fine("Done publishing message");
         return FormValidation.ok("Success");
-      } catch (ValidatorException e) {
+      }
+      catch (ValidatorException e) {
         LOGGER.log(Level.SEVERE, "SSL error during trying to send rocket message", e);
         return FormValidation.error(e, "SSL error", e);
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
         LOGGER.log(Level.SEVERE, "Client error during trying to send rocket message", e);
         return FormValidation.error(e, "Client error - Could not send message");
       }
