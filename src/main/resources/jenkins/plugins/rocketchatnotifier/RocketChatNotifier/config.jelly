@@ -55,8 +55,12 @@
         <f:entry title="Project Channel" description="Comma separated list of rooms (e.g. #project) and / or persons (e.g. @john)">
             <f:textbox name="rocketChannel" value="${instance.getChannel()}"/>
         </f:entry>
+        <f:entry title="Incoming Webhook Token" description="Webhook token for posting messages. Overrides global authentication data and channel. ">
+            <f:textbox name="webhookToken" value="${instance.getWebhookToken()}"/>
+        </f:entry>
+        
         <f:validateButton
                 title="${%Test Connection}" progress="${%Testing...}"
-                method="testConnection" with="rocketChannel"/>
+                method="testConnection" with="rocketChannel,webhookToken"/>
     </f:advanced>
 </j:jelly>

@@ -48,6 +48,10 @@ public class RocketChatClientCallBuilder {
     this(new RocketChatBasicCallAuthentication(serverUrl, user, password), serverUrl, trustSSL);
   }
 
+  protected RocketChatClientCallBuilder(String serverUrl, boolean trustSSL, String webhookToken) {
+    this(new RocketChatWebhookAuthentication(serverUrl, webhookToken), serverUrl, trustSSL);
+  }
+
   protected RocketChatClientCallBuilder(RocketChatCallAuthentication authentication, String serverUrl,
       boolean trustSSL) {
     this.authentication = authentication;
