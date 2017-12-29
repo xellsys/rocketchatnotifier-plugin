@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout"
-         xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+         xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
     <f:entry title="Notify Build Start">
         <f:checkbox name="rocketStartNotification" value="true" checked="${instance.getStartNotification()}"/>
     </f:entry>
@@ -55,12 +55,16 @@
         <f:entry title="Project Channel" description="Comma separated list of rooms (e.g. #project) and / or persons (e.g. @john)">
             <f:textbox name="rocketChannel" value="${instance.getChannel()}"/>
         </f:entry>
-        <f:entry title="Incoming Webhook Token" description="Webhook token for posting messages. Overrides global authentication data and channel. ">
-            <f:textbox name="webhookToken" value="${instance.getWebhookToken()}"/>
+        <f:entry title="Incoming Webhook Token" description="Webhook token for posting messages. Overrides global authentication data and channel.">
+            <f:textbox field="webhookToken" name="webhookToken" value="${instance.getWebhookToken()}"/>
+        </f:entry>
+        
+        <f:entry title="Webhook Token Credential ID" field="tokenCredentialId" name="tokenCredentialId" description="Webhook token as Secret Text credential for posting messages. Overrides webhook token text.">
+            <c:select value="${instance.getWebhookTokenCredentialId()}"/>
         </f:entry>
         
         <f:validateButton
                 title="${%Test Connection}" progress="${%Testing...}"
-                method="testConnection" with="rocketChannel,webhookToken"/>
+                method="testConnection" with="rocketChannel,webhookToken,tokenCredentialId"/>
     </f:advanced>
 </j:jelly>
