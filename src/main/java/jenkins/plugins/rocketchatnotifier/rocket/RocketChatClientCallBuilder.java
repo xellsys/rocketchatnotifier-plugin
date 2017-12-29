@@ -30,7 +30,8 @@ import java.security.cert.X509Certificate;
 import java.util.Map.Entry;
 
 /**
- * The call builder for the {@link RocketChatClient} and is only supposed to be used internally.
+ * The call builder for the {@link RocketChatClient} and is only supposed to be
+ * used internally.
  *
  * @author Bradley Hilton (graywolf336)
  * @version 0.0.1
@@ -38,18 +39,19 @@ import java.util.Map.Entry;
  */
 public class RocketChatClientCallBuilder {
   private final ObjectMapper objectMapper;
-  private final String serverUrl;
-  private final String user;
-  private final String password;
-  private String authToken;
-  private String userId;
+
+  private String serverUrl;
+
+  private final RocketChatCallAuthentication authentication;
 
   protected RocketChatClientCallBuilder(String serverUrl, boolean trustSSL, String user, String password) {
-    if (!serverUrl.endsWith("api/")) {
-      this.serverUrl = serverUrl + (serverUrl.endsWith("/") ? "" : "/") + "api/";
-    } else {
-      this.serverUrl = serverUrl;
-    }
+    this(new RocketChatBasicCallAuthentication(serverUrl, user, password), serverUrl, trustSSL);
+  }
+
+  protected RocketChatClientCallBuilder(RocketChatCallAuthentication authentication, String serverUrl,
+      boolean trustSSL) {
+    this.authentication = authentication;
+    this.serverUrl = serverUrl;
 
     if (this.hasProxyEnvironment()) {
       URI uri = URI.create(this.getProxy());
@@ -58,13 +60,8 @@ public class RocketChatClientCallBuilder {
 
     Unirest.setHttpClient(createHttpClient(trustSSL));
 
-    this.user = user;
-    this.password = password;
-    this.authToken = "";
-    this.userId = "";
     this.objectMapper = new ObjectMapper();
     this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
   }
 
   private boolean hasProxyEnvironment() {
@@ -84,9 +81,10 @@ public class RocketChatClientCallBuilder {
     return this.buildCall(call, queryParams, null);
   }
 
-  protected Response buildCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams, Object body) throws IOException {
-    if (call.requiresAuth() && (authToken.isEmpty() || userId.isEmpty())) {
-      login();
+  protected Response buildCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams, Object body)
+      throws IOException {
+    if (call.requiresAuth() && !authentication.isAuthenticated()) {
+      authentication.doAuthentication();
     }
 
     switch (call.getHttpMethod()) {
@@ -99,35 +97,11 @@ public class RocketChatClientCallBuilder {
     }
   }
 
-  private void login() throws IOException {
-    HttpResponse<JsonNode> loginResult;
-    String apiURL = serverUrl + "v1/login";
-
-    try {
-      loginResult = Unirest.post(apiURL).field("user", user).field("password", password).asJson();
-    } catch (UnirestException e) {
-      throw new IOException("Please check if the server API " + apiURL + " is correct: " + e.getMessage(), e);
-    } catch (Exception e) {
-      throw new IOException(e);
-    }
-
-    if (loginResult.getStatus() == 401)
-      throw new IOException("The username and password provided are incorrect.");
-
-    if (loginResult.getStatus() != 200)
-      throw new IOException("The login failed with a result of: " + loginResult.getStatus());
-
-    JSONObject data = loginResult.getBody().getObject().getJSONObject("data");
-    this.authToken = data.getString("authToken");
-    this.userId = data.getString("userId");
-  }
-
   private Response buildGetCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams) throws IOException {
-    GetRequest req = Unirest.get(serverUrl + call.getMethodName());
+    GetRequest req = Unirest.get(authentication.getUrlForRequest(call));
 
     if (call.requiresAuth()) {
-      req.header("X-Auth-Token", authToken);
-      req.header("X-User-Id", userId);
+      authentication.addAuthenticationDataToRequest(req);
     }
 
     if (queryParams != null && !queryParams.isEmpty()) {
@@ -145,12 +119,13 @@ public class RocketChatClientCallBuilder {
     }
   }
 
-  private Response buildPostCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams, Object body) throws IOException {
-    HttpRequestWithBody req = Unirest.post(serverUrl + call.getMethodName()).header("Content-Type", "application/json");
+  private Response buildPostCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams, Object body)
+      throws IOException {
+    HttpRequestWithBody req = Unirest.post(authentication.getUrlForRequest(call)).header("Content-Type",
+        "application/json");
 
     if (call.requiresAuth()) {
-      req.header("X-Auth-Token", authToken);
-      req.header("X-User-Id", userId);
+      authentication.addAuthenticationDataToRequest(req);
     }
 
     if (queryParams != null && !queryParams.isEmpty()) {
@@ -181,7 +156,7 @@ public class RocketChatClientCallBuilder {
       SSLContext sslContext = SSLContext.getInstance("SSL");
 
       // set up a TrustManager that trusts everything
-      sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+      sslContext.init(null, new TrustManager[] { new X509TrustManager() {
         public X509Certificate[] getAcceptedIssuers() {
           return null;
         }
@@ -193,7 +168,7 @@ public class RocketChatClientCallBuilder {
         public void checkServerTrusted(X509Certificate[] certs, String authType) {
           // intentionally left blank
         }
-      }}, new SecureRandom());
+      } }, new SecureRandom());
 
       SSLSocketFactory sf = new SSLSocketFactory(sslContext);
       Scheme httpsScheme = new Scheme("https", 443, sf);
