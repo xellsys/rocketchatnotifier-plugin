@@ -5,6 +5,8 @@ import jenkins.plugins.rocketchatnotifier.model.Info;
 import jenkins.plugins.rocketchatnotifier.model.Response;
 import jenkins.plugins.rocketchatnotifier.model.Room;
 import jenkins.plugins.rocketchatnotifier.model.User;
+
+import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONValue;
 import sun.security.validator.ValidatorException;
 
@@ -41,6 +43,18 @@ public class RocketChatClientImpl implements RocketChatClient {
     this.callBuilder = new RocketChatClientCallBuilder(serverUrl, trustSSL, JSONValue.escape(user), JSONValue.escape(password));
   }
 
+  /**
+   * Initialize a new instance of the client providing the server's url along with webhook for
+   * posting notifications.
+   *
+   * @param serverUrl of the Rocket.Chat server, with or without it ending in "/api/"
+   * @param trustSSL  if set set the SSL certificate of the rpcket server will not be checked
+   * @param webhookToken      authentication token or URL
+   */
+  public RocketChatClientImpl(String serverUrl, boolean trustSSL, String webhookToken) {
+    this.callBuilder = new RocketChatClientCallBuilder(serverUrl, trustSSL, webhookToken);
+  }
+  
   @Override
   public User[] getUsers() throws IOException {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.UsersList);
@@ -125,12 +139,15 @@ public class RocketChatClientImpl implements RocketChatClient {
 
   private void sendSingleMessage(final String singleChannelName, final String message, final String emoji, final String avatar, final List<Map<String, Object>> attachments) throws IOException {
     Map body = new HashMap<String, String>();
-    String targetChannelName = singleChannelName.trim();
-    if (!targetChannelName.matches("^[@#].+")) {
-      targetChannelName = "#" + targetChannelName;
+    if (!StringUtils.isEmpty(singleChannelName)) {
+      String targetChannelName = singleChannelName.trim();
+      if (!targetChannelName.matches("^[@#].+")) {
+        targetChannelName = "#" + targetChannelName;
+      }
+
+      body.put("channel", targetChannelName);
     }
 
-    body.put("channel", targetChannelName);
     body.put("text", message);
     if (this.getInfo().getVersion().compareTo("0.50.1") >= 0) {
       if (emoji != null)
