@@ -314,7 +314,7 @@ public class RocketChatNotifier extends Notifier {
         boolean includeCustomMessage = "on".equals(sr.getParameter("includeCustomMessage"));
         String customMessage = sr.getParameter("customMessage");
         String webhookToken = sr.getParameter("webhookToken");
-        String webhookTokenCredentialId = sr.getParameter("tokenCredentialId");
+        String webhookTokenCredentialId = json.getString("tokenCredentialId");
         return new RocketChatNotifier(rocketServerUrl, trustSSL, username, password, channel, buildServerUrl, startNotification, notifyAborted,
           notifyFailure, notifyNotBuilt, notifySuccess, notifyUnstable, notifyBackToNormal, notifyRepeatedFailure,
           includeTestSummary, commitInfoChoice, includeCustomMessage, customMessage, webhookToken, webhookTokenCredentialId);
@@ -338,7 +338,7 @@ public class RocketChatNotifier extends Notifier {
         buildServerUrl = buildServerUrl + "/";
       }
       webhookToken = sr.getParameter("webhookToken");
-      webhookTokenCredentialId = sr.getParameter("tokenCredentialId");
+      webhookTokenCredentialId = formData.getString("tokenCredentialId");
       save();
       return super.configure(sr, formData);
     }
