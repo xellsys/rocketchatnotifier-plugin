@@ -1,11 +1,12 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/1.0.3...v) (2017-12-11)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/1.1.0...v) (2018-01-10)
 
 
 ### Bug Fixes
 
 * **NPE:** Fix typo (see #https://issues.jenkins-ci.org/browse/JENKINS-48185) ([52c57a3](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/52c57a3))
 * **NPE:** Resolve null pointer issue (see #https://issues.jenkins-ci.org/browse/JENKINS-48185) ([dd53f96](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/dd53f96))
+* **proxy-config:** Refactor proxy config ([9d28f53](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/9d28f53))
 
 
 
