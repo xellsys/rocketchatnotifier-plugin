@@ -8,7 +8,23 @@
 
 The latest stable version is available at Plugins Center. Dev builds are available via the [Experimental Plugins Update Center](https://jenkins.io/blog/2013/09/23/experimental-plugins-update-center/).
 
+<a name="donation"></a>
+> Feel free to **donate**
+>
+> <a href='https://pledgie.com/campaigns/34775'><img alt='Click here to lend your support to: Open Source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/34775.png?skin_name=chrome' border='0' ></a>
+> <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AGPGLZYNV6Y5S">
+> <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/>
+> </img></a>
+>
+> Or donate Bitcoins: bitcoin:3NKtxw1SRYgess5ev4Ri54GekoAgkR213D
+>
+> [![Bitcoin](https://martinreinhardt-online.de/bitcoin.png)](bitcoin:3NKtxw1SRYgess5ev4Ri54GekoAgkR213D)
+>
+> Also via [greenaddress](https://greenaddress.it/pay/GA3ZPfh7As3Gc2oP6pQ1njxMij88u/)
+
 ## Usage
+
+### Pipeline
 
 You can use it in the Workflow/Pipeline DSL
 ```
