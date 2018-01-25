@@ -34,6 +34,7 @@ public class RocketChatNotifierDecriptorImplTest {
 
   @Mock
   private AbstractProject project;
+
   @Mock
   private ItemGroup parent;
 
