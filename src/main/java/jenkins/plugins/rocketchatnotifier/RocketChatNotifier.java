@@ -1,5 +1,7 @@
 package jenkins.plugins.rocketchatnotifier;
 
+import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
+import com.cloudbees.plugins.credentials.domains.DomainRequirement;
 import hudson.EnvVars;
 import hudson.Extension;
 import hudson.Launcher;
@@ -24,12 +26,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
-
-import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
-import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-import com.cloudbees.plugins.credentials.domains.HostnameRequirement;
-import com.fasterxml.jackson.core.JsonParseException;
-
 import sun.security.validator.ValidatorException;
 
 import java.io.IOException;
@@ -73,13 +69,19 @@ public class RocketChatNotifier extends Notifier {
     return channel;
   }
 
+  public void setBuildServerUrl(String buildServerUrl) {
+    this.buildServerUrl = buildServerUrl;
+  }
+
   public String getBuildServerUrl() {
     LOGGER.log(Level.FINE, "Getting build server URL");
     if (buildServerUrl == null || buildServerUrl.equalsIgnoreCase("")) {
       JenkinsLocationConfiguration jenkinsConfig = new JenkinsLocationConfiguration();
       return jenkinsConfig.getUrl();
-    } else {
+    }
+    else {
       return buildServerUrl;
+
     }
   }
 
@@ -134,7 +136,7 @@ public class RocketChatNotifier extends Notifier {
   public String getWebhookToken() {
     return webhookToken;
   }
-  
+
   public String getWebhookTokenCredentialId() {
     return webhookTokenCredentialId;
   }
@@ -193,7 +195,8 @@ public class RocketChatNotifier extends Notifier {
     EnvVars env = null;
     try {
       env = r.getEnvironment(listener);
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       listener.getLogger().println("Error retrieving environment vars: " + e.getMessage());
       env = new EnvVars();
     }
@@ -270,11 +273,11 @@ public class RocketChatNotifier extends Notifier {
     public String getChannel() {
       return channel;
     }
-    
+
     public String getWebhookToken() {
       return webhookToken;
     }
-    
+
     public String getWebhookTokenCredentialId() {
       return webhookTokenCredentialId;
     }
@@ -284,7 +287,8 @@ public class RocketChatNotifier extends Notifier {
       if (buildServerUrl == null || buildServerUrl.equalsIgnoreCase("")) {
         JenkinsLocationConfiguration jenkinsConfig = new JenkinsLocationConfiguration();
         return jenkinsConfig.getUrl();
-      } else {
+      }
+      else {
         return buildServerUrl;
       }
     }
@@ -338,7 +342,9 @@ public class RocketChatNotifier extends Notifier {
         buildServerUrl = buildServerUrl + "/";
       }
       webhookToken = sr.getParameter("webhookToken");
-      webhookTokenCredentialId = formData.getString("tokenCredentialId");
+      if (formData != null && formData.containsKey("tokenCredentialId")) {
+        webhookTokenCredentialId = formData.getString("tokenCredentialId");
+      }
       save();
       return super.configure(sr, formData);
     }
@@ -389,11 +395,12 @@ public class RocketChatNotifier extends Notifier {
         if (StringUtils.isEmpty(targetWebhookTokenCredentialId)) {
           targetWebhookTokenCredentialId = this.webhookTokenCredentialId;
         }
-        
+
         RocketClient rocketChatClient;
-        if (!StringUtils.isEmpty(targetWebhookToken) || !StringUtils.isEmpty(targetWebhookTokenCredentialId)){
+        if (!StringUtils.isEmpty(targetWebhookToken) || !StringUtils.isEmpty(targetWebhookTokenCredentialId)) {
           rocketChatClient = new RocketClientWebhookImpl(targetServerUrl, targetTrustSSL, targetWebhookToken, targetWebhookTokenCredentialId);
-        } else {
+        }
+        else {
           rocketChatClient = new RocketClientImpl(targetServerUrl, targetTrustSSL, targetUsername, targetPassword, targetChannel);
         }
         String message = "RocketChat/Jenkins plugin: you're all set on " + targetBuildServerUrl;
@@ -404,10 +411,12 @@ public class RocketChatNotifier extends Notifier {
         rocketChatClient.publish(message);
         LOGGER.fine("Done publishing message");
         return FormValidation.ok("Success");
-      } catch (ValidatorException e) {
+      }
+      catch (ValidatorException e) {
         LOGGER.log(Level.SEVERE, "SSL error during trying to send rocket message", e);
         return FormValidation.error(e, "SSL error", e);
-      } catch (Exception e) {
+      }
+      catch (Exception e) {
         LOGGER.log(Level.SEVERE, "Client error during trying to send rocket message", e);
         return FormValidation.error(e, "Client error - Could not send message");
       }
@@ -418,15 +427,15 @@ public class RocketChatNotifier extends Notifier {
         return new ListBoxModel();
       }
       return new StandardListBoxModel()
-              .withEmptySelection()
-              .withAll(lookupCredentials(
-                      StringCredentials.class,
-                      Jenkins.getInstance(),
-                      ACL.SYSTEM,
-                      Collections.<DomainRequirement>emptyList())
-              );
+        .withEmptySelection()
+        .withAll(lookupCredentials(
+          StringCredentials.class,
+          Jenkins.getInstance(),
+          ACL.SYSTEM,
+          Collections.<DomainRequirement>emptyList())
+        );
     }
-  
+
     //WARN users that they should not use the plain/exposed token, but rather the token credential id
     public FormValidation doCheckWebhookToken(@QueryParameter String value) {
       if (StringUtils.isEmpty(value)) {
