@@ -1,10 +1,31 @@
 <a name=""></a>
-# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/1.1.1...v) (2018-01-25)
+# [](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v1.1.2...v) (2018-02-15)
+
+
+### Bug Fixes
+
+* **proxy-error:** Resolve #JENKINS-47858 ([074a5e0](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/074a5e0)), closes [#JENKINS-47858](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-47858)
+* **use-defaults:** applying global defaults ([4a8bdf7](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/4a8bdf7)), closes [#JENKINS-48486](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-48486)
+* **use-defaults:** applying global defaults ([673b6ea](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/673b6ea)), closes [#JENKINS-48486](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-48486)
+
+
+
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v1.1.1...v1.1.2) (2018-01-25)
 
 
 ### Bug Fixes
 
 * **JSON:** Corrected form data usage ([JENKINS-47858](https://issues.jenkins-ci.org/browse/JENKINS-47858)) ([2781961](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/2781961))
+
+
+
+<a name="1.1.1"></a>
+## [1.1.1](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v1.1.0...v1.1.1) (2018-01-10)
+
+
+### Bug Fixes
+
 * **NPE:** Fix typo (see #https://issues.jenkins-ci.org/browse/JENKINS-48185) ([52c57a3](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/52c57a3))
 * **NPE:** Resolve null pointer issue (see #https://issues.jenkins-ci.org/browse/JENKINS-48185) ([dd53f96](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/dd53f96))
 * **proxy-config:** Refactor proxy config ([9d28f53](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/9d28f53))
@@ -12,13 +33,13 @@
 
 
 <a name="1.0.0"></a>
-# [1.0.0](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.5...v1.0.0) (2017-11-15)
+# [1.0.0](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v0.5.5...v1.0.0) (2017-11-15)
 
 
 ### Bug Fixes
 
 * **duration-display:** Fix for duration label error ([28c8594](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/28c8594))
-* **error-handling:** Improved error handling for special characters in fields (see #JENKINS-47858) ([2a3a542](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/2a3a542))
+* **error-handling:** Improved error handling for special characters in fields (see #JENKINS-47858) ([2a3a542](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/2a3a542)), closes [#JENKINS-47858](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-47858)
 * **NPE:** Resolve null pointer in error log ([94b7308](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/94b7308)), closes [#JENKINS-47841](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-47841)
 
 
@@ -29,7 +50,7 @@
 
 
 <a name="0.5.3"></a>
-## [0.5.3](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.3...v0.5.3) (2017-09-13)
+## [0.5.3](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v0.5.2...v0.5.3) (2017-09-13)
 
 
 ### Features
@@ -39,7 +60,7 @@
 
 
 <a name="0.5.2"></a>
-## [0.5.2](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/0.5.2...v0.5.2) (2017-07-13)
+## [0.5.2](https://github.com/jenkinsci/rocketchatnotifier-plugin/compare/v0.5.1...v0.5.2) (2017-07-13)
 
 
 
@@ -59,8 +80,8 @@
 
 ### Bug Fixes
 
-* **NPE:** Corrected NPE error. ([583b847](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/583b847))
-* **status-msg:** Corrected status message ([724c625](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/724c625))
+* **NPE:** Corrected NPE error. ([583b847](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/583b847)), closes [#JENKINS-41436](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-41436)
+* **status-msg:** Corrected status message ([724c625](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/724c625)), closes [#JENKINS-41680](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-41680)
 
 
 ### Features
@@ -83,14 +104,14 @@
 
 ### Features
 
-* **new-rocket-api:** first basic implementation (see #JENKINS-40595) ([ebb346e](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/ebb346e))
-* **new-rocket-api:** Implement message sending (see #JENKINS-40595) ([162812b](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/162812b))
-* **new-rocket-api:** Let integration tests respect RocketChat version (see #JENKINS-40595 and #JENKINS-40673) ([603e6af](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/603e6af))
-* **new-rocket-api:** Let integration tests respect RocketChat version (see #JENKINS-40595 and #JENKINS-40673) ([aa9614f](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/aa9614f))
-* **new-rocket-api:** Run tests against multiple rocketchat versions (see #JENKINS-40595 and #JENKINS-40673) ([0cd495d](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/0cd495d))
-* **new-rocket-api:** Support old legacy API, too (see #JENKINS-40595) ([08d8b42](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/08d8b42))
-* **new-rocket-api:** Use docker tests in Travis Build (see #JENKINS-40595 and #JENKINS-40673) ([e477881](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/e477881))
-* **testing:** Implement basic integration test (see #JENKINS-40673) ([01c249d](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/01c249d))
+* **new-rocket-api:** first basic implementation (see #JENKINS-40595) ([ebb346e](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/ebb346e)), closes [#JENKINS-40595](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40595)
+* **new-rocket-api:** Implement message sending (see #JENKINS-40595) ([162812b](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/162812b)), closes [#JENKINS-40595](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40595)
+* **new-rocket-api:** Let integration tests respect RocketChat version (see #JENKINS-40595 and #JENKINS-40673) ([603e6af](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/603e6af)), closes [#JENKINS-40595](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40595) [#JENKINS-40673](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40673)
+* **new-rocket-api:** Let integration tests respect RocketChat version (see #JENKINS-40595 and #JENKINS-40673) ([aa9614f](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/aa9614f)), closes [#JENKINS-40595](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40595) [#JENKINS-40673](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40673)
+* **new-rocket-api:** Run tests against multiple rocketchat versions (see #JENKINS-40595 and #JENKINS-40673) ([0cd495d](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/0cd495d)), closes [#JENKINS-40595](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40595) [#JENKINS-40673](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40673)
+* **new-rocket-api:** Support old legacy API, too (see #JENKINS-40595) ([08d8b42](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/08d8b42)), closes [#JENKINS-40595](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40595)
+* **new-rocket-api:** Use docker tests in Travis Build (see #JENKINS-40595 and #JENKINS-40673) ([e477881](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/e477881)), closes [#JENKINS-40595](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40595) [#JENKINS-40673](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40673)
+* **testing:** Implement basic integration test (see #JENKINS-40673) ([01c249d](https://github.com/jenkinsci/rocketchatnotifier-plugin/commit/01c249d)), closes [#JENKINS-40673](https://github.com/jenkinsci/rocketchatnotifier-plugin/issues/JENKINS-40673)
 
 
 

@@ -23,6 +23,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
@@ -141,7 +142,126 @@ public class RocketChatNotifier extends Notifier {
     return webhookTokenCredentialId;
   }
 
+  @DataBoundSetter
+  public void setChannel(String channel) {
+    this.channel = channel;
+  }
+
+  public boolean isStartNotification() {
+    return startNotification;
+  }
+
+  @DataBoundSetter
+  public void setStartNotification(boolean startNotification) {
+    this.startNotification = startNotification;
+  }
+
+  public boolean isNotifySuccess() {
+    return notifySuccess;
+  }
+
+  @DataBoundSetter
+  public void setNotifySuccess(boolean notifySuccess) {
+    this.notifySuccess = notifySuccess;
+  }
+
+  public boolean isNotifyAborted() {
+    return notifyAborted;
+  }
+
+  @DataBoundSetter
+  public void setNotifyAborted(boolean notifyAborted) {
+    this.notifyAborted = notifyAborted;
+  }
+
+  public boolean isNotifyNotBuilt() {
+    return notifyNotBuilt;
+  }
+
+  @DataBoundSetter
+  public void setNotifyNotBuilt(boolean notifyNotBuilt) {
+    this.notifyNotBuilt = notifyNotBuilt;
+  }
+
+  public boolean isNotifyUnstable() {
+    return notifyUnstable;
+  }
+
+  @DataBoundSetter
+  public void setNotifyUnstable(boolean notifyUnstable) {
+    this.notifyUnstable = notifyUnstable;
+  }
+
+  public boolean isNotifyFailure() {
+    return notifyFailure;
+  }
+
+  @DataBoundSetter
+  public void setNotifyFailure(boolean notifyFailure) {
+    this.notifyFailure = notifyFailure;
+  }
+
+  public boolean isNotifyBackToNormal() {
+    return notifyBackToNormal;
+  }
+
+  @DataBoundSetter
+  public void setNotifyBackToNormal(boolean notifyBackToNormal) {
+    this.notifyBackToNormal = notifyBackToNormal;
+  }
+
+  public boolean isNotifyRepeatedFailure() {
+    return notifyRepeatedFailure;
+  }
+
+  @DataBoundSetter
+  public void setNotifyRepeatedFailure(boolean notifyRepeatedFailure) {
+    this.notifyRepeatedFailure = notifyRepeatedFailure;
+  }
+
+  public boolean isIncludeTestSummary() {
+    return includeTestSummary;
+  }
+
+  @DataBoundSetter
+  public void setIncludeTestSummary(boolean includeTestSummary) {
+    this.includeTestSummary = includeTestSummary;
+  }
+
+  @DataBoundSetter
+  public void setCommitInfoChoice(CommitInfoChoice commitInfoChoice) {
+    this.commitInfoChoice = commitInfoChoice;
+  }
+
+  public boolean isIncludeCustomMessage() {
+    return includeCustomMessage;
+  }
+
+  @DataBoundSetter
+  public void setIncludeCustomMessage(boolean includeCustomMessage) {
+    this.includeCustomMessage = includeCustomMessage;
+  }
+
+  @DataBoundSetter
+  public void setCustomMessage(String customMessage) {
+    this.customMessage = customMessage;
+  }
+
+  @DataBoundSetter
+  public void setWebhookToken(String webhookToken) {
+    this.webhookToken = webhookToken;
+  }
+
+  @DataBoundSetter
+  public void setWebhookTokenCredentialId(String webhookTokenCredentialId) {
+    this.webhookTokenCredentialId = webhookTokenCredentialId;
+  }
+
   @DataBoundConstructor
+  public RocketChatNotifier() {
+    super();
+  }
+
   public RocketChatNotifier(final String rocketServerUrl, final boolean trustSSL, final String username, final String password, final String channel, final String buildServerUrl,
                             final boolean startNotification, final boolean notifyAborted, final boolean notifyFailure,
                             final boolean notifyNotBuilt, final boolean notifySuccess, final boolean notifyUnstable, final boolean notifyBackToNormal,

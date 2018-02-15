@@ -10,6 +10,7 @@ import com.mashape.unirest.request.HttpRequestWithBody;
 import hudson.ProxyConfiguration;
 import jenkins.model.Jenkins;
 import jenkins.plugins.rocketchatnotifier.model.Response;
+import jenkins.plugins.rocketchatnotifier.utils.NetworkUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -35,7 +36,6 @@ import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
-import java.util.regex.Pattern;
 
 /**
  * The call builder for the {@link RocketChatClient} and is only supposed to be
@@ -68,56 +68,37 @@ public class RocketChatClientCallBuilder {
     this.authentication = authentication;
     this.serverUrl = serverUrl;
 
-    if (Jenkins.getInstance() != null && Jenkins.getInstance().proxy != null) {
+    if (Jenkins.getInstance() != null && Jenkins.getInstance().proxy != null
+      && !NetworkUtils.isHostOnNoProxyList(this.serverUrl, Jenkins.getInstance().proxy)) {
+      final HttpClientBuilder clientBuilder = HttpClients.custom();
+      final ProxyConfiguration proxy = Jenkins.getInstance().proxy;
+      final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+      final HttpHost proxyHost = new HttpHost(proxy.name, proxy.port);
+      final HttpRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxyHost);
 
-      ProxyConfiguration proxy = Jenkins.getInstance().proxy;
-      if (proxy != null && !isHostOnNoProxyList(this.serverUrl, proxy)) {
-        final HttpClientBuilder clientBuilder = HttpClients.custom();
-        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-        final HttpHost proxyHost = new HttpHost(proxy.name, proxy.port);
-        final HttpRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxyHost);
-        clientBuilder.setRoutePlanner(routePlanner);
+      clientBuilder.setRoutePlanner(routePlanner);
+      clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
-        String username = proxy.getUserName();
-        String password = proxy.getPassword();
-        // Consider it to be passed if username specified. Sufficient?
-        if (username != null && !"".equals(username.trim())) {
-          logger.info("Using proxy authentication (user=" + username + ")");
-          credentialsProvider.setCredentials(new AuthScope(proxyHost),
-            new UsernamePasswordCredentials(username, password));
-          Unirest.setHttpClient(clientBuilder.build());
-        }
-        else {
-          Unirest.setProxy(proxyHost);
-        }
+      String username = proxy.getUserName();
+      String password = proxy.getPassword();
+      // Consider it to be passed if username specified. Sufficient?
+      if (username != null && !"".equals(username.trim())) {
+        logger.info("Using proxy authentication (user=" + username + ")");
+        credentialsProvider.setCredentials(new AuthScope(proxyHost),
+          new UsernamePasswordCredentials(username, password));
+        Unirest.setHttpClient(clientBuilder.build());
+      }
+      else {
+        Unirest.setProxy(proxyHost);
       }
     }
     else {
-
       Unirest.setHttpClient(createHttpClient(trustSSL));
     }
     this.objectMapper = new ObjectMapper();
     this.objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
   }
 
-  /**
-   * Returns whether or not host is on the noProxy list
-   * as defined in the Jenkins proxy settings
-   *
-   * @param proxy the ProxyConfiguration
-   * @return whether or not the host is on the noProxy list
-   */
-  private boolean isHostOnNoProxyList(String host, ProxyConfiguration proxy) {
-    if (host != null && proxy.noProxyHost != null) {
-      for (Pattern p : ProxyConfiguration.getNoProxyHostPatterns(proxy.noProxyHost)) {
-        if (p.matcher(host).matches()) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
 
   protected Response buildCall(RocketChatRestApiV1 call) throws IOException {
     return this.buildCall(call, null, null);

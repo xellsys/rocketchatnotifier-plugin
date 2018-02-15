@@ -5,10 +5,27 @@
 [![Build Status](https://martinreinhardt-online.de/jenkins/buildStatus/icon?job=rocketchatnotifier-plugin/master)](https://martinreinhardt-online.de/jenkins/job/rocketchatnotifier-plugin/job/master/)
 [![codecov](https://codecov.io/gh/jenkinsci/rocketchatnotifier-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/jenkinsci/rocketchatnotifier-plugin)
 [![Known Vulnerabilities](https://snyk.io/test/github/jenkinsci/rocketchatnotifier-plugin/badge.svg)](https://snyk.io/test/github/jenkinsci/rocketchatnotifier-plugin)
+[![](https://img.shields.io/badge/style-issues-yellow.svg?style=flat&label=JIRA)](https://issues.jenkins-ci.org/browse/JENKINS-48905?jql=project%20%3D%20JENKINS%20AND%20status%20in%20(Open%2C%20%22In%20Progress%22%2C%20Reopened%2C%20%22In%20Review%22)%20AND%20component%20%3D%20rocket-chat-notifier-plugin)
 
 The latest stable version is available at Plugins Center. Dev builds are available via the [Experimental Plugins Update Center](https://jenkins.io/blog/2013/09/23/experimental-plugins-update-center/).
 
+<a name="donation"></a>
+> Feel free to **donate**
+>
+> <a href='https://pledgie.com/campaigns/34775'><img alt='Click here to lend your support to: Open Source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/34775.png?skin_name=chrome' border='0' ></a>
+> <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AGPGLZYNV6Y5S">
+> <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/>
+> </img></a>
+>
+> Or donate Bitcoins: bitcoin:3NKtxw1SRYgess5ev4Ri54GekoAgkR213D
+>
+> [![Bitcoin](https://martinreinhardt-online.de/bitcoin.png)](bitcoin:3NKtxw1SRYgess5ev4Ri54GekoAgkR213D)
+>
+> Also via [greenaddress](https://greenaddress.it/pay/GA3ZPfh7As3Gc2oP6pQ1njxMij88u/)
+
 ## Usage
+
+### Pipeline
 
 You can use it in the Workflow/Pipeline DSL
 ```
