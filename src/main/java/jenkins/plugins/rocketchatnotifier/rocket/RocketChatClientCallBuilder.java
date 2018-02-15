@@ -67,15 +67,17 @@ public class RocketChatClientCallBuilder {
                                         boolean trustSSL) {
     this.authentication = authentication;
     this.serverUrl = serverUrl;
-    final ProxyConfiguration proxy = Jenkins.getInstance().proxy;
 
-    if (proxy != null && !NetworkUtils.isHostOnNoProxyList(this.serverUrl, proxy)) {
+    if (Jenkins.getInstance() != null && Jenkins.getInstance().proxy != null
+      && !NetworkUtils.isHostOnNoProxyList(this.serverUrl, Jenkins.getInstance().proxy)) {
       final HttpClientBuilder clientBuilder = HttpClients.custom();
+      final ProxyConfiguration proxy = Jenkins.getInstance().proxy;
       final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-      clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
       final HttpHost proxyHost = new HttpHost(proxy.name, proxy.port);
       final HttpRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxyHost);
+
       clientBuilder.setRoutePlanner(routePlanner);
+      clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
 
       String username = proxy.getUserName();
       String password = proxy.getPassword();
