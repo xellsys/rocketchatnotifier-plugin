@@ -10,7 +10,7 @@
 
   <properties>
     <artifactSuffix/>
-    <jenkins.version>1.653</jenkins.version>
+    <jenkins.version>2.32.1</jenkins.version>
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,6 +20,7 @@
     <skipITs>false</skipITs>
     <workflow.version>1.11</workflow.version>
     <!-- Project Libs-->
+    <httpclient.version>4.5.1</httpclient.version>
     <unirest.version>1.4.9</unirest.version>
     <jackson.version>2.9.3</jackson.version>
     <hamcrest.version>1.3</hamcrest.version>
@@ -180,6 +181,11 @@
 
   <dependencies>
 
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>${httpclient.version}</version>
+    </dependency>
     <dependency>
       <groupId>com.mashape.unirest</groupId>
       <artifactId>unirest-java</artifactId>

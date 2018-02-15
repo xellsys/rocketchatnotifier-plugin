@@ -4,12 +4,12 @@
   <f:entry field="message" title="Message">
     <f:textbox/>
   </f:entry>
-  <f:entry field="rawMessage">
-    <f:checkbox title="Raw message" default="false"/>
-  </f:entry>
-  <f:advanced>
     <f:entry field="channel" title="Channel">
       <f:textbox/>
+    </f:entry>
+  <f:advanced>
+    <f:entry field="rawMessage">
+      <f:checkbox title="Raw message" default="false"/>
     </f:entry>
     <f:entry field="emoji" title="Emoji">
       <f:textbox/>

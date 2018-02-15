@@ -142,6 +142,11 @@ public class RocketChatNotifier extends Notifier {
   }
 
   @DataBoundConstructor
+  public RocketChatNotifier() {
+    super();
+  }
+
+  @DataBoundConstructor
   public RocketChatNotifier(final String rocketServerUrl, final boolean trustSSL, final String username, final String password, final String channel, final String buildServerUrl,
                             final boolean startNotification, final boolean notifyAborted, final boolean notifyFailure,
                             final boolean notifyNotBuilt, final boolean notifySuccess, final boolean notifyUnstable, final boolean notifyBackToNormal,
