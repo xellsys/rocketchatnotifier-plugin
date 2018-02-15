@@ -67,34 +67,30 @@ public class RocketChatClientCallBuilder {
                                         boolean trustSSL) {
     this.authentication = authentication;
     this.serverUrl = serverUrl;
+    final ProxyConfiguration proxy = Jenkins.getInstance().proxy;
 
-    if (Jenkins.getInstance() != null && Jenkins.getInstance().proxy != null) {
+    if (proxy != null && !NetworkUtils.isHostOnNoProxyList(this.serverUrl, proxy)) {
+      final HttpClientBuilder clientBuilder = HttpClients.custom();
+      final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+      clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+      final HttpHost proxyHost = new HttpHost(proxy.name, proxy.port);
+      final HttpRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxyHost);
+      clientBuilder.setRoutePlanner(routePlanner);
 
-      ProxyConfiguration proxy = Jenkins.getInstance().proxy;
-      if (proxy != null && !NetworkUtils.isHostOnNoProxyList(this.serverUrl, proxy)) {
-        final HttpClientBuilder clientBuilder = HttpClients.custom();
-        final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
-        final HttpHost proxyHost = new HttpHost(proxy.name, proxy.port);
-        final HttpRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxyHost);
-        clientBuilder.setRoutePlanner(routePlanner);
-
-        String username = proxy.getUserName();
-        String password = proxy.getPassword();
-        // Consider it to be passed if username specified. Sufficient?
-        if (username != null && !"".equals(username.trim())) {
-          logger.info("Using proxy authentication (user=" + username + ")");
-          credentialsProvider.setCredentials(new AuthScope(proxyHost),
-            new UsernamePasswordCredentials(username, password));
-          Unirest.setHttpClient(clientBuilder.build());
-        }
-        else {
-          Unirest.setProxy(proxyHost);
-        }
+      String username = proxy.getUserName();
+      String password = proxy.getPassword();
+      // Consider it to be passed if username specified. Sufficient?
+      if (username != null && !"".equals(username.trim())) {
+        logger.info("Using proxy authentication (user=" + username + ")");
+        credentialsProvider.setCredentials(new AuthScope(proxyHost),
+          new UsernamePasswordCredentials(username, password));
+        Unirest.setHttpClient(clientBuilder.build());
+      }
+      else {
+        Unirest.setProxy(proxyHost);
       }
     }
     else {
-
       Unirest.setHttpClient(createHttpClient(trustSSL));
     }
     this.objectMapper = new ObjectMapper();
