@@ -325,7 +325,7 @@ public class RocketChatNotifier extends Notifier {
     password = env.expand(password);
 
     if (!StringUtils.isEmpty(webhookToken) || !StringUtils.isEmpty(webhookTokenCredentialId)) {
-      return new RocketClientWebhookImpl(serverUrl, trustSSL, webhookToken, webhookTokenCredentialId);
+      return new RocketClientWebhookImpl(serverUrl, trustSSL, webhookToken, webhookTokenCredentialId, channel);
     }
     return new RocketClientImpl(serverUrl, trustSSL, username, password, channel);
   }
@@ -518,7 +518,7 @@ public class RocketChatNotifier extends Notifier {
 
         RocketClient rocketChatClient;
         if (!StringUtils.isEmpty(targetWebhookToken) || !StringUtils.isEmpty(targetWebhookTokenCredentialId)) {
-          rocketChatClient = new RocketClientWebhookImpl(targetServerUrl, targetTrustSSL, targetWebhookToken, targetWebhookTokenCredentialId);
+          rocketChatClient = new RocketClientWebhookImpl(targetServerUrl, targetTrustSSL, targetWebhookToken, targetWebhookTokenCredentialId, channel);
         }
         else {
           rocketChatClient = new RocketClientImpl(targetServerUrl, targetTrustSSL, targetUsername, targetPassword, targetChannel);

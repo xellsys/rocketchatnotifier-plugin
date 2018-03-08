@@ -26,14 +26,17 @@ public class RocketClientWebhookImpl implements RocketClient {
 
   private RocketChatClient client;
 
-  public RocketClientWebhookImpl(String serverUrl, boolean trustSSL, String token, String tokenCredentialId) {
+  private String channel;
+
+  public RocketClientWebhookImpl(String serverUrl, boolean trustSSL, String token, String tokenCredentialId, String channel) {
     client = new RocketChatClientImpl(serverUrl, trustSSL, getTokenToUse(tokenCredentialId, token));
+    this.channel = channel;
   }
 
   public boolean publish(String message) {
     try {
       LOGGER.fine("Starting sending message to webhook");
-      this.client.send("", message);
+      this.client.send(this.channel, message);
       return true;
     } catch (IOException e) {
       LOGGER.log(Level.SEVERE, "I/O error error during publishing message", e);
@@ -48,7 +51,7 @@ public class RocketClientWebhookImpl implements RocketClient {
   public boolean publish(final String message, final String emoji, final String avatar) {
     try {
       LOGGER.fine("Starting sending message to webhook");
-      this.client.send("", message, emoji, avatar);
+      this.client.send(this.channel, message, emoji, avatar);
       return true;
     } catch (IOException e) {
       LOGGER.log(Level.SEVERE, "I/O error error during publishing message", e);
@@ -64,7 +67,7 @@ public class RocketClientWebhookImpl implements RocketClient {
       final List<Map<String, Object>> attachments) {
     try {
       LOGGER.fine("Starting sending message to webhook");
-      this.client.send("", message, emoji, avatar, attachments);
+      this.client.send(this.channel, message, emoji, avatar, attachments);
       return true;
     } catch (IOException e) {
       LOGGER.log(Level.SEVERE, "I/O error error during publishing message", e);
