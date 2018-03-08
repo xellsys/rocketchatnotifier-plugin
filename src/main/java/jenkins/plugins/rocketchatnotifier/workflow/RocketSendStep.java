@@ -251,7 +251,7 @@ public class RocketSendStep extends AbstractStepImpl {
     RocketClient getRocketClient(String server, boolean trustSSL, String user, String password, String channel,
       String webhookToken, String webhookTokenCredentialId) throws IOException {
       if (!StringUtils.isEmpty(webhookToken) || !StringUtils.isEmpty(webhookTokenCredentialId)) {
-        return new RocketClientWebhookImpl(server, trustSSL, webhookToken, webhookTokenCredentialId);
+        return new RocketClientWebhookImpl(server, trustSSL, webhookToken, webhookTokenCredentialId, channel);
       }
       return new RocketClientImpl(server, trustSSL, user, password, channel);
     }
