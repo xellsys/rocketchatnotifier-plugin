@@ -24,7 +24,7 @@ node('docker') {
     }
 
     stage('Build') {
-      sh "mvn clean install -U"
+      sh "./mvnw clean install -U"
     }
 
     stage('Prepare Docker Images') {
@@ -36,7 +36,7 @@ node('docker') {
 
     stage('Test') {
       try {
-        sh "mvn -Pdocker -Djava.awt.headless=true -Dmaven.test.redirectTestOutputToFile=true -Dcobertura.report.format=xml --fail-at-end --batch-mode clean cobertura:cobertura verify"
+        sh "./mvnw -Pdocker -Djava.awt.headless=true -Dmaven.test.redirectTestOutputToFile=true -Dcobertura.report.format=xml --fail-at-end --batch-mode clean cobertura:cobertura verify"
       } finally {
         sh "./docker-stop.sh"
         junit testResults: 'target/surefire-reports/TEST-*.xml,target/failsafe-reports/TEST-*.xml'
@@ -50,10 +50,10 @@ node('docker') {
         def projectVersion = projectVersion()
         if (projectVersion && !projectVersion.contains('SNAPSHOT')) {
           // release build
-          sh "mvn deploy -DskipTests=true"
+          sh "./mvnw deploy -DskipTests=true"
           // nightly build
         } else {
-          sh "mvn deploy -DskipTests=true -DartifactSuffix=-alpha"
+          sh "./mvnw deploy -DskipTests=true -DartifactSuffix=-alpha"
         }
       }
     }
