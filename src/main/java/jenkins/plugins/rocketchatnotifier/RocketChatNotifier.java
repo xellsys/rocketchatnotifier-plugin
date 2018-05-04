@@ -29,6 +29,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
 import sun.security.validator.ValidatorException;
 
+import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -532,7 +533,7 @@ public class RocketChatNotifier extends Notifier {
         LOGGER.fine("Done publishing message");
         return FormValidation.ok("Success");
       }
-      catch (ValidatorException e) {
+      catch (ValidatorException | SSLHandshakeException e) {
         LOGGER.log(Level.SEVERE, "SSL error during trying to send rocket message", e);
         return FormValidation.error(e, "SSL error", e);
       }
