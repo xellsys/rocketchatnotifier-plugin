@@ -29,6 +29,7 @@ import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.export.Exported;
 import sun.security.validator.ValidatorException;
 
+import javax.net.ssl.SSLHandshakeException;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -325,7 +326,7 @@ public class RocketChatNotifier extends Notifier {
     password = env.expand(password);
 
     if (!StringUtils.isEmpty(webhookToken) || !StringUtils.isEmpty(webhookTokenCredentialId)) {
-      return new RocketClientWebhookImpl(serverUrl, trustSSL, webhookToken, webhookTokenCredentialId);
+      return new RocketClientWebhookImpl(serverUrl, trustSSL, webhookToken, webhookTokenCredentialId, channel);
     }
     return new RocketClientImpl(serverUrl, trustSSL, username, password, channel);
   }
@@ -518,7 +519,7 @@ public class RocketChatNotifier extends Notifier {
 
         RocketClient rocketChatClient;
         if (!StringUtils.isEmpty(targetWebhookToken) || !StringUtils.isEmpty(targetWebhookTokenCredentialId)) {
-          rocketChatClient = new RocketClientWebhookImpl(targetServerUrl, targetTrustSSL, targetWebhookToken, targetWebhookTokenCredentialId);
+          rocketChatClient = new RocketClientWebhookImpl(targetServerUrl, targetTrustSSL, targetWebhookToken, targetWebhookTokenCredentialId, channel);
         }
         else {
           rocketChatClient = new RocketClientImpl(targetServerUrl, targetTrustSSL, targetUsername, targetPassword, targetChannel);
@@ -532,7 +533,7 @@ public class RocketChatNotifier extends Notifier {
         LOGGER.fine("Done publishing message");
         return FormValidation.ok("Success");
       }
-      catch (ValidatorException e) {
+      catch (ValidatorException | SSLHandshakeException e) {
         LOGGER.log(Level.SEVERE, "SSL error during trying to send rocket message", e);
         return FormValidation.error(e, "SSL error", e);
       }

@@ -5,7 +5,6 @@ import jenkins.plugins.rocketchatnotifier.model.Info;
 import jenkins.plugins.rocketchatnotifier.model.Response;
 import jenkins.plugins.rocketchatnotifier.model.Room;
 import jenkins.plugins.rocketchatnotifier.model.User;
-
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONValue;
 import sun.security.validator.ValidatorException;
@@ -47,14 +46,15 @@ public class RocketChatClientImpl implements RocketChatClient {
    * Initialize a new instance of the client providing the server's url along with webhook for
    * posting notifications.
    *
-   * @param serverUrl of the Rocket.Chat server, with or without it ending in "/api/"
-   * @param trustSSL  if set set the SSL certificate of the rpcket server will not be checked
-   * @param webhookToken      authentication token or URL
+   * @param serverUrl    of the Rocket.Chat server, with or without it ending in "/api/"
+   * @param trustSSL     if set set the SSL certificate of the rocket server will not be checked
+   * @param webhookToken authentication token or URL
    */
   public RocketChatClientImpl(String serverUrl, boolean trustSSL, String webhookToken) {
+    LOG.info("Creating new instance for rocket " + serverUrl + " (trustSSL: " + trustSSL + ")");
     this.callBuilder = new RocketChatClientCallBuilder(serverUrl, trustSSL, webhookToken);
   }
-  
+
   @Override
   public User[] getUsers() throws IOException {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.UsersList);
@@ -150,18 +150,22 @@ public class RocketChatClientImpl implements RocketChatClient {
 
     body.put("text", message);
     if (this.getInfo().getVersion().compareTo("0.50.1") >= 0) {
-      if (emoji != null)
+      if (emoji != null) {
         body.put("emoji", emoji);
-      else if (avatar != null)
+      }
+      else if (avatar != null) {
         body.put("avatar", avatar);
-      if (attachments != null && attachments.size() > 0)
+      }
+      if (attachments != null && attachments.size() > 0) {
         body.put("attachments", attachments);
+      }
     }
     final Response res = this.callBuilder.buildCall(RocketChatRestApiV1.PostMessage, null, body);
 
     if (res.isSuccessful()) {
       LOG.fine("Message sent was successfull.");
-    } else {
+    }
+    else {
       LOG.severe("Could not send message: " + res);
       throw new IOException("The send of the message was unsuccessful.");
     }

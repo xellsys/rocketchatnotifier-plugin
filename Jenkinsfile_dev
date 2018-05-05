@@ -6,6 +6,9 @@ properties([
   buildDiscarder(logRotator(artifactNumToKeepStr: '20', numToKeepStr: '20'))
 ])
 
+@Library('mare-build-library')
+def maven = new de.mare.ci.jenkins.Maven()
+
 node('docker') {
 
   def buildNumber = env.BUILD_NUMBER
@@ -23,37 +26,19 @@ node('docker') {
       checkout scm
     }
 
-    stage('Build') {
-      sh "mvn clean install -U"
-    }
-
-    stage('Prepare Docker Images') {
-      // build docker images
-      sh "./docker-build-images.sh"
-      // run images
-      sh "./docker-run.sh"
-    }
-
-    stage('Test') {
-      try {
-        sh "mvn -Pdocker -Djava.awt.headless=true -Dmaven.test.redirectTestOutputToFile=true -Dcobertura.report.format=xml --fail-at-end --batch-mode clean cobertura:cobertura verify"
-      } finally {
-        sh "./docker-stop.sh"
-        junit testResults: 'target/surefire-reports/TEST-*.xml,target/failsafe-reports/TEST-*.xml'
-        archiveArtifacts artifacts: 'target/*.hpi,target/site/**/*'
-        step([$class: 'CoberturaPublisher', autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'target/site/cobertura/coverage.xml', failUnhealthy: false, failUnstable: false, maxNumberOfBuilds: 0, onlyStable: false, sourceEncoding: 'ASCII', zoomCoverageChart: false])
-      }
+    stage('Build and Test') {
+      sh "./mvnw clean install -U"
     }
 
     stage('Deploy') {
       sshagent(credentials: ['github-hypery2k']) {
-        def projectVersion = projectVersion()
+        def projectVersion = maven.getProjectVersion()
         if (projectVersion && !projectVersion.contains('SNAPSHOT')) {
           // release build
-          sh "mvn deploy -DskipTests=true"
+          sh "./mvnw deploy -DskipTests=true"
           // nightly build
         } else {
-          sh "mvn deploy -DskipTests=true -DartifactSuffix=-alpha"
+          sh "./mvnw deploy -DskipTests=true -DartifactSuffix=-alpha"
         }
       }
     }
@@ -62,10 +47,4 @@ node('docker') {
     throw e
   }
 
-}
-
-def projectVersion() {
-  def file = readFile('pom.xml')
-  def project = new XmlSlurper().parseText(file)
-  return project.version.text()
 }
