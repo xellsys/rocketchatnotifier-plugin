@@ -6,7 +6,7 @@ properties([
   buildDiscarder(logRotator(artifactNumToKeepStr: '20', numToKeepStr: '20'))
 ])
 
-@Library('my-build-library')
+@Library('mare-build-library')
 def maven = new de.mare.ci.jenkins.Maven()
 
 node('docker') {
