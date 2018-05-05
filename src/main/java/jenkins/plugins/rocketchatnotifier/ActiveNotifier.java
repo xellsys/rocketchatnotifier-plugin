@@ -1,7 +1,13 @@
 package jenkins.plugins.rocketchatnotifier;
 
 import edu.umd.cs.findbugs.annotations.SuppressWarnings;
-import hudson.model.*;
+import hudson.model.AbstractBuild;
+import hudson.model.AbstractProject;
+import hudson.model.BuildListener;
+import hudson.model.Cause;
+import hudson.model.CauseAction;
+import hudson.model.Hudson;
+import hudson.model.Result;
 import hudson.scm.ChangeLogSet;
 import hudson.scm.ChangeLogSet.AffectedFile;
 import hudson.scm.ChangeLogSet.Entry;
@@ -59,10 +65,12 @@ public class ActiveNotifier implements FineGrainedNotifier {
       String changes = getChanges(build, notifier.includeCustomMessage(), false);
       if (changes != null) {
         notifyStart(build, changes);
-      } else {
+      }
+      else {
         notifyStart(build, getBuildStatusMessage(build, false, notifier.includeCustomMessage(), false));
       }
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       LOGGER.info("Could not send rocket message");
     }
   }
@@ -104,14 +112,16 @@ public class ActiveNotifier implements FineGrainedNotifier {
               || (result == Result.UNSTABLE && notifier.getNotifyUnstable())) {
               getRocket(r).publish(getBuildStatusMessage(r, notifier.includeTestSummary(),
                 notifier.includeCustomMessage(), true));//, getBuildColor(r));
-              if (notifier.getCommitInfoChoice().showAnything()) {
+              if (notifier.getCommitInfoChoice() != null &&
+                notifier.getCommitInfoChoice().showAnything()) {
                 getRocket(r).publish(getCommitList(r));//, getBuildColor(r));
               }
             }
           }
         }
       }
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       LOGGER.info("Could not send rocket message");
     }
   }
