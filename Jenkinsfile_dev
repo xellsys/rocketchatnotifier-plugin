@@ -6,6 +6,9 @@ properties([
   buildDiscarder(logRotator(artifactNumToKeepStr: '20', numToKeepStr: '20'))
 ])
 
+@Library('my-build-library')
+def maven = new de.mare.ci.jenkins.Maven()
+
 node('docker') {
 
   def buildNumber = env.BUILD_NUMBER
@@ -29,7 +32,7 @@ node('docker') {
 
     stage('Deploy') {
       sshagent(credentials: ['github-hypery2k']) {
-        def projectVersion = projectVersion()
+        def projectVersion = maven.getProjectVersion()
         if (projectVersion && !projectVersion.contains('SNAPSHOT')) {
           // release build
           sh "./mvnw deploy -DskipTests=true"
@@ -44,10 +47,4 @@ node('docker') {
     throw e
   }
 
-}
-
-def projectVersion() {
-  def file = readFile('pom.xml')
-  def project = new XmlSlurper().parseText(file)
-  return project.version.text()
 }
