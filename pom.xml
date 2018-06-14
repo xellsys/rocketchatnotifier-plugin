@@ -333,7 +333,7 @@
     <url>https://jenkins.ci.cloudbees.com/job/plugins/job/rocketchatnotifier-plugin/</url>
   </ciManagement>
 
-  <url>https://wiki.jenkins-ci.org/display/JENKINS/RocketChat+Plugin</url>
+  <url>https://plugins.jenkins.io/rocketchatnotifier</url>
 
   <developers>
     <developer>
