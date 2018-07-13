@@ -32,14 +32,7 @@ node('docker') {
 
     stage('Deploy') {
       sshagent(credentials: ['github-hypery2k']) {
-        def projectVersion = maven.getProjectVersion()
-        if (projectVersion && !projectVersion.contains('SNAPSHOT')) {
-          // release build
-          sh "./mvnw deploy -DskipTests=true"
-          // nightly build
-        } else {
-          sh "./mvnw deploy -DskipTests=true -DartifactSuffix=-alpha"
-        }
+        sh "./mvnw deploy -DskipTests=true"
       }
     }
   } catch (e) {
