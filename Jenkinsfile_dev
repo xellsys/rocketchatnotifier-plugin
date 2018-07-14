@@ -7,7 +7,7 @@ properties([
 ])
 
 @Library('mare-build-library')
-def maven = new de.mare.ci.jenkins.Maven()
+def git = new de.mare.ci.jenkins.Git()
 
 node('docker') {
 
@@ -30,11 +30,12 @@ node('docker') {
       sh "./mvnw clean install -U"
     }
 
-    stage('Deploy') {
+    if (git.isProductionBranch()) {
       sshagent(credentials: ['github-hypery2k']) {
         sh "./mvnw deploy -DskipTests=true"
       }
     }
+
   } catch (e) {
     mail subject: 'Error on build', to: 'github@martinreinhardt-online.de', body: "Please go to ${env.BUILD_URL}."
     throw e
