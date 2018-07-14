@@ -28,7 +28,7 @@ node('docker') {
 
     stage('Build and Test') {
       sh "./mvnw clean install -U"
-      openTasks high: 'FIXME', normal: 'TODO', pattern: '**/src/**/*.*,*.properties,Jenkinsfile*,*.gradle'
+      openTasks high: 'FIXME', normal: 'TODO', pattern: '**/src/**/*.*,*.properties,Jenkinsfil*,*.gradle'
       junit 'target/surefire-reports/*.xml'
     }
 
