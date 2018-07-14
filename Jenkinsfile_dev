@@ -7,7 +7,7 @@ properties([
 ])
 
 @Library('mare-build-library')
-def maven = new de.mare.ci.jenkins.Maven()
+def git = new de.mare.ci.jenkins.Git()
 
 node('docker') {
 
@@ -28,20 +28,16 @@ node('docker') {
 
     stage('Build and Test') {
       sh "./mvnw clean install -U"
+      openTasks high: 'FIXME', normal: 'TODO', pattern: '**/src/**/*.*,*.properties,Jenkinsfil*,*.gradle'
+      junit 'target/surefire-reports/*.xml'
     }
 
-    stage('Deploy') {
+    if (git.isProductionBranch()) {
       sshagent(credentials: ['github-hypery2k']) {
-        def projectVersion = maven.getProjectVersion()
-        if (projectVersion && !projectVersion.contains('SNAPSHOT')) {
-          // release build
-          sh "./mvnw deploy -DskipTests=true"
-          // nightly build
-        } else {
-          sh "./mvnw deploy -DskipTests=true -DartifactSuffix=-alpha"
-        }
+        sh "./mvnw deploy -DskipTests=true"
       }
     }
+
   } catch (e) {
     mail subject: 'Error on build', to: 'github@martinreinhardt-online.de', body: "Please go to ${env.BUILD_URL}."
     throw e
