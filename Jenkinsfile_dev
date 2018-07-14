@@ -28,6 +28,8 @@ node('docker') {
 
     stage('Build and Test') {
       sh "./mvnw clean install -U"
+      openTasks high: 'FIXME', normal: 'TODO', pattern: '**/src/**/*.*,*.properties,Jenkinsfile*,*.gradle'
+      junit 'target/surefire-reports/*.xml'
     }
 
     if (git.isProductionBranch()) {
