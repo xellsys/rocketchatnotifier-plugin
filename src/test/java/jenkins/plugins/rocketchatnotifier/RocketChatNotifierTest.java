@@ -58,7 +58,7 @@ public class RocketChatNotifierTest {
       "user", "password",
       "jenkins", "rocket.example.com",
       false,
-      false, false, false, false, false, false, false, false, null, false, null, null, null);
+      false, false, false, false, false, false, false, false, null, false, false, null, null, null, null);
   }
 
   @Test
@@ -101,7 +101,7 @@ public class RocketChatNotifierTest {
       "user", "password",
       "jenkins", "rocket.example.com",
       false,
-      false, false, false, false, false, false, false, false, null, false, null, "42", "23");
+      false, false, false, false, false, false, false, false, null, false, false, null, null, "42", "23");
     // when
     RocketClient client = notifier.newRocketChatClient(build, listener);
     // then

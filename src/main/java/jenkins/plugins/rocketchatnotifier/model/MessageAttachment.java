@@ -1,13 +1,21 @@
-package jenkins.plugins.rocketchatnotifier.workflow.attachments;
+package jenkins.plugins.rocketchatnotifier.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hudson.Extension;
 import hudson.model.AbstractDescribableImpl;
 import hudson.model.Descriptor;
+import jenkins.plugins.rocketchatnotifier.utils.IgnoreInheritedIntrospector;
+import net.sf.json.JSONObject;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.DataBoundSetter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by ben on 07/02/2017.
@@ -95,8 +103,9 @@ public class MessageAttachment extends AbstractDescribableImpl<MessageAttachment
 
   @DataBoundSetter
   public void setCollapsed(final Boolean collapsed) {
-    if (collapsed)
+    if (collapsed) {
       this.collapsed = collapsed;
+    }
   }
 
   public String getAuthorName() {
@@ -176,6 +185,70 @@ public class MessageAttachment extends AbstractDescribableImpl<MessageAttachment
   @DataBoundSetter
   public void setVideoUrl(final String videoUrl) {
     this.videoUrl = videoUrl;
+  }
+
+
+  public static MessageAttachment fromJSON(final JSONObject json) {
+    final MessageAttachment attachment = new MessageAttachment(json.optString("title"));
+    attachment.setColor(sanitizeEmptyStringtoNull(json.getString("color")));
+    attachment.setText(sanitizeEmptyStringtoNull(json.getString("text")));
+    attachment.setThumbUrl(sanitizeEmptyStringtoNull(json.getString("thumbUrl")));
+    attachment.setMessageLink(sanitizeEmptyStringtoNull(json.getString("messageLink")));
+    attachment.setCollapsed(json.getBoolean("collapsed"));
+    attachment.setAuthorName(sanitizeEmptyStringtoNull(json.getString("authorName")));
+    attachment.setAuthorIcon(sanitizeEmptyStringtoNull(json.getString("authorIcon")));
+    attachment.setAuthorLink(sanitizeEmptyStringtoNull(json.getString("authorLink")));
+    attachment.setTitleLink(sanitizeEmptyStringtoNull(json.getString("titleLink")));
+    attachment.setTitleLinkDownload(sanitizeEmptyStringtoNull(json.getString("titleLinkDownload")));
+    attachment.setImageUrl(sanitizeEmptyStringtoNull(json.getString("imageUrl")));
+    attachment.setAudioUrl(sanitizeEmptyStringtoNull(json.getString("audioUrl")));
+    attachment.setVideoUrl(sanitizeEmptyStringtoNull(json.getString("videoUrl")));
+    return attachment;
+  }
+
+  private static String sanitizeEmptyStringtoNull(String text) {
+    return text == null || text.length() == 0 ? null : text;
+  }
+
+  public static List<Map<String, Object>> convertMessageAttachmentsToMaps(List<MessageAttachment> attachments) {
+    List<Map<String, Object>> returnedList = new ArrayList<Map<String, Object>>();
+    if (attachments != null && attachments.size() > 0) {
+      ObjectMapper oMapper = new ObjectMapper();
+      oMapper.setAnnotationIntrospector(new IgnoreInheritedIntrospector());
+      for (MessageAttachment attachment : attachments) {
+        returnedList.add(oMapper.convertValue(attachment, Map.class));
+      }
+    }
+    return returnedList;
+
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    MessageAttachment that = (MessageAttachment) o;
+    return Objects.equals(color, that.color) &&
+      Objects.equals(text, that.text) &&
+      Objects.equals(ts, that.ts) &&
+      Objects.equals(thumbUrl, that.thumbUrl) &&
+      Objects.equals(messageLink, that.messageLink) &&
+      Objects.equals(collapsed, that.collapsed) &&
+      Objects.equals(authorName, that.authorName) &&
+      Objects.equals(title, that.title) &&
+      Objects.equals(authorLink, that.authorLink) &&
+      Objects.equals(authorIcon, that.authorIcon) &&
+      Objects.equals(titleLink, that.titleLink) &&
+      Objects.equals(titleLinkDownload, that.titleLinkDownload) &&
+      Objects.equals(imageUrl, that.imageUrl) &&
+      Objects.equals(audioUrl, that.audioUrl) &&
+      Objects.equals(videoUrl, that.videoUrl);
+  }
+
+  @Override
+  public int hashCode() {
+
+    return Objects.hash(color, text, ts, thumbUrl, messageLink, collapsed, authorName, title, authorLink, authorIcon, titleLink, titleLinkDownload, imageUrl, audioUrl, videoUrl);
   }
 
   @Extension

@@ -31,30 +31,17 @@ public class RocketClientImpl implements RocketClient {
     this.channel = channel;
   }
 
-  public boolean publish(String message) {
+  public boolean publish(String message, List<Map<String, Object>> attachments) {
     try {
       LOGGER.fine("Starting sending message to channel " + this.channel);
-      this.client.send(this.channel, message);
+      this.client.send(this.channel, message, null, null, attachments);
       return true;
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       LOGGER.log(Level.SEVERE, "I/O error error during publishing message", e);
-      return false;
-    } catch (Exception e) {
-      LOGGER.log(Level.SEVERE, "Unknown error error during publishing message", e);
       return false;
     }
-  }
-
-  @Override
-  public boolean publish(final String message, final String emoji, final String avatar) {
-    try {
-      LOGGER.fine("Starting sending message to channel " + this.channel);
-      this.client.send(this.channel, message, emoji, avatar);
-      return true;
-    } catch (IOException e) {
-      LOGGER.log(Level.SEVERE, "I/O error error during publishing message", e);
-      return false;
-    } catch (Exception e) {
+    catch (Exception e) {
       LOGGER.log(Level.SEVERE, "Unknown error error during publishing message", e);
       return false;
     }
@@ -66,10 +53,12 @@ public class RocketClientImpl implements RocketClient {
       LOGGER.fine("Starting sending message to channel " + this.channel);
       this.client.send(this.channel, message, emoji, avatar, attachments);
       return true;
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       LOGGER.log(Level.SEVERE, "I/O error error during publishing message", e);
       return false;
-    } catch (Exception e) {
+    }
+    catch (Exception e) {
       LOGGER.log(Level.SEVERE, "Unknown error error during publishing message", e);
       return false;
     }

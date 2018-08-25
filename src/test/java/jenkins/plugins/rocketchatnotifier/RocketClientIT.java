@@ -16,17 +16,12 @@ public class RocketClientIT {
   @Before
   public void setup() throws Exception {
     this.client = new RocketClientImpl("http://localhost:44443/", false, "admin", "supersecret",
-                                       "general"); // TODO read from env
+      "general"); // TODO read from env
   }
 
   @Test
   public void shouldSendMessage() throws Exception {
-    this.client.publish("test");
-  }
-
-  @Test
-  public void shouldSendMessageAndEmoJiAndAvatar() throws Exception {
-    this.client.publish("test", ":sob:", null);
+    this.client.publish("test", null);
   }
 
   @Test

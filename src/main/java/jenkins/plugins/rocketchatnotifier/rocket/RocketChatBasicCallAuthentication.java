@@ -1,14 +1,13 @@
 package jenkins.plugins.rocketchatnotifier.rocket;
 
-import java.io.IOException;
-
-import org.json.JSONObject;
-
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 /**
  * Authentication using username/ password
@@ -22,12 +21,18 @@ public class RocketChatBasicCallAuthentication implements RocketChatCallAuthenti
 
   public RocketChatBasicCallAuthentication(String serverUrl, String user, String password) {
     super();
+    if (!serverUrl.endsWith("/")) {
+      serverUrl += "/";
+    }
+    if (!serverUrl.startsWith("http")) {
+      serverUrl = "https://" + serverUrl;
+    }
     if (!serverUrl.endsWith("api/")) {
-      this.serverUrl = serverUrl + (serverUrl.endsWith("/") ? "" : "/") + "api/";
-    } else {
+      this.serverUrl = serverUrl + "api/";
+    }
+    else {
       this.serverUrl = serverUrl;
     }
-
     this.user = user;
     this.password = password;
   }
@@ -44,17 +49,18 @@ public class RocketChatBasicCallAuthentication implements RocketChatCallAuthenti
 
     try {
       loginResult = Unirest.post(apiURL).field("user", user).field("password", password).asJson();
-    } catch (UnirestException e) {
+    }
+    catch (UnirestException e) {
       throw new IOException("Please check if the server API " + apiURL + " is correct: " + e.getMessage(), e);
-    } catch (Exception e) {
-      throw new IOException(e);
     }
 
-    if (loginResult.getStatus() == 401)
+    if (loginResult.getStatus() == 401) {
       throw new IOException("The username and password provided are incorrect.");
+    }
 
-    if (loginResult.getStatus() != 200)
+    if (loginResult.getStatus() != 200) {
       throw new IOException("The login failed with a result of: " + loginResult.getStatus());
+    }
 
     JSONObject data = loginResult.getBody().getObject().getJSONObject("data");
     this.authToken = data.getString("authToken");

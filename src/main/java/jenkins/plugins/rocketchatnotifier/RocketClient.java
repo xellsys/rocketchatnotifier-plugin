@@ -9,11 +9,10 @@ import java.util.Map;
 /**
  * Created by mreinhardt on 08.09.16.
  */
+
 public interface RocketClient {
 
-  boolean publish(String message);
-
-  boolean publish(String message, String emoji, String avatar);
+  boolean publish(String message, List<Map<String, Object>> attachments);
 
   boolean publish(String message, String emoji, String avatar, List<Map<String, Object>> attachments);
 

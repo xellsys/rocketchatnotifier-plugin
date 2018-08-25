@@ -1,8 +1,8 @@
 # Rocket Chat Notification Plugin for Jenkins
 
 [![Build Status](https://travis-ci.org/jenkinsci/rocketchatnotifier-plugin.svg?branch=master)](https://travis-ci.org/jenkinsci/rocketchatnotifier-plugin) 
-[![Build Status](https://ci.jenkins.io/job/Plugins/job/rocketchatnotifier-plugin/job/develop/badge/icon)](https://ci.jenkins.io/blue/organizations/jenkins/Plugins%2Frocketchatnotifier-plugin/branches/)
-[![Build Status](https://martinreinhardt-online.de/jenkins/buildStatus/icon?job=rocketchatnotifier-plugin/master)](https://martinreinhardt-online.de/jenkins/job/rocketchatnotifier-plugin/job/master/)
+[![Build Status](https://ci.jenkins.io/job/Plugins/job/rocketchatnotifier-plugin/job/master/badge/icon)](https://ci.jenkins.io/blue/organizations/jenkins/Plugins%2Frocketchatnotifier-plugin/branches/)
+[![Build Status](https://jenkins.martinreinhardt-online.de/buildStatus/icon?job=OSS/rocketchatnotifier-plugin/master)](https://jenkins.martinreinhardt-online.de/blue/organizations/jenkins/OSS%2Frocketchatnotifier-plugin/branches/)
 [![codecov](https://codecov.io/gh/jenkinsci/rocketchatnotifier-plugin/branch/master/graph/badge.svg)](https://codecov.io/gh/jenkinsci/rocketchatnotifier-plugin)
 [![Known Vulnerabilities](https://snyk.io/test/github/jenkinsci/rocketchatnotifier-plugin/badge.svg)](https://snyk.io/test/github/jenkinsci/rocketchatnotifier-plugin)
 [![](https://img.shields.io/badge/style-issues-yellow.svg?style=flat&label=JIRA)](https://issues.jenkins-ci.org/browse/JENKINS-48905?jql=project%20%3D%20JENKINS%20AND%20status%20in%20(Open%2C%20%22In%20Progress%22%2C%20Reopened%2C%20%22In%20Review%22)%20AND%20component%20%3D%20rocket-chat-notifier-plugin)
@@ -12,11 +12,9 @@ The latest stable version is available at Plugins Center. Dev builds are availab
 <a name="donation"></a>
 > Feel free to **donate**
 >
-> <a href='https://pledgie.com/campaigns/34775'><img alt='Click here to lend your support to: Open Source and make a donation at pledgie.com !' src='https://pledgie.com/campaigns/34775.png?skin_name=chrome' border='0' ></a>
-> <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=AGPGLZYNV6Y5S">
-> <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"/>
+> <a target="_blank" href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D88ZDNH6AANPJ">
+> <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif"/>
 > </img></a>
->
 > Or donate Bitcoins: bitcoin:3NKtxw1SRYgess5ev4Ri54GekoAgkR213D
 >
 > [![Bitcoin](https://martinreinhardt-online.de/bitcoin.png)](bitcoin:3NKtxw1SRYgess5ev4Ri54GekoAgkR213D)
