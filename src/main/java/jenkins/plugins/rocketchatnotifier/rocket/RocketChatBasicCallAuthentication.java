@@ -21,11 +21,14 @@ public class RocketChatBasicCallAuthentication implements RocketChatCallAuthenti
 
   public RocketChatBasicCallAuthentication(String serverUrl, String user, String password) {
     super();
+    if (!serverUrl.endsWith("/")) {
+      serverUrl += "/";
+    }
     if (!serverUrl.startsWith("http")) {
       serverUrl = "https://" + serverUrl;
     }
     if (!serverUrl.endsWith("api/")) {
-      this.serverUrl = serverUrl + (serverUrl.endsWith("/") ? "" : "/") + "api/";
+      this.serverUrl = serverUrl + "api/";
     }
     else {
       this.serverUrl = serverUrl;
