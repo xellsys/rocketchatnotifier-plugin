@@ -12,6 +12,7 @@ import hudson.scm.ChangeLogSet;
 import hudson.scm.ChangeLogSet.AffectedFile;
 import hudson.scm.ChangeLogSet.Entry;
 import hudson.triggers.SCMTrigger;
+import jenkins.plugins.rocketchatnotifier.model.MessageAttachment;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
@@ -76,7 +77,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
   }
 
   private void notifyStart(AbstractBuild build, String message) throws IOException {
-    getRocket(build).publish(message);
+    getRocket(build).publish(message, MessageAttachment.convertMessageAttachmentsToMaps(this.notifier.getAttachments()));
   }
 
   public void finalized(AbstractBuild r) {
@@ -111,10 +112,10 @@ public class ActiveNotifier implements FineGrainedNotifier {
               || (result == Result.SUCCESS && notifier.getNotifySuccess())
               || (result == Result.UNSTABLE && notifier.getNotifyUnstable())) {
               getRocket(r).publish(getBuildStatusMessage(r, notifier.includeTestSummary(),
-                notifier.includeCustomMessage(), true));//, getBuildColor(r));
+                notifier.includeCustomMessage(), true), MessageAttachment.convertMessageAttachmentsToMaps(this.notifier.getAttachments()));//, getBuildColor(r));
               if (notifier.getCommitInfoChoice() != null &&
                 notifier.getCommitInfoChoice().showAnything()) {
-                getRocket(r).publish(getCommitList(r));//, getBuildColor(r));
+                getRocket(r).publish(getCommitList(r), MessageAttachment.convertMessageAttachmentsToMaps(this.notifier.getAttachments()));//, getBuildColor(r));
               }
             }
           }

@@ -1,6 +1,6 @@
 <?jelly escape-by-default='true'?>
-<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define"
-         xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+<j:jelly xmlns:j="jelly:core"
+         xmlns:f="/lib/form">
   <!--
     This Jelly script is used to produce the global configuration option.
 
@@ -13,27 +13,30 @@
     tags they use. Views are always organized according to its owner class,
     so it should be straightforward to find them.
   -->
-<f:section title="Global RocketChat Notifier Settings" name="rocket">
+  <f:section title="Global RocketChat Notifier Settings" name="rocket">
     <f:entry title="Rocket Server URL">
-        <f:textbox field="rocketServerUrl" name="rocketServerUrl" value="${descriptor.getRocketServerUrl()}" />
+      <f:textbox field="rocketServerUrl" clazz="required" name="rocketServerUrl"
+                 value="${descriptor.getRocketServerUrl()}"/>
     </f:entry>
-    <f:entry title="Trust Server Certificate?" description="If checked, the SSL certificate of the Rocket Server will not be checked">
+    <f:entry title="Trust Server Certificate?"
+             description="If checked, the SSL certificate of the Rocket Server will not be checked">
       <f:checkbox field="trustSSL" name="trustSSL" checked="${descriptor.isTrustSSL()}"/>
     </f:entry>
     <f:entry title="Login Username">
-        <f:textbox field="username" name="rocketUsername" value="${descriptor.getUsername()}" />
+      <f:textbox field="username" name="rocketUsername" value="${descriptor.getUsername()}"/>
     </f:entry>
     <f:entry title="Login password">
-        <f:password field="password" name="rocketPassword" value="${descriptor.getPassword()}" />
+      <f:password field="password" name="rocketPassword" value="${descriptor.getPassword()}"/>
     </f:entry>
     <f:entry title="Channel" description="Comma separated list of rooms (e.g. #project) and / or persons (e.g. @john)">
-        <f:textbox field="channel" name="rocketChannel" value="${descriptor.getChannel()}" />
+      <f:textbox field="channel" name="rocketChannel" value="${descriptor.getChannel()}"/>
     </f:entry>
     <f:entry title="Build Server URL">
-        <f:textbox field="buildServerUrl" name="rocketBuildServerUrl" value="${descriptor.getBuildServerUrl()}" />
+      <f:textbox field="buildServerUrl" name="rocketBuildServerUrl" value="${descriptor.getBuildServerUrl()}"/>
     </f:entry>
     <f:validateButton
-        title="${%Test Connection}" progress="${%Testing...}"
-        method="testConnection" with="rocketServerUrl,trustSSL,rocketUsername,rocketPassword,rocketChannel,rocketBuildServerUrl" />
+      title="${%Test Connection}" progress="${%Testing...}"
+      method="testConnection"
+      with="rocketServerUrl,trustSSL,rocketUsername,rocketPassword,rocketChannel,rocketBuildServerUrl"/>
   </f:section>
 </j:jelly>

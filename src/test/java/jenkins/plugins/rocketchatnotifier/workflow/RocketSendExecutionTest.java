@@ -1,6 +1,6 @@
 package jenkins.plugins.rocketchatnotifier.workflow;
 
-import jenkins.plugins.rocketchatnotifier.workflow.attachments.MessageAttachment;
+import jenkins.plugins.rocketchatnotifier.model.MessageAttachment;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -15,12 +15,11 @@ public class RocketSendExecutionTest {
 
   @Test
   public void convertMessageAttachmentsShouldConvertCamelCaseToUnderscore() {
-    RocketSendStep.RocketSendStepExecution rocketSendStepExecution = new RocketSendStep.RocketSendStepExecution();
     List<MessageAttachment> attachments = new ArrayList<MessageAttachment>();
     MessageAttachment messageAttachment = new MessageAttachment("title");
     messageAttachment.setAuthorName("John Doe");
     attachments.add(messageAttachment);
-    List<Map<String, Object>> maps = rocketSendStepExecution.convertMessageAttachmentsToMaps(attachments);
+    List<Map<String, Object>> maps = MessageAttachment.convertMessageAttachmentsToMaps(attachments);
 
     Assert.assertNotNull(maps);
     Assert.assertTrue(maps.get(0).containsKey("author_name"));
@@ -29,11 +28,10 @@ public class RocketSendExecutionTest {
 
   @Test
   public void convertMessageAttachmentsShouldNotConvertNullPropertie() {
-    RocketSendStep.RocketSendStepExecution rocketSendStepExecution = new RocketSendStep.RocketSendStepExecution();
     List<MessageAttachment> attachments = new ArrayList<MessageAttachment>();
     MessageAttachment messageAttachment = new MessageAttachment("title");
     attachments.add(messageAttachment);
-    List<Map<String, Object>> maps = rocketSendStepExecution.convertMessageAttachmentsToMaps(attachments);
+    List<Map<String, Object>> maps = MessageAttachment.convertMessageAttachmentsToMaps(attachments);
 
     Assert.assertNotNull(maps);
     Assert.assertFalse(maps.get(0).containsKey("author_name"));
@@ -50,7 +48,7 @@ public class RocketSendExecutionTest {
     MessageAttachment messageAttachment2 = new MessageAttachment("title");
     messageAttachment2.setMessageLink("http://github.com");
     attachments.add(messageAttachment2);
-    List<Map<String, Object>> maps = rocketSendStepExecution.convertMessageAttachmentsToMaps(attachments);
+    List<Map<String, Object>> maps = MessageAttachment.convertMessageAttachmentsToMaps(attachments);
 
     Assert.assertNotNull(maps);
     Assert.assertEquals(2, maps.size());

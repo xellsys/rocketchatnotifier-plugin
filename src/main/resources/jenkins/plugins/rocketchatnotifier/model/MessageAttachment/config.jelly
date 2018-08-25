@@ -2,7 +2,7 @@
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
   <f:entry field="title" title="title">
-    <f:textbox/>
+    <f:textbox clazz="required"/>
   </f:entry>
   <f:entry field="color" title="color">
     <f:textbox/>
@@ -23,10 +23,10 @@
     <f:entry field="authorName" title="author_name">
       <f:textbox/>
     </f:entry>
-    <f:entry field="authorLink" title="author_link">
+    <f:entry field="authorIcon" title="author_icon">
       <f:textbox/>
     </f:entry>
-    <f:entry field="authorIcon" title="message_icon">
+    <f:entry field="authorLink" title="author_link">
       <f:textbox/>
     </f:entry>
     <f:entry field="titleLink" title="title_link">
@@ -35,7 +35,7 @@
     <f:entry field="titleLinkDownload" title="title_link_download">
       <f:textbox/>
     </f:entry>
-    <f:entry field="imageUrl" title="imageUrl">
+    <f:entry field="imageUrl" title="image_url">
       <f:textbox/>
     </f:entry>
     <f:entry field="audioUrl" title="audio_url">

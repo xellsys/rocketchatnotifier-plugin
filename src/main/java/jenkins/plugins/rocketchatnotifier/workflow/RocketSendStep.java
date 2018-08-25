@@ -1,38 +1,10 @@
 package jenkins.plugins.rocketchatnotifier.workflow;
 
-import static com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.annotation.Nonnull;
-import javax.inject.Inject;
-
-import org.apache.commons.lang.StringUtils;
-import org.jenkinsci.plugins.plaincredentials.StringCredentials;
-import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
-import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
-import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
-import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
-import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.DataBoundSetter;
-import org.kohsuke.stapler.QueryParameter;
-
 import com.cloudbees.plugins.credentials.common.StandardListBoxModel;
 import com.cloudbees.plugins.credentials.domains.DomainRequirement;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
-import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
-
 import hudson.AbortException;
 import hudson.Extension;
 import hudson.Util;
-import hudson.model.AbstractDescribableImpl;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.security.ACL;
@@ -44,7 +16,26 @@ import jenkins.plugins.rocketchatnotifier.RocketChatNotifier;
 import jenkins.plugins.rocketchatnotifier.RocketClient;
 import jenkins.plugins.rocketchatnotifier.RocketClientImpl;
 import jenkins.plugins.rocketchatnotifier.RocketClientWebhookImpl;
-import jenkins.plugins.rocketchatnotifier.workflow.attachments.MessageAttachment;
+import jenkins.plugins.rocketchatnotifier.model.MessageAttachment;
+import org.apache.commons.lang.StringUtils;
+import org.jenkinsci.plugins.plaincredentials.StringCredentials;
+import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
+import org.jenkinsci.plugins.workflow.steps.AbstractStepImpl;
+import org.jenkinsci.plugins.workflow.steps.AbstractSynchronousNonBlockingStepExecution;
+import org.jenkinsci.plugins.workflow.steps.StepContextParameter;
+import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static com.cloudbees.plugins.credentials.CredentialsProvider.lookupCredentials;
 
 /**
  * Workflow step to send a rocket channel notification.
@@ -213,7 +204,8 @@ public class RocketSendStep extends AbstractStepImpl {
       //Jenkins.getInstance() may return null, no message sent in that case
       try {
         jenkins = Jenkins.getInstance();
-      } catch (NullPointerException ne) {
+      }
+      catch (NullPointerException ne) {
         listener.error(Messages.NotificationFailedWithException(ne));
         return null;
       }
@@ -238,10 +230,11 @@ public class RocketSendStep extends AbstractStepImpl {
       }
 
       boolean publishSuccess = rocketClient.publish(msg, step.emoji, step.avatar,
-        convertMessageAttachmentsToMaps(step.attachments));
+        MessageAttachment.convertMessageAttachmentsToMaps(step.attachments));
       if (!publishSuccess && step.failOnError) {
         throw new AbortException(Messages.NotificationFailed());
-      } else if (!publishSuccess) {
+      }
+      else if (!publishSuccess) {
         listener.error(Messages.NotificationFailed());
       }
       return null;
@@ -249,32 +242,12 @@ public class RocketSendStep extends AbstractStepImpl {
 
     //streamline unit testing
     RocketClient getRocketClient(String server, boolean trustSSL, String user, String password, String channel,
-      String webhookToken, String webhookTokenCredentialId) throws IOException {
+                                 String webhookToken, String webhookTokenCredentialId) throws IOException {
       if (!StringUtils.isEmpty(webhookToken) || !StringUtils.isEmpty(webhookTokenCredentialId)) {
         return new RocketClientWebhookImpl(server, trustSSL, webhookToken, webhookTokenCredentialId, channel);
       }
       return new RocketClientImpl(server, trustSSL, user, password, channel);
     }
 
-    protected List<Map<String, Object>> convertMessageAttachmentsToMaps(List<MessageAttachment> attachments) {
-      List<Map<String, Object>> returnedList = new ArrayList<Map<String, Object>>();
-      if (attachments != null && attachments.size() > 0) {
-        ObjectMapper oMapper = new ObjectMapper();
-        oMapper.setAnnotationIntrospector(new IgnoreInheritedIntrospector());
-        for (MessageAttachment attachment : attachments) {
-          returnedList.add(oMapper.convertValue(attachment, Map.class));
-        }
-      }
-      return returnedList;
-
-    }
-
-  }
-
-  private static class IgnoreInheritedIntrospector extends JacksonAnnotationIntrospector {
-    @Override
-    public boolean hasIgnoreMarker(final AnnotatedMember m) {
-      return m.getDeclaringClass() == AbstractDescribableImpl.class || super.hasIgnoreMarker(m);
-    }
   }
 }
