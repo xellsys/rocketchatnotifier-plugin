@@ -32,9 +32,11 @@ node('docker') {
       junit 'target/surefire-reports/*.xml'
     }
 
-    if (git.isProductionBranch()) {
-      sshagent(credentials: ['github-hypery2k']) {
-        sh "./mvnw deploy -DskipTests=true"
+    stage('Deploy') {
+      if (git.isProductionBranch()) {
+        sshagent(credentials: ['github-hypery2k']) {
+          sh "./mvnw deploy -DskipTests=true"
+        }
       }
     }
 
