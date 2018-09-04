@@ -13,9 +13,9 @@ import hudson.scm.ChangeLogSet.AffectedFile;
 import hudson.scm.ChangeLogSet.Entry;
 import hudson.triggers.SCMTrigger;
 import jenkins.plugins.rocketchatnotifier.model.MessageAttachment;
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
     this.listener = listener;
   }
 
-  private RocketClient getRocket(AbstractBuild r) throws IOException {
+  private RocketClient getRocket(AbstractBuild r) throws RocketClientException {
     return notifier.newRocketChatClient(r, listener);
   }
 
@@ -71,12 +71,12 @@ public class ActiveNotifier implements FineGrainedNotifier {
         notifyStart(build, getBuildStatusMessage(build, false, notifier.includeCustomMessage(), false));
       }
     }
-    catch (IOException e) {
+    catch (RocketClientException e) {
       LOGGER.info("Could not send rocket message");
     }
   }
 
-  private void notifyStart(AbstractBuild build, String message) throws IOException {
+  private void notifyStart(AbstractBuild build, String message) throws RocketClientException {
     getRocket(build).publish(message, MessageAttachment.convertMessageAttachmentsToMaps(this.notifier.getAttachments()));
   }
 
@@ -122,7 +122,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
         }
       }
     }
-    catch (IOException e) {
+    catch (RocketClientException e) {
       LOGGER.info("Could not send rocket message");
     }
   }

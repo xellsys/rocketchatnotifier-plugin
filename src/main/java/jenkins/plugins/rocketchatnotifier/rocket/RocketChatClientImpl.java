@@ -5,11 +5,11 @@ import jenkins.plugins.rocketchatnotifier.model.Info;
 import jenkins.plugins.rocketchatnotifier.model.Response;
 import jenkins.plugins.rocketchatnotifier.model.Room;
 import jenkins.plugins.rocketchatnotifier.model.User;
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 import org.apache.commons.lang.StringUtils;
 import org.json.simple.JSONValue;
 import sun.security.validator.ValidatorException;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +25,8 @@ import java.util.logging.Logger;
  */
 public class RocketChatClientImpl implements RocketChatClient {
 
-  private RocketChatClientCallBuilder callBuilder;
-
   private static final Logger LOG = Logger.getLogger(RocketClientImpl.class.getName());
+  private RocketChatClientCallBuilder callBuilder;
 
   /**
    * Initialize a new instance of the client providing the server's url along with username and
@@ -56,77 +55,77 @@ public class RocketChatClientImpl implements RocketChatClient {
   }
 
   @Override
-  public User[] getUsers() throws IOException {
+  public User[] getUsers() throws RocketClientException {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.UsersList);
 
     if (!res.isSuccessful()) {
       LOG.severe("Could not read users information: " + res.getMessage().getMsg());
-      throw new IOException("The call to get the User's Information was unsuccessful.");
+      throw new RocketClientException("The call to get the User's Information was unsuccessful.");
     }
     if (!res.isUsers()) {
       LOG.severe("Failed to read users information: " + res.getMessage().getMsg());
-      throw new IOException("Get User Information failed to retrieve a user.");
+      throw new RocketClientException("Get User Information failed to retrieve a user.");
     }
     return res.getUsers();
   }
 
   @Override
-  public User getUser(String userId) throws IOException {
+  public User getUser(String userId) throws RocketClientException {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.UsersInfo,
       new RocketChatQueryParams("userId", userId));
 
     if (!res.isSuccessful()) {
       LOG.severe("Could not read user information: " + res.getMessage().getMsg());
-      throw new IOException("The call to get the User's Information was unsuccessful.");
+      throw new RocketClientException("The call to get the User's Information was unsuccessful.");
     }
     if (!res.isUser()) {
       LOG.severe("Failed to read users information: " + res.getMessage().getMsg());
-      throw new IOException("Get User Information failed to retrieve a user.");
+      throw new RocketClientException("Get User Information failed to retrieve a user.");
     }
     return res.getUser();
   }
 
   @Override
-  public Room[] getChannels() throws IOException {
+  public Room[] getChannels() throws RocketClientException {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.ChannelsList);
 
     if (!res.isSuccessful()) {
       LOG.severe("Could not read channels information: " + res.getMessage().getMsg());
-      throw new IOException("The call to get the all Channel Information was unsuccessful.");
+      throw new RocketClientException("The call to get the all Channel Information was unsuccessful.");
     }
     return res.getChannels();
   }
 
   @Override
-  public Info getInfo() throws IOException {
+  public Info getInfo() throws RocketClientException {
     Response res = this.callBuilder.buildCall(RocketChatRestApiV1.Info);
 
     if (res.isSuccessful()) {
       return res.getInfo();
     }
     LOG.severe("Could not read information: " + res);
-    throw new IOException("The call to get informations was unsuccessful.");
+    throw new RocketClientException("The call to get informations was unsuccessful.");
   }
 
   @Override
-  public void send(Room room, String message) throws ValidatorException, IOException {
+  public void send(Room room, String message) throws ValidatorException, RocketClientException {
     this.send(room.getName(), message);
   }
 
   @Override
-  public void send(String channelName, String message) throws ValidatorException, IOException {
+  public void send(String channelName, String message) throws ValidatorException, RocketClientException {
     this.send(channelName, message, null, null);
   }
 
   @Override
   public void send(final String channelName, final String message, final String emoji, final String avatar)
-    throws ValidatorException, IOException {
+    throws ValidatorException, RocketClientException {
     this.send(channelName, message, emoji, avatar, null);
   }
 
   @Override
   public void send(final String channelName, final String message, final String emoji, final String avatar, final List<Map<String, Object>> attachments)
-    throws ValidatorException, IOException {
+    throws ValidatorException, RocketClientException {
     if (!channelName.contains(",")) {
       sendSingleMessage(channelName, message, emoji, avatar, attachments);
       return;
@@ -137,7 +136,7 @@ public class RocketChatClientImpl implements RocketChatClient {
     }
   }
 
-  private void sendSingleMessage(final String singleChannelName, final String message, final String emoji, final String avatar, final List<Map<String, Object>> attachments) throws IOException {
+  private void sendSingleMessage(final String singleChannelName, final String message, final String emoji, final String avatar, final List<Map<String, Object>> attachments) throws RocketClientException {
     Map body = new HashMap<String, String>();
     if (!StringUtils.isEmpty(singleChannelName)) {
       String targetChannelName = singleChannelName.trim();
@@ -167,7 +166,7 @@ public class RocketChatClientImpl implements RocketChatClient {
     }
     else {
       LOG.severe("Could not send message: " + res);
-      throw new IOException("The send of the message was unsuccessful.");
+      throw new RocketClientException("The send of the message was unsuccessful.");
     }
   }
 

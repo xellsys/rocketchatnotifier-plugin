@@ -1,7 +1,7 @@
 package jenkins.plugins.rocketchatnotifier.rocket;
 
-import java.io.IOException;
 import com.mashape.unirest.request.HttpRequest;
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 
 public class RocketChatWebhookAuthentication implements RocketChatCallAuthentication {
   private static final String HOOKS_PATH = "hooks/";
@@ -22,7 +22,7 @@ public class RocketChatWebhookAuthentication implements RocketChatCallAuthentica
   }
 
   @Override
-  public void doAuthentication() throws IOException {
+  public void doAuthentication() throws RocketClientException {
     // No authentication needed
   }
 

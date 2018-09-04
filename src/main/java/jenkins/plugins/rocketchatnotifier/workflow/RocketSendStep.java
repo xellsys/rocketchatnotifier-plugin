@@ -17,6 +17,7 @@ import jenkins.plugins.rocketchatnotifier.RocketClient;
 import jenkins.plugins.rocketchatnotifier.RocketClientImpl;
 import jenkins.plugins.rocketchatnotifier.RocketClientWebhookImpl;
 import jenkins.plugins.rocketchatnotifier.model.MessageAttachment;
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 import org.apache.commons.lang.StringUtils;
 import org.jenkinsci.plugins.plaincredentials.StringCredentials;
 import org.jenkinsci.plugins.workflow.steps.AbstractStepDescriptorImpl;
@@ -29,7 +30,6 @@ import org.kohsuke.stapler.QueryParameter;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -242,7 +242,7 @@ public class RocketSendStep extends AbstractStepImpl {
 
     //streamline unit testing
     RocketClient getRocketClient(String server, boolean trustSSL, String user, String password, String channel,
-                                 String webhookToken, String webhookTokenCredentialId) throws IOException {
+                                 String webhookToken, String webhookTokenCredentialId) throws RocketClientException {
       if (!StringUtils.isEmpty(webhookToken) || !StringUtils.isEmpty(webhookTokenCredentialId)) {
         return new RocketClientWebhookImpl(server, trustSSL, webhookToken, webhookTokenCredentialId, channel);
       }

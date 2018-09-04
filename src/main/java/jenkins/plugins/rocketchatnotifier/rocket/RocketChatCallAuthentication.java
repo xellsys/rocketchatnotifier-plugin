@@ -1,14 +1,13 @@
 package jenkins.plugins.rocketchatnotifier.rocket;
 
-import java.io.IOException;
-
 import com.mashape.unirest.request.HttpRequest;
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 
 public interface RocketChatCallAuthentication {
 
   boolean isAuthenticated();
 
-  void doAuthentication() throws IOException;
+  void doAuthentication() throws RocketClientException;
 
   String getUrlForRequest(RocketChatRestApiV1 call);
 

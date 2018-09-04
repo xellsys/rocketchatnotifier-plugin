@@ -3,6 +3,7 @@ package jenkins.plugins.rocketchatnotifier.rocket;
 import jenkins.plugins.rocketchatnotifier.model.Info;
 import jenkins.plugins.rocketchatnotifier.model.Response;
 import jenkins.plugins.rocketchatnotifier.model.Room;
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -94,7 +94,7 @@ public class RocketChatClientImplTest {
     // then no error
   }
 
-  @Test(expected = IOException.class)
+  @Test(expected = RocketClientException.class)
   public void shouldFailOnEmptyResponseOnVersionInfo() throws Exception {
     // given
     final Response errorResponse = new Response();
@@ -105,7 +105,7 @@ public class RocketChatClientImplTest {
     // then error
   }
 
-  @Test(expected = IOException.class)
+  @Test(expected = RocketClientException.class)
   public void shouldFailOnEmptyResponseOnSendMessage() throws Exception {
     // given
     final Response infoResponse = new Response();
@@ -175,7 +175,7 @@ public class RocketChatClientImplTest {
     return response;
   }
 
-  private Set<String> mockSuccessAndCollectChannels() throws IOException {
+  private Set<String> mockSuccessAndCollectChannels() throws RocketClientException {
     final Response infoResponse = mockInfoRequest();
     final Set<String> collectedTargetChannels = new HashSet<>();
     when(this.callBuilder.buildCall(any(RocketChatRestApiV1.class), any(RocketChatQueryParams.class), any(Map.class)))
@@ -193,7 +193,7 @@ public class RocketChatClientImplTest {
     return collectedTargetChannels;
   }
 
-  private Response mockInfoRequest() throws IOException {
+  private Response mockInfoRequest() throws RocketClientException {
     final Response infoResponse = new Response();
     infoResponse.setSuccess(true);
     final Info info = new Info();

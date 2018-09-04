@@ -19,6 +19,7 @@ import hudson.util.ListBoxModel;
 import jenkins.model.Jenkins;
 import jenkins.model.JenkinsLocationConfiguration;
 import jenkins.plugins.rocketchatnotifier.model.MessageAttachment;
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.BooleanUtils;
@@ -321,7 +322,7 @@ public class RocketChatNotifier extends Notifier {
     return BuildStepMonitor.NONE;
   }
 
-  public RocketClient newRocketChatClient(AbstractBuild r, BuildListener listener) throws IOException {
+  public RocketClient newRocketChatClient(AbstractBuild r, BuildListener listener) throws RocketClientException {
     String serverUrl = this.rocketServerUrl;
     if (StringUtils.isEmpty(serverUrl)) {
       serverUrl = getDescriptor().getRocketServerUrl();
@@ -573,13 +574,16 @@ public class RocketChatNotifier extends Notifier {
         LOGGER.fine("Done publishing message");
         return FormValidation.ok("Success");
       }
-      catch (ValidatorException | SSLHandshakeException e) {
-        LOGGER.log(Level.SEVERE, "SSL error during trying to send rocket message", e);
-        return FormValidation.error(e, "SSL error", e);
-      }
       catch (Exception e) {
-        LOGGER.log(Level.SEVERE, "Client error during trying to send rocket message", e);
-        return FormValidation.error(e, "Client error - Could not send message");
+        if (e.getCause().getClass() == SSLHandshakeException.class
+          || e.getCause().getClass() == ValidatorException.class) {
+          LOGGER.log(Level.SEVERE, "Client error during trying to send rocket message", e);
+          return FormValidation.error(e, "Client error - Could not send message");
+        }
+        else {
+          LOGGER.log(Level.SEVERE, "SSL error during trying to send rocket message", e);
+          return FormValidation.error(e, "SSL error", e);
+        }
       }
     }
 

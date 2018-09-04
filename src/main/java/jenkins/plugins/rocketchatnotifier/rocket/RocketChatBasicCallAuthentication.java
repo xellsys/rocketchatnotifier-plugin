@@ -5,9 +5,8 @@ import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 import org.json.JSONObject;
-
-import java.io.IOException;
 
 /**
  * Authentication using username/ password
@@ -43,7 +42,7 @@ public class RocketChatBasicCallAuthentication implements RocketChatCallAuthenti
   }
 
   @Override
-  public void doAuthentication() throws IOException {
+  public void doAuthentication() throws RocketClientException {
     HttpResponse<JsonNode> loginResult;
     String apiURL = serverUrl + "v1/login";
 
@@ -51,15 +50,15 @@ public class RocketChatBasicCallAuthentication implements RocketChatCallAuthenti
       loginResult = Unirest.post(apiURL).field("user", user).field("password", password).asJson();
     }
     catch (UnirestException e) {
-      throw new IOException("Please check if the server API " + apiURL + " is correct: " + e.getMessage(), e);
+      throw new RocketClientException("Please check if the server API " + apiURL + " is correct: " + e.getMessage(), e);
     }
 
     if (loginResult.getStatus() == 401) {
-      throw new IOException("The username and password provided are incorrect.");
+      throw new RocketClientException("The username and password provided are incorrect.");
     }
 
     if (loginResult.getStatus() != 200) {
-      throw new IOException("The login failed with a result of: " + loginResult.getStatus());
+      throw new RocketClientException("The login failed with a result of: " + loginResult.getStatus());
     }
 
     JSONObject data = loginResult.getBody().getObject().getJSONObject("data");

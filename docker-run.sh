@@ -17,4 +17,4 @@ docker-compose up -d
 # docker-compose logs -f
 
 while ! echo exit | nc localhost ${RC_PORT}; do sleep 10; done
-sleep 120
+sleep 30

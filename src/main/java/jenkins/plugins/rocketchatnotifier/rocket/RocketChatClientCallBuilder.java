@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.GetRequest;
 import com.mashape.unirest.request.HttpRequestWithBody;
 import hudson.ProxyConfiguration;
 import jenkins.model.Jenkins;
 import jenkins.plugins.rocketchatnotifier.model.Response;
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 import jenkins.plugins.rocketchatnotifier.utils.NetworkUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -31,7 +31,6 @@ import org.apache.http.impl.conn.SingleClientConnManager;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Map.Entry;
@@ -100,16 +99,16 @@ public class RocketChatClientCallBuilder {
   }
 
 
-  protected Response buildCall(RocketChatRestApiV1 call) throws IOException {
+  protected Response buildCall(RocketChatRestApiV1 call) throws RocketClientException {
     return this.buildCall(call, null, null);
   }
 
-  protected Response buildCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams) throws IOException {
+  protected Response buildCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams) throws RocketClientException {
     return this.buildCall(call, queryParams, null);
   }
 
   protected Response buildCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams, Object body)
-    throws IOException {
+    throws RocketClientException {
     if (call.requiresAuth() && !authentication.isAuthenticated()) {
       authentication.doAuthentication();
     }
@@ -120,11 +119,11 @@ public class RocketChatClientCallBuilder {
       case POST:
         return this.buildPostCall(call, queryParams, body);
       default:
-        throw new IOException("Http Method " + call.getHttpMethod().toString() + " is not supported.");
+        throw new RocketClientException("Http Method " + call.getHttpMethod().toString() + " is not supported.");
     }
   }
 
-  private Response buildGetCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams) throws IOException {
+  private Response buildGetCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams) throws RocketClientException {
     GetRequest req = Unirest.get(authentication.getUrlForRequest(call));
 
     if (call.requiresAuth()) {
@@ -138,17 +137,15 @@ public class RocketChatClientCallBuilder {
     }
 
     try {
-      HttpResponse<String> res = req.asString();
-
-      return objectMapper.readValue(res.getBody(), Response.class);
+      return objectMapper.readValue(req.asString().getBody(), Response.class);
     }
-    catch (UnirestException e) {
-      throw new IOException(e);
+    catch (Exception e) {
+      throw new RocketClientException(e);
     }
   }
 
   private Response buildPostCall(RocketChatRestApiV1 call, RocketChatQueryParams queryParams, Object body)
-    throws IOException {
+    throws RocketClientException {
     HttpRequestWithBody req = Unirest.post(authentication.getUrlForRequest(call)).header("Content-Type",
       "application/json");
 
@@ -162,17 +159,17 @@ public class RocketChatClientCallBuilder {
       }
     }
 
-    if (body != null) {
-      req.body(objectMapper.writeValueAsString(body));
-    }
-
     try {
+
+      if (body != null) {
+        req.body(objectMapper.writeValueAsString(body));
+      }
       HttpResponse<String> res = req.asString();
 
       return objectMapper.readValue(res.getBody(), Response.class);
     }
-    catch (UnirestException e) {
-      throw new IOException(e);
+    catch (Exception e) {
+      throw new RocketClientException(e);
     }
   }
 

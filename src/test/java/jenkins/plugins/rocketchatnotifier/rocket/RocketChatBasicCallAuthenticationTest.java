@@ -1,8 +1,7 @@
 package jenkins.plugins.rocketchatnotifier.rocket;
 
+import jenkins.plugins.rocketchatnotifier.rocket.errorhandling.RocketClientException;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -31,7 +30,7 @@ public class RocketChatBasicCallAuthenticationTest {
     assertThat(sampleCall, is(equalTo("https://example.com/api/v1/info")));
   }
 
-  @Test(expected = IOException.class)
+  @Test(expected = RocketClientException.class)
   public void shouldAutoPrefixWithHttpsIfNotGiven() throws Exception {
     new RocketChatBasicCallAuthentication("example.com", "a", "b").doAuthentication();
   }
