@@ -204,6 +204,7 @@ public class ActiveNotifier implements FineGrainedNotifier {
 
   String getBuildStatusMessage(AbstractBuild r, boolean includeTestSummary, boolean includeCustomMessage, boolean finished) {
     MessageBuilder message = new MessageBuilder(notifier, r, finished);
+    message.appendStatusSymbol();
     message.appendStatusMessage();
     message.appendDuration();
     message.appendOpenLink();

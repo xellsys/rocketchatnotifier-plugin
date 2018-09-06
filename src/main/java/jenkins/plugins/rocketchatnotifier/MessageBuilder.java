@@ -211,4 +211,23 @@ public class MessageBuilder {
   public String toString() {
     return message.toString();
   }
+
+  void appendStatusSymbol() {
+    Result result = this.build.getResult();
+    String symbol;
+
+    if (result == Result.SUCCESS) {
+      symbol = ":white_check_mark: ";
+    } else if (result == Result.FAILURE) {
+      symbol = ":negative_squared_cross_mark: ";
+    } else if (result == Result.UNSTABLE) {
+      symbol = ":warning: ";
+    } else if (result == Result.ABORTED) {
+      symbol = ":stop_button: ";
+    } else {
+      symbol = ":grey_exclamation: ";
+    }
+
+    message.append(this.escape(symbol));
+  }
 }
